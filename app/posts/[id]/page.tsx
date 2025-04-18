@@ -5,6 +5,7 @@ import Markdown from "react-markdown";
 import Link from "next/link";
 import Like from "@/components/posts/post/Like";
 import { auth } from "@clerk/nextjs/server";
+import { RiArrowLeftLine } from "react-icons/ri";
 
 export default async function PostPage({
   params,
@@ -40,15 +41,18 @@ export default async function PostPage({
   return (
     <div>
       <div className="flex items-center text-sm py-4">
-        <Link href="/" className="hover:text-zinc-700 hover:underline">
-          Home
+        <Link
+          href="/"
+          className="flex items-center gap-1 hover:text-zinc-700 hover:underline"
+        >
+          <RiArrowLeftLine size={16} /> Posts
         </Link>
-        <span className="mx-2">/</span>
+        {/* <span className="mx-2">/</span>
         <Link href="/posts" className="hover:text-zinc-700 hover:underline">
           Posts
         </Link>
-        <span className="mx-2">/</span>
-        <span>{post.title}</span>
+        <span className="mx-2">/</span> */}
+        {/* <span>{post.title}</span> */}
       </div>
       <h1 className="mb-2">{post.title}</h1>
 

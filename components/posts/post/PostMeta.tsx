@@ -2,12 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { RiHeartFill } from "react-icons/ri";
 import { users, posts } from "@/app/generated/prisma";
+import { formatDate } from "@/lib/formatDate";
 
 type PropTypes = {
   post: posts;
   user: users;
 };
-
 export default function PostMeta({ post, user }: PropTypes) {
   return (
     <div className="flex items-center text-sm text-zinc-500">
@@ -25,15 +25,7 @@ export default function PostMeta({ post, user }: PropTypes) {
         </Link>
       </span>
       <span className="mx-2">/</span>
-      <span>
-        {new Intl.DateTimeFormat("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-        }).format(post.created_at ?? new Date())}
-      </span>
+      <span>{formatDate(post.created_at ?? new Date()).date}</span>
     </div>
   );
 }

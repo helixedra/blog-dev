@@ -2,10 +2,12 @@ import prisma from "@/lib/prisma";
 import { Input } from "@/components/shared/Input";
 import { Textarea } from "@/components/shared/Textarea";
 import { Button } from "@/components/shared/Button";
-import PostListItem from "@/components/posts/PostListItem";
 import { redirect } from "next/navigation";
 import AddPostForm from "@/components/posts/AddPostForm";
 import { auth } from "@clerk/nextjs/server";
+import PostList from "@/components/posts/PostList";
+import { users, posts } from "@/app/generated/prisma";
+import { api } from "@/lib/api";
 
 export interface UserData {
   id: number;
@@ -24,7 +26,6 @@ export interface UserData {
 }
 export default async function Home() {
   const { userId } = await auth();
-  // const user = await currentUser();
 
   const user = userId
     ? await prisma.users.findFirst({
@@ -57,18 +58,11 @@ export default async function Home() {
     if (!title || !content) {
       return;
     }
-    const api = process.env.NEXT_PUBLIC_API_URL;
 
-    await fetch(`${api}/api/posts/new`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        content,
-        author_id: user?.id,
-      }),
+    await api.post("/api/posts/new", {
+      title,
+      content,
+      author_id: user?.id,
     });
 
     redirect("/");
@@ -87,9 +81,7 @@ export default async function Home() {
         </div>
       </AddPostForm>
       {posts.length > 0 ? (
-        posts.map((post) => (
-          <PostListItem key={post.post_id} post={post} user={post.users} />
-        ))
+        <PostList posts={posts as (posts & { users: users })[]} />
       ) : (
         <div>No posts found</div>
       )}
