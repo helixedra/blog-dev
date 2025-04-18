@@ -186,6 +186,7 @@ exports.Prisma.TagsScalarFieldEnum = {
 };
 
 exports.Prisma.UsersScalarFieldEnum = {
+  id: 'id',
   user_id: 'user_id',
   username: 'username',
   email: 'email',

@@ -15,6 +15,6 @@ export const Theme = {
     button: {
       default: "bg-zinc-900 hover:bg-zinc-700 text-white",
       outline: "bg-transparent text-black border border-zinc-200",
-      ghost: "bg-transparent text-black",
+      ghost: "bg-transparent text-black hover:text-zinc-700 hover:bg-zinc-100",
       }
 };

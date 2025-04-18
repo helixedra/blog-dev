@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import Markdown from "react-markdown";
 import Link from "next/link";
 import Like from "@/components/posts/post/Like";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function PostPage({
   params,
@@ -12,8 +13,8 @@ export default async function PostPage({
 }) {
   const { id } = await params;
   const pageId = z.number().int().safeParse(Number(id.trim()));
-
-  const userId = 1;
+  const { userId } = await auth();
+  // const user = await currentUser();
 
   if (!pageId.success) {
     return <div>Invalid id</div>;
@@ -29,7 +30,9 @@ export default async function PostPage({
     },
   });
 
-  const isLiked = post?.likes?.some((like) => like.user_id === userId) ?? false;
+  const isLiked =
+    post?.likes?.some((like) => String(like.user_id) === String(userId)) ??
+    false;
 
   if (!post) {
     return <div>Post not found</div>;
@@ -51,7 +54,7 @@ export default async function PostPage({
 
       <div className="flex items-center text-sm py-4">
         <Link
-          href={`/users/${post.users.user_id}`}
+          href={`/profile/${post.users.id}`}
           className="hover:text-zinc-700 hover:underline"
         >
           {post.users.full_name}
@@ -68,7 +71,7 @@ export default async function PostPage({
           postId={post.post_id}
           likes={post.likeCount}
           liked={isLiked}
-          userId={userId}
+          userId={userId ?? ""}
         />
       </div>
     </div>

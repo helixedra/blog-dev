@@ -12,9 +12,10 @@ export default function Like({
   postId: number;
   likes: number;
   liked: boolean;
-  userId: number;
+  userId: string;
 }) {
-  const [isToggled, setIsToggled] = useState(false);
+  const initialUserState = userId ? false : true;
+  const [isToggled, setIsToggled] = useState(initialUserState);
   const [isLiked, setIsLiked] = useState(liked);
   const [likeCount, setLikeCount] = useState(likes);
 
@@ -57,7 +58,7 @@ export default function Like({
       onClick={toggleLike}
       disabled={isToggled}
     >
-      {likeCount > 0 ? <RiHeartFill /> : <RiHeartLine />}
+      {isLiked ? <RiHeartFill /> : <RiHeartLine />}
       <span className="text-sm ml-2">{likeCount || 0}</span>
     </Button>
   );

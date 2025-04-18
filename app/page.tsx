@@ -5,8 +5,43 @@ import { Button } from "@/components/shared/Button";
 import PostListItem from "@/components/posts/PostListItem";
 import { redirect } from "next/navigation";
 import AddPostForm from "@/components/posts/AddPostForm";
+import { auth } from "@clerk/nextjs/server";
 
+export interface UserData {
+  id: number;
+  userId: string;
+  userImage: string | null;
+  username: string | null;
+  email: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  is_active: boolean;
+  is_admin: boolean;
+  avatar_url: string | null;
+  bio: string | null;
+  password_hash: string | null;
+  full_name: string | null;
+}
 export default async function Home() {
+  const { userId } = await auth();
+  // const user = await currentUser();
+
+  const user = userId
+    ? await prisma.users.findFirst({
+        where: {
+          user_id: userId,
+          is_active: true,
+        },
+      })
+    : null;
+
+  const userData = {
+    userId,
+    fullName: user?.full_name,
+    username: user?.username,
+    email: user?.email,
+  };
+
   const posts = await prisma.posts.findMany({
     include: {
       users: true,
@@ -32,7 +67,7 @@ export default async function Home() {
       body: JSON.stringify({
         title,
         content,
-        author_id: 1,
+        author_id: user?.id,
       }),
     });
 
@@ -41,6 +76,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
+      <div>{user && `Welcome, ${user?.username}!`}</div>
       <AddPostForm>
         <div className="bg-zinc-100/50 rounded">
           <form action={handleSubmit} className="flex flex-col space-y-4 p-8">

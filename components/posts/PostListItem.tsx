@@ -1,15 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { posts, users } from "@/app/generated/prisma";
+import { users, posts } from "@/app/generated/prisma";
 import PostMeta from "./post/PostMeta";
 
-export default function PostListItem({
-  post,
-  user,
-}: {
+type PropTypes = {
   post: posts;
   user: users;
-}) {
+};
+
+export default function PostListItem({ post, user }: PropTypes) {
   return (
     <div className="w-fit my-4">
       <Link

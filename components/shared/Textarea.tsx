@@ -9,6 +9,7 @@ interface AccessibleTextareaProps {
   disabled?: boolean;
   name: string;
   value?: string;
+  defaultValue?: string;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLTextAreaElement>) => void;
   rows?: number;
@@ -32,6 +33,7 @@ export const Textarea = forwardRef<
       onBlur,
       rows = 4,
       className,
+      defaultValue,
       ...props
     },
     ref
@@ -67,13 +69,14 @@ export const Textarea = forwardRef<
           onBlur={onBlur}
           disabled={disabled}
           rows={rows}
+          defaultValue={defaultValue}
           aria-invalid={ariaInvalid}
           aria-describedby={
             ariaDescribedBy.length > 0 ? ariaDescribedBy.join(" ") : undefined
           }
-          className={`${Theme.border} ${Theme.px} ${Theme.py} block w-full ${
-            Theme.borderRadius
-          } ${
+          className={`${Theme.border} ${Theme.px} ${
+            Theme.py
+          } text-black block w-full ${Theme.borderRadius} ${
             Theme.textSize
           } focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
             hasError

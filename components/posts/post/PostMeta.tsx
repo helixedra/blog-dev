@@ -1,9 +1,14 @@
-import { posts, users } from "@/app/generated/prisma";
 import React from "react";
 import Link from "next/link";
 import { RiHeartFill } from "react-icons/ri";
+import { users, posts } from "@/app/generated/prisma";
 
-export default function PostMeta({ post, user }: { post: posts; user: users }) {
+type PropTypes = {
+  post: posts;
+  user: users;
+};
+
+export default function PostMeta({ post, user }: PropTypes) {
   return (
     <div className="flex items-center text-sm text-zinc-500">
       <div className="flex items-center">
@@ -13,10 +18,10 @@ export default function PostMeta({ post, user }: { post: posts; user: users }) {
       <span className="mx-2">/</span>
       <span className="font-semibold">
         <Link
-          href={`/users/${user.user_id}`}
+          href={`/profile/${user.id}`}
           className="hover:text-zinc-700 hover:underline"
         >
-          {user.full_name}
+          {user && <>{user.username || user.full_name}</>}
         </Link>
       </span>
       <span className="mx-2">/</span>

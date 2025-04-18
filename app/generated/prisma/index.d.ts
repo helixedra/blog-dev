@@ -6467,26 +6467,24 @@ export namespace Prisma {
   export type LikeAvgAggregateOutputType = {
     like_id: number | null
     post_id: number | null
-    user_id: number | null
   }
 
   export type LikeSumAggregateOutputType = {
     like_id: number | null
     post_id: number | null
-    user_id: number | null
   }
 
   export type LikeMinAggregateOutputType = {
     like_id: number | null
     post_id: number | null
-    user_id: number | null
+    user_id: string | null
     created_at: Date | null
   }
 
   export type LikeMaxAggregateOutputType = {
     like_id: number | null
     post_id: number | null
-    user_id: number | null
+    user_id: string | null
     created_at: Date | null
   }
 
@@ -6502,13 +6500,11 @@ export namespace Prisma {
   export type LikeAvgAggregateInputType = {
     like_id?: true
     post_id?: true
-    user_id?: true
   }
 
   export type LikeSumAggregateInputType = {
     like_id?: true
     post_id?: true
-    user_id?: true
   }
 
   export type LikeMinAggregateInputType = {
@@ -6622,7 +6618,7 @@ export namespace Prisma {
   export type LikeGroupByOutputType = {
     like_id: number
     post_id: number
-    user_id: number
+    user_id: string
     created_at: Date
     _count: LikeCountAggregateOutputType | null
     _avg: LikeAvgAggregateOutputType | null
@@ -6702,7 +6698,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       like_id: number
       post_id: number
-      user_id: number
+      user_id: string
       created_at: Date
     }, ExtArgs["result"]["like"]>
     composites: {}
@@ -7131,7 +7127,7 @@ export namespace Prisma {
   interface likeFieldRefs {
     readonly like_id: FieldRef<"like", 'Int'>
     readonly post_id: FieldRef<"like", 'Int'>
-    readonly user_id: FieldRef<"like", 'Int'>
+    readonly user_id: FieldRef<"like", 'String'>
     readonly created_at: FieldRef<"like", 'DateTime'>
   }
     
@@ -9719,15 +9715,16 @@ export namespace Prisma {
   }
 
   export type UsersAvgAggregateOutputType = {
-    user_id: number | null
+    id: number | null
   }
 
   export type UsersSumAggregateOutputType = {
-    user_id: number | null
+    id: number | null
   }
 
   export type UsersMinAggregateOutputType = {
-    user_id: number | null
+    id: number | null
+    user_id: string | null
     username: string | null
     email: string | null
     password_hash: string | null
@@ -9741,7 +9738,8 @@ export namespace Prisma {
   }
 
   export type UsersMaxAggregateOutputType = {
-    user_id: number | null
+    id: number | null
+    user_id: string | null
     username: string | null
     email: string | null
     password_hash: string | null
@@ -9755,6 +9753,7 @@ export namespace Prisma {
   }
 
   export type UsersCountAggregateOutputType = {
+    id: number
     user_id: number
     username: number
     email: number
@@ -9771,14 +9770,15 @@ export namespace Prisma {
 
 
   export type UsersAvgAggregateInputType = {
-    user_id?: true
+    id?: true
   }
 
   export type UsersSumAggregateInputType = {
-    user_id?: true
+    id?: true
   }
 
   export type UsersMinAggregateInputType = {
+    id?: true
     user_id?: true
     username?: true
     email?: true
@@ -9793,6 +9793,7 @@ export namespace Prisma {
   }
 
   export type UsersMaxAggregateInputType = {
+    id?: true
     user_id?: true
     username?: true
     email?: true
@@ -9807,6 +9808,7 @@ export namespace Prisma {
   }
 
   export type UsersCountAggregateInputType = {
+    id?: true
     user_id?: true
     username?: true
     email?: true
@@ -9908,7 +9910,8 @@ export namespace Prisma {
   }
 
   export type UsersGroupByOutputType = {
-    user_id: number
+    id: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -9941,6 +9944,7 @@ export namespace Prisma {
 
 
   export type usersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     user_id?: boolean
     username?: boolean
     email?: boolean
@@ -9959,6 +9963,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     user_id?: boolean
     username?: boolean
     email?: boolean
@@ -9973,6 +9978,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     user_id?: boolean
     username?: boolean
     email?: boolean
@@ -9987,6 +9993,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
+    id?: boolean
     user_id?: boolean
     username?: boolean
     email?: boolean
@@ -10000,7 +10007,7 @@ export namespace Prisma {
     is_admin?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "username" | "email" | "password_hash" | "full_name" | "bio" | "avatar_url" | "created_at" | "updated_at" | "is_active" | "is_admin", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "username" | "email" | "password_hash" | "full_name" | "bio" | "avatar_url" | "created_at" | "updated_at" | "is_active" | "is_admin", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     comments?: boolean | users$commentsArgs<ExtArgs>
     posts?: boolean | users$postsArgs<ExtArgs>
@@ -10018,7 +10025,8 @@ export namespace Prisma {
       likes: Prisma.$likePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      user_id: number
+      id: number
+      user_id: string
       username: string
       email: string
       password_hash: string
@@ -10112,8 +10120,8 @@ export namespace Prisma {
      * // Get first 10 Users
      * const users = await prisma.users.findMany({ take: 10 })
      * 
-     * // Only select the `user_id`
-     * const usersWithUser_idOnly = await prisma.users.findMany({ select: { user_id: true } })
+     * // Only select the `id`
+     * const usersWithIdOnly = await prisma.users.findMany({ select: { id: true } })
      * 
      */
     findMany<T extends usersFindManyArgs>(args?: SelectSubset<T, usersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -10157,9 +10165,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Users and only return the `user_id`
-     * const usersWithUser_idOnly = await prisma.users.createManyAndReturn({
-     *   select: { user_id: true },
+     * // Create many Users and only return the `id`
+     * const usersWithIdOnly = await prisma.users.createManyAndReturn({
+     *   select: { id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -10248,9 +10256,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Users and only return the `user_id`
-     * const usersWithUser_idOnly = await prisma.users.updateManyAndReturn({
-     *   select: { user_id: true },
+     * // Update zero or more Users and only return the `id`
+     * const usersWithIdOnly = await prisma.users.updateManyAndReturn({
+     *   select: { id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10455,7 +10463,8 @@ export namespace Prisma {
    * Fields of the users model
    */
   interface usersFieldRefs {
-    readonly user_id: FieldRef<"users", 'Int'>
+    readonly id: FieldRef<"users", 'Int'>
+    readonly user_id: FieldRef<"users", 'String'>
     readonly username: FieldRef<"users", 'String'>
     readonly email: FieldRef<"users", 'String'>
     readonly password_hash: FieldRef<"users", 'String'>
@@ -11048,6 +11057,7 @@ export namespace Prisma {
 
 
   export const UsersScalarFieldEnum: {
+    id: 'id',
     user_id: 'user_id',
     username: 'username',
     email: 'email',
@@ -11473,7 +11483,7 @@ export namespace Prisma {
     NOT?: likeWhereInput | likeWhereInput[]
     like_id?: IntFilter<"like"> | number
     post_id?: IntFilter<"like"> | number
-    user_id?: IntFilter<"like"> | number
+    user_id?: StringFilter<"like"> | string
     created_at?: DateTimeFilter<"like"> | Date | string
     post?: XOR<PostsScalarRelationFilter, postsWhereInput>
     user?: XOR<UsersScalarRelationFilter, usersWhereInput>
@@ -11495,7 +11505,7 @@ export namespace Prisma {
     OR?: likeWhereInput[]
     NOT?: likeWhereInput | likeWhereInput[]
     post_id?: IntFilter<"like"> | number
-    user_id?: IntFilter<"like"> | number
+    user_id?: StringFilter<"like"> | string
     created_at?: DateTimeFilter<"like"> | Date | string
     post?: XOR<PostsScalarRelationFilter, postsWhereInput>
     user?: XOR<UsersScalarRelationFilter, usersWhereInput>
@@ -11519,7 +11529,7 @@ export namespace Prisma {
     NOT?: likeScalarWhereWithAggregatesInput | likeScalarWhereWithAggregatesInput[]
     like_id?: IntWithAggregatesFilter<"like"> | number
     post_id?: IntWithAggregatesFilter<"like"> | number
-    user_id?: IntWithAggregatesFilter<"like"> | number
+    user_id?: StringWithAggregatesFilter<"like"> | string
     created_at?: DateTimeWithAggregatesFilter<"like"> | Date | string
   }
 
@@ -11648,7 +11658,8 @@ export namespace Prisma {
     AND?: usersWhereInput | usersWhereInput[]
     OR?: usersWhereInput[]
     NOT?: usersWhereInput | usersWhereInput[]
-    user_id?: IntFilter<"users"> | number
+    id?: IntFilter<"users"> | number
+    user_id?: StringFilter<"users"> | string
     username?: StringFilter<"users"> | string
     email?: StringFilter<"users"> | string
     password_hash?: StringFilter<"users"> | string
@@ -11665,6 +11676,7 @@ export namespace Prisma {
   }
 
   export type usersOrderByWithRelationInput = {
+    id?: SortOrder
     user_id?: SortOrder
     username?: SortOrder
     email?: SortOrder
@@ -11682,7 +11694,8 @@ export namespace Prisma {
   }
 
   export type usersWhereUniqueInput = Prisma.AtLeast<{
-    user_id?: number
+    id?: number
+    user_id?: string
     username?: string
     email?: string
     AND?: usersWhereInput | usersWhereInput[]
@@ -11699,9 +11712,10 @@ export namespace Prisma {
     comments?: CommentsListRelationFilter
     posts?: PostsListRelationFilter
     likes?: LikeListRelationFilter
-  }, "user_id" | "username" | "email">
+  }, "id" | "user_id" | "username" | "email">
 
   export type usersOrderByWithAggregationInput = {
+    id?: SortOrder
     user_id?: SortOrder
     username?: SortOrder
     email?: SortOrder
@@ -11724,7 +11738,8 @@ export namespace Prisma {
     AND?: usersScalarWhereWithAggregatesInput | usersScalarWhereWithAggregatesInput[]
     OR?: usersScalarWhereWithAggregatesInput[]
     NOT?: usersScalarWhereWithAggregatesInput | usersScalarWhereWithAggregatesInput[]
-    user_id?: IntWithAggregatesFilter<"users"> | number
+    id?: IntWithAggregatesFilter<"users"> | number
+    user_id?: StringWithAggregatesFilter<"users"> | string
     username?: StringWithAggregatesFilter<"users"> | string
     email?: StringWithAggregatesFilter<"users"> | string
     password_hash?: StringWithAggregatesFilter<"users"> | string
@@ -12052,7 +12067,7 @@ export namespace Prisma {
   export type likeUncheckedCreateInput = {
     like_id?: number
     post_id: number
-    user_id: number
+    user_id: string
     created_at?: Date | string
   }
 
@@ -12065,14 +12080,14 @@ export namespace Prisma {
   export type likeUncheckedUpdateInput = {
     like_id?: IntFieldUpdateOperationsInput | number
     post_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type likeCreateManyInput = {
     like_id?: number
     post_id: number
-    user_id: number
+    user_id: string
     created_at?: Date | string
   }
 
@@ -12083,7 +12098,7 @@ export namespace Prisma {
   export type likeUncheckedUpdateManyInput = {
     like_id?: IntFieldUpdateOperationsInput | number
     post_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -12212,6 +12227,7 @@ export namespace Prisma {
   }
 
   export type usersCreateInput = {
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -12228,7 +12244,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedCreateInput = {
-    user_id?: number
+    id?: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -12245,6 +12262,7 @@ export namespace Prisma {
   }
 
   export type usersUpdateInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -12261,7 +12279,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedUpdateInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -12278,7 +12297,8 @@ export namespace Prisma {
   }
 
   export type usersCreateManyInput = {
-    user_id?: number
+    id?: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -12292,6 +12312,7 @@ export namespace Prisma {
   }
 
   export type usersUpdateManyMutationInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -12305,7 +12326,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedUpdateManyInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -12731,7 +12753,7 @@ export namespace Prisma {
 
   export type likePost_idUser_idCompoundUniqueInput = {
     post_id: number
-    user_id: number
+    user_id: string
   }
 
   export type likeCountOrderByAggregateInput = {
@@ -12744,7 +12766,6 @@ export namespace Prisma {
   export type likeAvgOrderByAggregateInput = {
     like_id?: SortOrder
     post_id?: SortOrder
-    user_id?: SortOrder
   }
 
   export type likeMaxOrderByAggregateInput = {
@@ -12764,7 +12785,6 @@ export namespace Prisma {
   export type likeSumOrderByAggregateInput = {
     like_id?: SortOrder
     post_id?: SortOrder
-    user_id?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -12865,6 +12885,7 @@ export namespace Prisma {
   }
 
   export type usersCountOrderByAggregateInput = {
+    id?: SortOrder
     user_id?: SortOrder
     username?: SortOrder
     email?: SortOrder
@@ -12879,10 +12900,11 @@ export namespace Prisma {
   }
 
   export type usersAvgOrderByAggregateInput = {
-    user_id?: SortOrder
+    id?: SortOrder
   }
 
   export type usersMaxOrderByAggregateInput = {
+    id?: SortOrder
     user_id?: SortOrder
     username?: SortOrder
     email?: SortOrder
@@ -12897,6 +12919,7 @@ export namespace Prisma {
   }
 
   export type usersMinOrderByAggregateInput = {
+    id?: SortOrder
     user_id?: SortOrder
     username?: SortOrder
     email?: SortOrder
@@ -12911,7 +12934,7 @@ export namespace Prisma {
   }
 
   export type usersSumOrderByAggregateInput = {
-    user_id?: SortOrder
+    id?: SortOrder
   }
 
   export type postsCreateNestedManyWithoutCategoriesInput = {
@@ -13852,6 +13875,7 @@ export namespace Prisma {
   }
 
   export type usersCreateWithoutCommentsInput = {
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -13867,7 +13891,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedCreateWithoutCommentsInput = {
-    user_id?: number
+    id?: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -14015,6 +14040,7 @@ export namespace Prisma {
   }
 
   export type usersUpdateWithoutCommentsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14030,7 +14056,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedUpdateWithoutCommentsInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14188,7 +14215,7 @@ export namespace Prisma {
 
   export type likeUncheckedCreateWithoutPostInput = {
     like_id?: number
-    user_id: number
+    user_id: string
     created_at?: Date | string
   }
 
@@ -14256,6 +14283,7 @@ export namespace Prisma {
   }
 
   export type usersCreateWithoutPostsInput = {
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -14271,7 +14299,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedCreateWithoutPostsInput = {
-    user_id?: number
+    id?: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -14333,7 +14362,7 @@ export namespace Prisma {
     NOT?: likeScalarWhereInput | likeScalarWhereInput[]
     like_id?: IntFilter<"like"> | number
     post_id?: IntFilter<"like"> | number
-    user_id?: IntFilter<"like"> | number
+    user_id?: StringFilter<"like"> | string
     created_at?: DateTimeFilter<"like"> | Date | string
   }
 
@@ -14389,6 +14418,7 @@ export namespace Prisma {
   }
 
   export type usersUpdateWithoutPostsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14404,7 +14434,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedUpdateWithoutPostsInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14488,6 +14519,7 @@ export namespace Prisma {
   }
 
   export type usersCreateWithoutLikesInput = {
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -14503,7 +14535,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedCreateWithoutLikesInput = {
-    user_id?: number
+    id?: number
+    user_id: string
     username: string
     email: string
     password_hash: string
@@ -14583,6 +14616,7 @@ export namespace Prisma {
   }
 
   export type usersUpdateWithoutLikesInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14598,7 +14632,8 @@ export namespace Prisma {
   }
 
   export type usersUncheckedUpdateWithoutLikesInput = {
-    user_id?: IntFieldUpdateOperationsInput | number
+    id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     password_hash?: StringFieldUpdateOperationsInput | string
@@ -14918,7 +14953,7 @@ export namespace Prisma {
 
   export type likeCreateManyPostInput = {
     like_id?: number
-    user_id: number
+    user_id: string
     created_at?: Date | string
   }
 
@@ -14945,13 +14980,13 @@ export namespace Prisma {
 
   export type likeUncheckedUpdateWithoutPostInput = {
     like_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type likeUncheckedUpdateManyWithoutPostInput = {
     like_id?: IntFieldUpdateOperationsInput | number
-    user_id?: IntFieldUpdateOperationsInput | number
+    user_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
