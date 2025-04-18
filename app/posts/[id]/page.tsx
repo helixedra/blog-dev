@@ -3,9 +3,6 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import Markdown from "react-markdown";
 import Link from "next/link";
-import PostMeta from "@/components/posts/post/PostMeta";
-import { Button } from "@/components/shared/Button";
-import { RiHeartLine } from "react-icons/ri";
 import Like from "@/components/posts/post/Like";
 
 export default async function PostPage({
