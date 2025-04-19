@@ -1,18 +1,18 @@
 import React from "react";
 import Link from "next/link";
-import { users, posts } from "@/app/generated/prisma";
+import { User, Post } from "@/app/generated/prisma";
 import PostMeta from "./post/PostMeta";
 
 type PropTypes = {
-  post: posts;
-  user: users;
+  post: Post;
+  user: User;
 };
 
 export default function PostListItem({ post, user }: PropTypes) {
   return (
     <div className="w-fit my-4">
       <Link
-        href={`/posts/${post.post_id}`}
+        href={`/posts/${post.id}`}
         className="hover:text-zinc-700 hover:before:content-['#'] before:absolute before:-ml-4 "
       >
         <>

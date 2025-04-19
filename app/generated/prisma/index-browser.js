@@ -117,87 +117,95 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.CategoriesScalarFieldEnum = {
-  category_id: 'category_id',
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
   name: 'name',
   slug: 'slug',
   description: 'description',
-  created_at: 'created_at'
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.CommentsScalarFieldEnum = {
-  comment_id: 'comment_id',
-  post_id: 'post_id',
-  user_id: 'user_id',
-  author_name: 'author_name',
-  author_email: 'author_email',
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  authorName: 'authorName',
+  authorEmail: 'authorEmail',
   content: 'content',
   status: 'status',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  parent_id: 'parent_id'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  parentId: 'parentId'
 };
 
-exports.Prisma.Post_tagsScalarFieldEnum = {
-  post_id: 'post_id',
-  tag_id: 'tag_id'
+exports.Prisma.PostTagScalarFieldEnum = {
+  postId: 'postId',
+  tagId: 'tagId'
 };
 
-exports.Prisma.PostsScalarFieldEnum = {
-  post_id: 'post_id',
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
   title: 'title',
   likeCount: 'likeCount',
   excerpt: 'excerpt',
   content: 'content',
-  author_id: 'author_id',
-  category_id: 'category_id',
+  authorId: 'authorId',
+  categoryId: 'categoryId',
   status: 'status',
-  published_at: 'published_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  featured_image_url: 'featured_image_url',
-  meta_title: 'meta_title',
-  meta_description: 'meta_description'
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  featuredImageUrl: 'featuredImageUrl',
+  metaTitle: 'metaTitle',
+  metaDescription: 'metaDescription'
 };
 
 exports.Prisma.LikeScalarFieldEnum = {
-  like_id: 'like_id',
-  post_id: 'post_id',
-  user_id: 'user_id',
-  created_at: 'created_at'
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.SettingsScalarFieldEnum = {
-  setting_id: 'setting_id',
-  setting_key: 'setting_key',
-  setting_value: 'setting_value',
-  setting_group: 'setting_group',
-  is_public: 'is_public',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+exports.Prisma.SettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  group: 'group',
+  isPublic: 'isPublic',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
-exports.Prisma.TagsScalarFieldEnum = {
-  tag_id: 'tag_id',
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
   name: 'name',
   slug: 'slug',
   description: 'description',
-  created_at: 'created_at'
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.UsersScalarFieldEnum = {
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  user_id: 'user_id',
+  userId: 'userId',
   username: 'username',
   email: 'email',
-  password_hash: 'password_hash',
-  full_name: 'full_name',
+  passwordHash: 'passwordHash',
+  fullName: 'fullName',
   bio: 'bio',
-  avatar_url: 'avatar_url',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  is_active: 'is_active',
-  is_admin: 'is_admin'
+  avatarUrl: 'avatarUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isActive: 'isActive',
+  isAdmin: 'isAdmin',
+  followingCount: 'followingCount',
+  followersCount: 'followersCount'
+};
+
+exports.Prisma.FollowScalarFieldEnum = {
+  followerId: 'followerId',
+  followingId: 'followingId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -217,14 +225,15 @@ exports.Prisma.NullsOrder = {
 
 
 exports.Prisma.ModelName = {
-  categories: 'categories',
-  comments: 'comments',
-  post_tags: 'post_tags',
-  posts: 'posts',
-  like: 'like',
-  settings: 'settings',
-  tags: 'tags',
-  users: 'users'
+  Category: 'Category',
+  Comment: 'Comment',
+  PostTag: 'PostTag',
+  Post: 'Post',
+  Like: 'Like',
+  Setting: 'Setting',
+  Tag: 'Tag',
+  User: 'User',
+  Follow: 'Follow'
 };
 
 /**

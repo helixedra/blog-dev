@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Inconsolata } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
-import { ClerkProvider } from "@clerk/nextjs";
-import UserRegistration from "./UserRegistration";
+import { ClerkProvider, SignIn, SignUp } from "@clerk/nextjs";
 import Header from "@/components/layout/Header";
 
 const inter = Inter({
@@ -30,7 +29,6 @@ export default async function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <QueryProvider>
-          <UserRegistration />
           <body className={`${inter.variable} ${inconsolata.variable}`}>
             <Header />
             <main className="mx-auto max-w-3xl p-4">{children}</main>

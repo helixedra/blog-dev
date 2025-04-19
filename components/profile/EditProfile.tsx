@@ -14,7 +14,7 @@ export default function EditProfile({ userId }: { userId: string }) {
   const [user, setUser] = useState<{
     username: string;
     bio: string;
-    avatar_url: string;
+    avatarUrl: string;
   } | null>(null);
 
   // Form refs
@@ -43,7 +43,7 @@ export default function EditProfile({ userId }: { userId: string }) {
     mutationFn: async (data: {
       username: string;
       bio: string;
-      avatar_url: string;
+      avatarUrl: string;
     }) => {
       const response = await api.put(`user/${userId}`, data);
       if (!response.ok) {
@@ -84,12 +84,12 @@ export default function EditProfile({ userId }: { userId: string }) {
 
     const username = usernameRef.current?.value || user.username;
     const bio = bioRef.current?.value || user.bio;
-    const avatar_url = avatarRef.current?.value || user.avatar_url;
+    const avatarUrl = avatarRef.current?.value || user.avatarUrl;
 
     mutate({
       username,
       bio,
-      avatar_url,
+      avatarUrl: avatarUrl,
     });
   };
 
@@ -126,9 +126,9 @@ export default function EditProfile({ userId }: { userId: string }) {
             <Textarea name="bio" defaultValue={user?.bio ?? ""} ref={bioRef} />
             <Input
               type="text"
-              name="avatar_url"
+              name="avatarUrl"
               placeholder="Avatar URL"
-              defaultValue={user?.avatar_url ?? ""}
+              defaultValue={user?.avatarUrl ?? ""}
               ref={avatarRef}
             />
             <Button type="submit" disabled={isPending}>

@@ -11,9 +11,9 @@ const userSchema = z.object({
 
 export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
     const { userId } = await params;
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
-            user_id: userId,
+            userId,
         },
     });
     return NextResponse.json(user);
@@ -32,25 +32,25 @@ export async function PUT(request: NextRequest, { params }: { params: { userId: 
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const { username, bio, avatar_url } = await request.json();
+        const { username, bio, avatarUrl } = await request.json();
         const validatedData = userSchema.safeParse({
             username,
             bio,
-            avatar_url,
+            avatarUrl,
         });
 
         if (!validatedData.success) {
             return NextResponse.json({ error: "Invalid data" }, { status: 400 });
         }
 
-        const user = await prisma.users.update({
+        const user = await prisma.user.update({
             where: {
-                user_id: targetUserId,
+                userId: targetUserId,
             },
             data: {
                 username,
                 bio,
-                avatar_url,
+                avatarUrl,
             },
         });
 

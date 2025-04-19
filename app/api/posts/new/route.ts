@@ -5,23 +5,23 @@ import { z } from 'zod';
 const postSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
-  author_id: z.number().int(),
+  authorId: z.number().int(),
 });
 
 export async function POST(request: Request) {
-  const { title, content, author_id } = await request.json();
+  const { title, content, authorId } = await request.json();
 
-  const parsedData = postSchema.safeParse({ title, content, author_id });
+  const parsedData = postSchema.safeParse({ title, content, authorId });
   if (!parsedData.success) {
     return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
   }
 
   try {
-    const post = await prisma.posts.create({
+    const post = await prisma.post.create({
       data: {
         title,
         content,
-        author_id,
+        authorId,
         status: 'published',
         likeCount: 0,
       },

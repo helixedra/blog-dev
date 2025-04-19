@@ -1,16 +1,17 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
 export default async function UserRegistration() {
   try {
     const { userId } = await auth();
     const user = await currentUser();
 
-    if (!userId || !user) return null;
+    if (!userId || !user) return;
 
     // Check if user exists in database
-    const existingUser = await prisma.users.findUnique({
-      where: { user_id: userId },
+    const existingUser = await prisma.user.findUnique({
+      where: { userId },
     });
 
     if (!existingUser) {
@@ -28,26 +29,29 @@ export default async function UserRegistration() {
       let counter = 1;
 
       // Check if username exists and generate a unique one
-      while (await prisma.users.findUnique({ where: { username } })) {
+      while (await prisma.user.findUnique({ where: { username } })) {
         username = `${baseUsername}_${counter++}`;
       }
 
       // Create new user in database
-      await prisma.users.create({
+      await prisma.user.create({
         data: {
-          user_id: userId,
-          full_name: `${user.firstName || ""} ${user.lastName || ""}`,
+          userId,
+          fullName: `${user.firstName || ""} ${user.lastName || ""}`,
           username,
           email: user.emailAddresses[0]?.emailAddress || "",
-          password_hash: "",
-          is_active: true,
-          is_admin: false,
-          avatar_url: user.imageUrl || "",
+          passwordHash: "",
+          isActive: true,
+          isAdmin: false,
+          avatarUrl: user.imageUrl || "",
           bio: "",
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       });
+      return NextResponse.redirect(
+        new URL("/", process.env.NEXT_PUBLIC_APP_URL)
+      );
     }
   } catch (error) {
     console.error("Error registering user:", error);

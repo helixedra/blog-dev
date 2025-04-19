@@ -1,52 +1,59 @@
 import React from "react";
 import { Button } from "../shared/Button";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignIn,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
-import { users } from "@/app/generated/prisma";
+import { User } from "@/app/generated/prisma";
 import Link from "next/link";
 import SignOut from "@/components/profile/SignOut";
 
 export default async function Header() {
   const { userId } = await auth();
   const user = userId
-    ? await prisma.users.findFirst({
+    ? await prisma.user.findFirst({
         where: {
-          user_id: userId,
-          is_active: true,
+          userId,
+          isActive: true,
         },
       })
-    : null;
+    : false;
 
   return (
     <header className="flex justify-between items-center p-4 gap-4 h-16">
       <div>
         <Link href="/">Home</Link>
       </div>
+
       <SignedOut>
         <SignInButton>
           <Button variant="ghost">Sign In</Button>
         </SignInButton>
-        {/* <SignUpButton /> */}
       </SignedOut>
-      {/* <SignedIn>{user && <UserButton />}</SignedIn> */}
-      <div className="flex items-center gap-2">
-        <SignedIn>
-          {user && <UserProfileButton user={user as users} />}
-        </SignedIn>
-        <SignOut />
-      </div>
+      {user && (
+        <div className="flex items-center gap-2">
+          <SignedIn>
+            <UserProfileButton user={user as User} />
+            <SignOut />
+          </SignedIn>
+        </div>
+      )}
     </header>
   );
 }
-export function UserProfileButton({ user }: { user: users }) {
+export function UserProfileButton({ user }: { user: User }) {
   return (
     <div>
       <Link href={`/profile/${user?.id}`} className="flex items-center gap-2">
         <div className="w-6 h-6">
           <Image
-            src={`${user?.avatar_url}` || ""}
+            src={`${user?.avatarUrl}` || ""}
             alt={user?.username || ""}
             width={40}
             height={40}

@@ -6,8 +6,9 @@ import { redirect } from "next/navigation";
 import AddPostForm from "@/components/posts/AddPostForm";
 import { auth } from "@clerk/nextjs/server";
 import PostList from "@/components/posts/PostList";
-import { users, posts } from "@/app/generated/prisma";
+import { User, Post } from "@/app/generated/prisma";
 import { api } from "@/lib/api";
+import SignOut from "@/components/profile/SignOut";
 
 export interface UserData {
   id: number;
@@ -28,24 +29,24 @@ export default async function Home() {
   const { userId } = await auth();
 
   const user = userId
-    ? await prisma.users.findFirst({
+    ? await prisma.user.findFirst({
         where: {
-          user_id: userId,
-          is_active: true,
+          userId,
+          isActive: true,
         },
       })
     : null;
 
   const userData = {
     userId,
-    fullName: user?.full_name,
+    fullName: user?.fullName,
     username: user?.username,
     email: user?.email,
   };
 
-  const posts = await prisma.posts.findMany({
+  const posts = await prisma.post.findMany({
     include: {
-      users: true,
+      author: true,
     },
   });
 
@@ -70,6 +71,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
+      <SignOut />
       <div>{user && `Welcome, ${user?.username}!`}</div>
       <AddPostForm>
         <div className="bg-zinc-100/50 rounded">
@@ -81,7 +83,7 @@ export default async function Home() {
         </div>
       </AddPostForm>
       {posts.length > 0 ? (
-        <PostList posts={posts as (posts & { users: users })[]} />
+        <PostList posts={posts as (Post & { author: User })[]} />
       ) : (
         <div>No posts found</div>
       )}

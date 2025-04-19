@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { posts, users } from "@/app/generated/prisma";
+import { Post, User } from "@/app/generated/prisma";
 import Image from "next/image";
 import EditProfile from "./EditProfile";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,7 +14,7 @@ export default function ProfileCard({
   isOwner,
   userPosts,
 }: {
-  user: users;
+  user: User;
   isOwner: boolean;
   userPosts: any[];
 }) {
@@ -22,9 +22,9 @@ export default function ProfileCard({
 
   // update user data
   const { data: user } = useQuery({
-    queryKey: ["user", initialUser?.user_id],
+    queryKey: ["user", initialUser?.userId],
     queryFn: async () => {
-      const userData = await api.get(`user/${initialUser?.user_id}`);
+      const userData = await api.get(`user/${initialUser?.userId}`);
       if (!userData.ok) {
         throw new Error("Failed to fetch user data");
       }
@@ -78,7 +78,7 @@ export default function ProfileCard({
       </div>
       <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
         {userPosts.map((post) => (
-          <PostListItem key={post.post_id} post={post} user={user as users} />
+          <PostListItem key={post.id} post={post} user={user as User} />
         ))}
       </div>
     </div>

@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { RiHeartFill } from "react-icons/ri";
-import { users, posts } from "@/app/generated/prisma";
+import { User, Post } from "@/app/generated/prisma";
 import { formatDate } from "@/lib/formatDate";
 
 type PropTypes = {
-  post: posts;
-  user: users;
+  post: Post;
+  user: User;
 };
 export default function PostMeta({ post, user }: PropTypes) {
   return (
@@ -21,11 +21,11 @@ export default function PostMeta({ post, user }: PropTypes) {
           href={`/profile/${user.id}`}
           className="hover:text-zinc-700 hover:underline"
         >
-          {user && <>{user.username || user.full_name}</>}
+          {user && <>{user.username || user.fullName}</>}
         </Link>
       </span>
       <span className="mx-2">/</span>
-      <span>{formatDate(post.created_at ?? new Date()).date}</span>
+      <span>{formatDate(post.createdAt ?? new Date()).date}</span>
     </div>
   );
 }

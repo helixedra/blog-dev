@@ -13,9 +13,9 @@ export async function POST(
     // Check if user has already liked this post
     const existingLike = await prisma.like.findUnique({
       where: {
-        post_id_user_id: {
-          post_id: postId,
-          user_id: userId,
+        postId_userId: {
+          postId,
+          userId,
         },
       },
     });
@@ -24,16 +24,16 @@ export async function POST(
       // If already liked, remove the like
       await prisma.like.delete({
         where: {
-          post_id_user_id: {
-            post_id: postId,
-            user_id: userId,
+          postId_userId: {
+            postId,
+            userId,
           },
         },
       });
 
       // Decrement the like count
-      const post = await prisma.posts.update({
-        where: { post_id: postId },
+      const post = await prisma.post.update({
+        where: { id: postId },
         data: { likeCount: { decrement: 1 } },
         select: { likeCount: true },
       });
@@ -46,14 +46,14 @@ export async function POST(
       // If not liked, add the like
       await prisma.like.create({
         data: {
-          post_id: postId,
-          user_id: userId,
+          postId,
+          userId,
         },
       });
 
       // Increment the like count
-      const post = await prisma.posts.update({
-        where: { post_id: postId },
+      const post = await prisma.post.update({
+        where: { id: postId },
         data: { likeCount: { increment: 1 } },
         select: { likeCount: true },
       });

@@ -2,7 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import ProfileCard from "@/components/profile/ProfileCard";
-import { users } from "@/app/generated/prisma";
+import { User } from "@/app/generated/prisma";
 
 export default async function ProfilePage({
   params,
@@ -12,27 +12,27 @@ export default async function ProfilePage({
   const { id } = await params;
   const { userId } = await auth();
 
-  const user = await prisma.users.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: Number(id),
     },
   });
 
-  const userPosts = await prisma.posts.findMany({
+  const userPosts = await prisma.post.findMany({
     where: {
-      users: {
+      author: {
         id: Number(id),
       },
     },
   });
 
-  const isOwner = user?.user_id === userId;
+  const isOwner = user?.userId === userId;
 
   return (
     <div>
       <ProfileCard
         isOwner={isOwner}
-        user={user as users}
+        user={user as User}
         userPosts={userPosts}
       />
     </div>

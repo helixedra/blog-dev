@@ -21,18 +21,18 @@ export default async function PostPage({
     return <div>Invalid id</div>;
   }
 
-  const post = await prisma.posts.findUnique({
+  const post = await prisma.post.findUnique({
     where: {
-      post_id: pageId.data,
+      id: pageId.data,
     },
     include: {
-      users: true,
+      author: true,
       likes: true,
     },
   });
 
   const isLiked =
-    post?.likes?.some((like) => String(like.user_id) === String(userId)) ??
+    post?.likes?.some((like) => String(like.userId) === String(userId)) ??
     false;
 
   if (!post) {
@@ -58,13 +58,13 @@ export default async function PostPage({
 
       <div className="flex items-center text-sm py-4">
         <Link
-          href={`/profile/${post.users.id}`}
+          href={`/profile/${post.author.id}`}
           className="hover:text-zinc-700 hover:underline"
         >
-          {post.users.full_name}
+          {post.author.fullName}
         </Link>
         <span className="mx-2">/</span>
-        <span>{post.created_at?.toDateString()}</span>
+        <span>{post.createdAt?.toDateString()}</span>
       </div>
 
       <div className="mb-8">
@@ -72,7 +72,7 @@ export default async function PostPage({
       </div>
       <div>
         <Like
-          postId={post.post_id}
+          postId={post.id}
           likes={post.likeCount}
           liked={isLiked}
           userId={userId ?? ""}

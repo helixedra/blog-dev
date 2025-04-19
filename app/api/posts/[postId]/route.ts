@@ -6,8 +6,8 @@ export async function GET(
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
-  const post = await prisma.posts.findUnique({
-    where: { post_id: parseInt(postId) },
+  const post = await prisma.post.findUnique({
+    where: { id: parseInt(postId) },
     include: {
       likes: true,
     },
