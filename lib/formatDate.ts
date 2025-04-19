@@ -18,5 +18,25 @@ export function formatDate(date: Date) {
     minute: "2-digit",
   }).format(date);
 
-  return { dateTime: formattedDate, date: shortDate, time };
+  const ONE_MINUTE = 60000;
+  const ONE_HOUR = 3600000;
+  const ONE_DAY = 86400000;
+  const ONE_WEEK = 604800000;
+
+  const delta = Date.now() - date.getTime();
+
+  let timeAgo: string;
+  if (delta < ONE_MINUTE) {
+    timeAgo = "Just now";
+  } else if (delta < ONE_HOUR) {
+    timeAgo = `${Math.floor(delta / ONE_MINUTE)} minutes ago`;
+  } else if (delta < ONE_DAY) {
+    timeAgo = `${Math.floor(delta / ONE_HOUR)} hours ago`;
+  } else if (delta < ONE_WEEK) {
+    timeAgo = `${Math.floor(delta / ONE_DAY)} days ago`;
+  } else {
+    timeAgo = formattedDate;
+  }
+
+  return { dateTime: formattedDate, date: shortDate, time, timeAgo };
 }

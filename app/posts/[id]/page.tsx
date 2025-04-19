@@ -7,6 +7,9 @@ import Like from "@/components/posts/post/Like";
 import { auth } from "@clerk/nextjs/server";
 import { RiArrowLeftLine } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
+import { Textarea } from "@/components/shared/Textarea";
+import CommentForm from "@/components/posts/post/CommentForm";
+import Comments from "@/components/posts/post/Comments";
 
 export default async function PostPage({
   params,
@@ -83,6 +86,8 @@ export default async function PostPage({
           userId={{ userId: userId ?? "", id: userIdInt ?? 0 }}
         />
       </div>
+      <CommentForm postId={post.id} userId={userIdInt ?? 0} />
+      <Comments postId={post.id} />
     </div>
   );
 }

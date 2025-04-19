@@ -8,7 +8,7 @@ interface ButtonProps {
   disabled?: boolean;
   className?: string;
   variant?: "default" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

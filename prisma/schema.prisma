@@ -18,20 +18,18 @@ model Category {
 }
 
 model Comment {
-  id          Int       @id @default(autoincrement())
-  post        Post      @relation(fields: [postId], references: [id])
-  postId      Int
-  author      User?     @relation(fields: [userId], references: [id])
-  userId      Int?
-  authorName  String?   @db.VarChar(100)
-  authorEmail String?   @db.VarChar(100)
-  content     String
-  status      String?   @default("pending") @db.VarChar(20)
-  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @db.Timestamptz(6)
-  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
-  parentId    Int?
-  replies     Comment[] @relation("CommentReplies")
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int?
+  comment   String
+  status    String?   @default("pending") @db.VarChar(20)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  parentId  Int?
+  author    User?     @relation(fields: [userId], references: [id])
+  post      Post      @relation(fields: [postId], references: [id])
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
 
   @@index([postId])
   @@index([status])
