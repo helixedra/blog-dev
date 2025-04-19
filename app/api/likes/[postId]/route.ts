@@ -1,21 +1,39 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { auth } from '@clerk/nextjs/server';
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ postId: string }> }
 ) {
-
   try {
-    const { userId } = await request.json();
-    const postId = parseInt((await params).postId);
+    const { postId } = await params;
+    const { userId } = await auth();
+
+    const { userId: userIdFromRequest, id: idFromRequest } = await request.json();
+
+    if (!userIdFromRequest) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+    if (userId !== userIdFromRequest) {
+      return NextResponse.json(
+        { error: 'Wrong user request' },
+        { status: 401 }
+      );
+    }
+
+    const postIdInt = parseInt(postId);
+    const userIdInt = parseInt(idFromRequest);
 
     // Check if user has already liked this post
     const existingLike = await prisma.like.findUnique({
       where: {
-        postId_userId: {
-          postId,
-          userId,
+        postId_userId: { 
+          postId: postIdInt,
+          userId: userIdInt,
         },
       },
     });
@@ -25,15 +43,15 @@ export async function POST(
       await prisma.like.delete({
         where: {
           postId_userId: {
-            postId,
-            userId,
+            postId: postIdInt,
+            userId: userIdInt,
           },
         },
       });
 
       // Decrement the like count
       const post = await prisma.post.update({
-        where: { id: postId },
+        where: { id: postIdInt },
         data: { likeCount: { decrement: 1 } },
         select: { likeCount: true },
       });
@@ -46,14 +64,14 @@ export async function POST(
       // If not liked, add the like
       await prisma.like.create({
         data: {
-          postId,
-          userId,
+          postId: postIdInt,
+          userId: userIdInt,
         },
       });
 
       // Increment the like count
       const post = await prisma.post.update({
-        where: { id: postId },
+        where: { id: postIdInt },
         data: { likeCount: { increment: 1 } },
         select: { likeCount: true },
       });

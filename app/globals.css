@@ -34,3 +34,7 @@ pre {
     @apply text-base bg-gray-100 p-4 rounded my-4;
 }
 
+.cl-cardBox {
+    @apply shadow-none! border border-zinc-200;
+    transform: translateY(10%);
+}

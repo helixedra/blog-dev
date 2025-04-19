@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { Button } from "@/components/shared/Button";
 import { SignOutButton } from "@clerk/nextjs";
 

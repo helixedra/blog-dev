@@ -5,15 +5,23 @@ import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { RiLoader5Line } from "react-icons/ri";
+import { User } from "@/app/generated/prisma";
 
-export function UserProfileButton() {
+export function UserProfileButton({
+  user: userInitial,
+}: {
+  user: User | null;
+}) {
   const { userId } = useAuth();
 
   // User query
   const { data: user, isLoading } = useQuery({
     queryKey: ["user", userId],
+    initialData: userInitial,
+    enabled: !!userId, // Only run query if userId exists
     queryFn: async () => {
-      const userData = await api.get(`user/${userId}`);
+      if (!userId) return null;
+      const userData = await api.get(`/user/${userId}`);
       if (!userData.ok) {
         throw new Error("Failed to fetch user data");
       }
@@ -29,7 +37,10 @@ export function UserProfileButton() {
         </div>
       )}
       {user && (
-        <Link href={`/profile/${user?.id}`} className="flex items-center gap-2">
+        <Link
+          href={`/profile/${user?.username}`}
+          className="flex items-center gap-2"
+        >
           <div className="w-6 h-6">
             <Image
               src={user?.avatarUrl || ""}
@@ -40,7 +51,7 @@ export function UserProfileButton() {
             />
           </div>
           <div className="flex flex-col hover:underline">
-            <div>{user?.username}</div>
+            <div>{user?.fullName}</div>
           </div>
         </Link>
       )}

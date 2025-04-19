@@ -15,12 +15,14 @@ export default function EditProfile({ userId }: { userId: string }) {
     username: string;
     bio: string;
     avatarUrl: string;
+    fullName: string;
   } | null>(null);
 
   // Form refs
   const usernameRef = useRef<HTMLInputElement>(null);
   const bioRef = useRef<HTMLTextAreaElement>(null);
   const avatarRef = useRef<HTMLInputElement>(null);
+  const fullNameRef = useRef<HTMLInputElement>(null);
 
   // Query client
   const queryClient = useQueryClient();
@@ -44,6 +46,7 @@ export default function EditProfile({ userId }: { userId: string }) {
       username: string;
       bio: string;
       avatarUrl: string;
+      fullName: string;
     }) => {
       const response = await api.put(`user/${userId}`, data);
       if (!response.ok) {
@@ -83,6 +86,7 @@ export default function EditProfile({ userId }: { userId: string }) {
     if (!user) return;
 
     const username = usernameRef.current?.value || user.username;
+    const fullName = fullNameRef.current?.value || user.fullName;
     const bio = bioRef.current?.value || user.bio;
     const avatarUrl = avatarRef.current?.value || user.avatarUrl;
 
@@ -90,6 +94,7 @@ export default function EditProfile({ userId }: { userId: string }) {
       username,
       bio,
       avatarUrl: avatarUrl,
+      fullName,
     });
   };
 
@@ -122,6 +127,13 @@ export default function EditProfile({ userId }: { userId: string }) {
               placeholder="Username"
               defaultValue={user?.username ?? ""}
               ref={usernameRef}
+            />
+            <Input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              defaultValue={user?.fullName ?? ""}
+              ref={fullNameRef}
             />
             <Textarea name="bio" defaultValue={user?.bio ?? ""} ref={bioRef} />
             <Input

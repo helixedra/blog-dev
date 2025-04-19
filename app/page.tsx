@@ -8,7 +8,6 @@ import { auth } from "@clerk/nextjs/server";
 import PostList from "@/components/posts/PostList";
 import { User, Post } from "@/app/generated/prisma";
 import { api } from "@/lib/api";
-import SignOut from "@/components/profile/SignOut";
 
 export interface UserData {
   id: number;
@@ -60,10 +59,10 @@ export default async function Home() {
       return;
     }
 
-    await api.post("/api/posts/new", {
+    await api.post("/posts/new", {
       title,
       content,
-      author_id: user?.id,
+      authorId: user?.id,
     });
 
     redirect("/");
@@ -71,21 +70,27 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      <SignOut />
-      <div>{user && `Welcome, ${user?.username}!`}</div>
-      <AddPostForm>
-        <div className="bg-zinc-100/50 rounded">
-          <form action={handleSubmit} className="flex flex-col space-y-4 p-8">
-            <Input label="Title" name="title" type="text" required />
-            <Textarea name="content" label="Content" required rows={4} />
-            <Button type="submit">Post</Button>
-          </form>
-        </div>
-      </AddPostForm>
+      {user && (
+        <>
+          <div>Welcome, {user?.fullName}!</div>
+          <AddPostForm>
+            <div className="bg-zinc-100/50 rounded">
+              <form
+                action={handleSubmit}
+                className="flex flex-col space-y-4 p-8"
+              >
+                <Input label="Title" name="title" type="text" required />
+                <Textarea name="content" label="Content" required rows={4} />
+                <Button type="submit">Post</Button>
+              </form>
+            </div>
+          </AddPostForm>
+        </>
+      )}
       {posts.length > 0 ? (
         <PostList posts={posts as (Post & { author: User })[]} />
       ) : (
-        <div>No posts found</div>
+        <div className="text-zinc-400 text-center py-8">No posts found</div>
       )}
     </div>
   );

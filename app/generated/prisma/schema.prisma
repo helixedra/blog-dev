@@ -77,8 +77,8 @@ model Like {
   id        Int      @id @default(autoincrement())
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
-  user      User     @relation(fields: [id], references: [id])
-  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
   createdAt DateTime @default(now()) @db.Timestamptz(6)
 
   @@unique([postId, userId])
@@ -120,23 +120,17 @@ model User {
   isAdmin        Boolean?  @default(false)
   followingCount Int       @default(0)
   followersCount Int       @default(0)
-  following      User[]    @relation("UserFollows")
-  followers      User[]    @relation("UserFollows")
   comments       Comment[]
   posts          Post[]
   likes          Like[]
-  follows        Follow[]  @relation("Follower")
-  followings     Follow[]  @relation("Following")
+  follows        Follow[]
 }
 
 model Follow {
-  follower    User     @relation("Follower", fields: [followerId], references: [id])
-  followerId  Int
-  following   User     @relation("Following", fields: [followingId], references: [id])
-  followingId Int
-  createdAt   DateTime @default(now())
-
-  @@id([followerId, followingId])
-  @@index([followingId])
-  @@index([followerId])
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        Int      @unique
+  userFollowers Int[] // ID of users who follow this user
+  userFollows   Int[] // ID of users this user follows
+  createdAt     DateTime @default(now())
 }

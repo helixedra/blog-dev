@@ -8,13 +8,13 @@ export async function POST() {
     const user = await currentUser();
 
     if (!userId || !user) {
-      return NextResponse.json({ success: false, message: "Пользователь не найден" }, { status: 401 });
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 401 });
     }
 
     const existingUser = await prisma.user.findUnique({ where: { userId } });
 
     if (existingUser) {
-      return NextResponse.json({ success: true, message: "Пользователь уже зарегистрирован" });
+      return NextResponse.json({ success: true, message: "User already registered" });
     }
 
     let baseUsername = user.username || user.id.toString().replace("user_", "");
@@ -41,8 +41,8 @@ export async function POST() {
       },
     });
 
-    return NextResponse.json({ success: true, message: "Пользователь успешно зарегистрирован" });
+    return NextResponse.json({ success: true, message: "User successfully registered" });
   } catch (error) {
-    return NextResponse.json({ success: false, message: "Ошибка регистрации", error: error?.toString() }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Error registering user", error: error?.toString() }, { status: 500 });
   }
 }

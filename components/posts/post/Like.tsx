@@ -2,6 +2,7 @@
 import { Button } from "@/components/shared/Button";
 import React, { useState } from "react";
 import { RiHeartLine, RiHeartFill } from "react-icons/ri";
+import { api } from "@/lib/api";
 
 export default function Like({
   postId,
@@ -12,14 +13,12 @@ export default function Like({
   postId: number;
   likes: number;
   liked: boolean;
-  userId: string;
+  userId: { userId: string; id: number } | null;
 }) {
-  const initialUserState = userId ? false : true;
+  const initialUserState = userId?.id ? false : true;
   const [isToggled, setIsToggled] = useState(initialUserState);
   const [isLiked, setIsLiked] = useState(liked);
   const [likeCount, setLikeCount] = useState(likes);
-
-  const api = process.env.NEXT_PUBLIC_API_URL;
 
   const toggleLike = async () => {
     // Disable button while toggling
@@ -29,14 +28,9 @@ export default function Like({
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     // Try to toggle like
     try {
-      const res = await fetch(`${api}/api/likes/${postId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userId,
-        }),
+      const res = await api.post(`/likes/${postId}`, {
+        userId: userId?.userId,
+        id: userId?.id,
       });
       // Revert optimistic update if toggle fails
       if (!res.ok) {

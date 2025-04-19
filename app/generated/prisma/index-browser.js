@@ -203,8 +203,10 @@ exports.Prisma.UserScalarFieldEnum = {
 };
 
 exports.Prisma.FollowScalarFieldEnum = {
-  followerId: 'followerId',
-  followingId: 'followingId',
+  id: 'id',
+  userId: 'userId',
+  userFollowers: 'userFollowers',
+  userFollows: 'userFollows',
   createdAt: 'createdAt'
 };
 
