@@ -27,7 +27,7 @@ export default function CommentForm({
 
   const queryClient = useQueryClient();
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async ({
       comment,
       postId,
@@ -60,7 +60,7 @@ export default function CommentForm({
   };
   return (
     <div className="flex flex-col gap-2 rounded-md text-sm mb-4 mt-8 w-full text-zinc-500">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <Textarea
           name="comment"
           className="w-full bg-white"
@@ -81,7 +81,12 @@ export default function CommentForm({
               >
                 Cancel
               </Button>
-              <Button type="submit">Comment</Button>
+              <Button
+                type="submit"
+                disabled={comment.length === 0 || isPending}
+              >
+                Comment
+              </Button>
             </div>
           </div>
         )}

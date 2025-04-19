@@ -5,11 +5,11 @@ import PostListItem from "./PostListItem";
 export default function PostList({
   posts,
 }: {
-  posts: (Post & { author: User })[];
+  posts: (Post & { author: User; _count: { comments: number } })[];
 }) {
   return (
     <div>
-      {posts.map((post: Post & { author: User }) => (
+      {posts.map((post) => (
         <PostListItem key={post.id} post={post} user={post.author} />
       ))}
     </div>

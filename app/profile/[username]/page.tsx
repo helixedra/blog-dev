@@ -42,6 +42,14 @@ export default async function ProfilePage({
         userId: profileUser?.userId,
       },
     },
+    include: {
+      author: true,
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
   });
 
   const isOwner = profileUser?.userId === userId;

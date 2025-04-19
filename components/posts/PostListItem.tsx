@@ -4,7 +4,7 @@ import { User, Post } from "@/app/generated/prisma";
 import PostMeta from "./post/PostMeta";
 
 type PropTypes = {
-  post: Post;
+  post: Post & { _count: { comments: number } };
   user: User;
 };
 

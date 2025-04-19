@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { api } from "@/lib/api";
-import { RiLoader4Line } from "react-icons/ri";
+import Spinner from "@/components/shared/Spinner";
 export default function RegisterPage() {
   useEffect(() => {
     api.post("register", {}).then(async (res) => {
@@ -11,11 +11,5 @@ export default function RegisterPage() {
       }
     });
   }, []);
-  return (
-    <div className="flex items-center justify-center h-screen -mt-16">
-      <div className="animate-spin">
-        <RiLoader4Line size={48} />
-      </div>
-    </div>
-  );
+  return <Spinner />;
 }

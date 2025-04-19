@@ -10,7 +10,7 @@ import { User, Post } from "@/app/generated/prisma";
 import { formatDate } from "@/lib/formatDate";
 
 type PropTypes = {
-  post: Post;
+  post: Post & { _count: { comments: number } };
   user: User;
 };
 export default function PostMeta({ post, user }: PropTypes) {
@@ -35,7 +35,7 @@ export default function PostMeta({ post, user }: PropTypes) {
         </div>
         <div className="flex items-center">
           <RiChat1Line className="" />
-          <span className="ml-1 font-semibold">12</span>
+          <span className="ml-1 font-semibold">{post._count.comments}</span>
         </div>
       </div>
     </div>

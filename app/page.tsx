@@ -46,6 +46,11 @@ export default async function Home() {
   const posts = await prisma.post.findMany({
     include: {
       author: true,
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
     },
   });
 
@@ -88,7 +93,11 @@ export default async function Home() {
         </>
       )}
       {posts.length > 0 ? (
-        <PostList posts={posts as (Post & { author: User })[]} />
+        <PostList
+          posts={
+            posts as (Post & { author: User; _count: { comments: number } })[]
+          }
+        />
       ) : (
         <div className="text-zinc-400 text-center py-8">No posts found</div>
       )}
