@@ -4,9 +4,9 @@ import { z } from "zod";
 import { auth } from '@clerk/nextjs/server'
 
 const userSchema = z.object({
-    username: z.string().min(3).max(20),
+    username: z.string().min(3).max(50),
     bio: z.string().max(1000),
-    avatar_url: z.string().url(),
+    avatarUrl: z.string().url(),
 });
 
 export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
@@ -33,12 +33,13 @@ export async function PUT(request: NextRequest, { params }: { params: { userId: 
         }
 
         const { username, bio, avatarUrl } = await request.json();
+
         const validatedData = userSchema.safeParse({
             username,
             bio,
             avatarUrl,
         });
-
+   
         if (!validatedData.success) {
             return NextResponse.json({ error: "Invalid data" }, { status: 400 });
         }

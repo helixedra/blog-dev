@@ -34,7 +34,7 @@ export default function ProfileCard({
     initialData: initialUser,
   });
 
-  const date = new Date(user?.created_at);
+  const date = new Date(user?.createdAt);
   return (
     <div>
       <div className="relative h-38 rounded">
@@ -43,7 +43,7 @@ export default function ProfileCard({
           <Image
             width={120}
             height={120}
-            src={user?.avatar_url || ""}
+            src={user?.avatarUrl || ""}
             alt={user?.username || ""}
             className="rounded "
           />
@@ -52,7 +52,7 @@ export default function ProfileCard({
               <div className="text-2xl font-semibold truncate">
                 {user?.username}
               </div>
-              {isOwner && <EditProfile userId={user?.user_id} />}
+              {isOwner && <EditProfile userId={user?.userId} />}
             </div>
             <div className="flex gap-12 w-full">
               <div>
@@ -72,11 +72,18 @@ export default function ProfileCard({
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col items-start gap-2">
-          {user?.bio && <Markdown>{user?.bio}</Markdown>}
-        </div>
+        {user?.bio && (
+          <div className="flex flex-col items-start gap-2">
+            <Markdown>{user?.bio}</Markdown>
+          </div>
+        )}
       </div>
       <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
+        {userPosts.length === 0 && (
+          <div className="p-12 text-zinc-400 text-center w-full">
+            No posts yet
+          </div>
+        )}
         {userPosts.map((post) => (
           <PostListItem key={post.id} post={post} user={user as User} />
         ))}

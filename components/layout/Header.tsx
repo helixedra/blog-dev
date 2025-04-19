@@ -13,6 +13,7 @@ import Image from "next/image";
 import { User } from "@/app/generated/prisma";
 import Link from "next/link";
 import SignOut from "@/components/profile/SignOut";
+import { UserProfileButton } from "./UserProfileButton";
 
 export default async function Header() {
   const { userId } = await auth();
@@ -39,31 +40,11 @@ export default async function Header() {
       {user && (
         <div className="flex items-center gap-2">
           <SignedIn>
-            <UserProfileButton user={user as User} />
+            <UserProfileButton />
             <SignOut />
           </SignedIn>
         </div>
       )}
     </header>
-  );
-}
-export function UserProfileButton({ user }: { user: User }) {
-  return (
-    <div>
-      <Link href={`/profile/${user?.id}`} className="flex items-center gap-2">
-        <div className="w-6 h-6">
-          <Image
-            src={`${user?.avatarUrl}` || ""}
-            alt={user?.username || ""}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-        </div>
-        <div className="flex flex-col hover:underline">
-          <div>{user?.username}</div>
-        </div>
-      </Link>
-    </div>
   );
 }
