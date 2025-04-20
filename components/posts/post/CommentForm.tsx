@@ -4,15 +4,20 @@ import { Textarea } from "@/components/shared/Textarea";
 import { Button } from "@/components/shared/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { Comment } from "@/app/generated/prisma";
 
 export default function CommentForm({
   postId,
   userId,
   parentId,
+  commentId,
+  onClose,
 }: {
   postId: number;
   userId: number;
   parentId?: number;
+  commentId?: number;
+  onClose?: () => void;
 }) {
   const [actionVisibility, setActionVisibility] = React.useState(false);
   const [comment, setComment] = React.useState("");
@@ -20,6 +25,9 @@ export default function CommentForm({
   const handleCancel = () => {
     setActionVisibility(false);
     setComment("");
+    if (onClose) {
+      onClose();
+    }
   };
   const handleComment = () => {
     setActionVisibility(true);
@@ -54,12 +62,16 @@ export default function CommentForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     await mutateAsync({ comment, postId, userId, parentId });
     setActionVisibility(false);
     setComment("");
+    if (onClose) {
+      onClose();
+    }
   };
   return (
-    <div className="flex flex-col gap-2 rounded-md text-sm mb-4 mt-8 w-full text-zinc-500">
+    <div className="flex flex-col gap-2 rounded-md text-sm mb-4 w-full text-zinc-500">
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <Textarea
           name="comment"
@@ -69,7 +81,7 @@ export default function CommentForm({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
-        {actionVisibility && (
+        {(actionVisibility || onClose) && (
           <div className="flex items-center w-full justify-between gap-2">
             <div className="flex-1" />
             <div className="flex items-center gap-2">

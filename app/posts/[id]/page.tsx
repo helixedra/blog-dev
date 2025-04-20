@@ -87,7 +87,7 @@ export default async function PostPage({
         />
       </div>
       <CommentForm postId={post.id} userId={userIdInt ?? 0} />
-      <Comments postId={post.id} />
+      <Comments postId={post.id} userId={userIdInt ?? 0} />
     </div>
   );
 }
