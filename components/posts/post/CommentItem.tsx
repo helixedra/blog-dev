@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/formatDate";
 import { RiChat1Line, RiHeartLine } from "react-icons/ri";
 import { Button } from "@/components/shared/Button";
 import CommentForm from "./CommentForm";
+import LikeComment from "./LikeComment";
 
 type CommentTree = {
   id: number;
@@ -13,6 +14,7 @@ type CommentTree = {
   createdAt: Date;
   author: User;
   parentId?: number | null;
+  likes: number;
   children: CommentTree[];
 };
 
@@ -69,10 +71,7 @@ export default function CommentItem({
       {/*DEV IDS*/}
       <div>
         <div className="flex pl-7 mt-1 items-center gap-2">
-          <Button variant="ghost" size="xs" className="gap-1 text-zinc-500">
-            <RiHeartLine className="-mt-0.5" />
-            12
-          </Button>
+          <LikeComment commentId={id} userId={userId} likes={comment.likes} />
           <Button
             variant="ghost"
             size="xs"

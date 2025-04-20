@@ -12,6 +12,7 @@ type CommentTree = {
   createdAt: Date;
   author: User;
   parentId?: number | null;
+  likes: number;
   children: CommentTree[];
 };
 
@@ -46,6 +47,7 @@ export default function Comments({
         createdAt: comment.createdAt,
         author: comment.author,
         parentId: comment.parentId,
+        likes: comment.likeCount,
         children: [],
       };
     });
@@ -79,8 +81,6 @@ export default function Comments({
 
   // Build the comment tree
   const commentTree = buildCommentTree(comments?.comments || []);
-
-  console.log("Comment Tree:", commentTree);
 
   return (
     <div>

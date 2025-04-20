@@ -86,7 +86,9 @@ export default async function PostPage({
           userId={{ userId: userId ?? "", id: userIdInt ?? 0 }}
         />
       </div>
-      <CommentForm postId={post.id} userId={userIdInt ?? 0} />
+      <div className="mt-4 mb-8">
+        <CommentForm postId={post.id} userId={userIdInt ?? 0} />
+      </div>
       <Comments postId={post.id} userId={userIdInt ?? 0} />
     </div>
   );

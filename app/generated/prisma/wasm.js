@@ -133,7 +133,8 @@ exports.Prisma.CommentScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  parentId: 'parentId'
+  parentId: 'parentId',
+  likeCount: 'likeCount'
 };
 
 exports.Prisma.PostTagScalarFieldEnum = {
@@ -161,6 +162,13 @@ exports.Prisma.PostScalarFieldEnum = {
 exports.Prisma.LikeScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommentLikeScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
   userId: 'userId',
   createdAt: 'createdAt'
 };
@@ -230,6 +238,7 @@ exports.Prisma.ModelName = {
   PostTag: 'PostTag',
   Post: 'Post',
   Like: 'Like',
+  CommentLike: 'CommentLike',
   Setting: 'Setting',
   Tag: 'Tag',
   User: 'User',

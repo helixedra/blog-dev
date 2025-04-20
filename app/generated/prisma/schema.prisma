@@ -18,18 +18,20 @@ model Category {
 }
 
 model Comment {
-  id        Int       @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   postId    Int
   userId    Int?
   comment   String
-  status    String?   @default("pending") @db.VarChar(20)
-  createdAt DateTime  @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @db.Timestamptz(6)
+  status    String?       @default("pending") @db.VarChar(20)
+  createdAt DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime      @default(now()) @db.Timestamptz(6)
   parentId  Int?
-  author    User?     @relation(fields: [userId], references: [id])
-  post      Post      @relation(fields: [postId], references: [id])
-  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
-  replies   Comment[] @relation("CommentReplies")
+  author    User?         @relation(fields: [userId], references: [id])
+  post      Post          @relation(fields: [postId], references: [id])
+  likes     CommentLike[]
+  likeCount Int           @default(0)
+  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[]     @relation("CommentReplies")
 
   @@index([postId])
   @@index([status])
@@ -84,6 +86,19 @@ model Like {
   @@index([userId])
 }
 
+model CommentLike {
+  id        Int      @id @default(autoincrement())
+  commentId Int
+  userId    Int
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([commentId, userId])
+  @@index([commentId])
+  @@index([userId])
+}
+
 model Setting {
   id        Int       @id @default(autoincrement())
   key       String    @unique @db.VarChar(100)
@@ -104,24 +119,25 @@ model Tag {
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
-  userId         String    @unique @db.VarChar(100)
-  username       String    @unique @db.VarChar(50)
-  email          String    @unique @db.VarChar(100)
-  passwordHash   String    @db.VarChar(255)
-  fullName       String?   @db.VarChar(100)
+  id             Int           @id @default(autoincrement())
+  userId         String        @unique @db.VarChar(100)
+  username       String        @unique @db.VarChar(50)
+  email          String        @unique @db.VarChar(100)
+  passwordHash   String        @db.VarChar(255)
+  fullName       String?       @db.VarChar(100)
   bio            String?
-  avatarUrl      String?   @db.VarChar(255)
-  createdAt      DateTime? @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime? @default(now()) @db.Timestamptz(6)
-  isActive       Boolean?  @default(true)
-  isAdmin        Boolean?  @default(false)
-  followingCount Int       @default(0)
-  followersCount Int       @default(0)
+  avatarUrl      String?       @db.VarChar(255)
+  createdAt      DateTime?     @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime?     @default(now()) @db.Timestamptz(6)
+  isActive       Boolean?      @default(true)
+  isAdmin        Boolean?      @default(false)
+  followingCount Int           @default(0)
+  followersCount Int           @default(0)
   comments       Comment[]
   posts          Post[]
   likes          Like[]
   follows        Follow[]
+  commentLikes   CommentLike[]
 }
 
 model Follow {

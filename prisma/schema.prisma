@@ -28,6 +28,8 @@ model Comment {
   parentId  Int?
   author    User?     @relation(fields: [userId], references: [id])
   post      Post      @relation(fields: [postId], references: [id])
+  likes     CommentLike[]
+  likeCount Int       @default(0)
   parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[] @relation("CommentReplies")
 
@@ -84,6 +86,20 @@ model Like {
   @@index([userId])
 }
 
+model CommentLike {
+  id        Int      @id @default(autoincrement())
+  commentId    Int
+  userId    Int
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  comment      Comment     @relation(fields: [commentId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+
+  @@unique([commentId, userId])
+  @@index([commentId])
+  @@index([userId])
+}
+
+
 model Setting {
   id        Int       @id @default(autoincrement())
   key       String    @unique @db.VarChar(100)
@@ -122,6 +138,7 @@ model User {
   posts          Post[]
   likes          Like[]
   follows        Follow[]
+  commentLikes   CommentLike[]
 }
 
 model Follow {
