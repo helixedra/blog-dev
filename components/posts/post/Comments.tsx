@@ -2,18 +2,22 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Comment, User } from "@/app/generated/prisma";
+import { User, CommentLike } from "@/app/generated/prisma";
 import CommentItem from "./CommentItem";
 
-type CommentWithAuthor = Comment & { author: User };
-type CommentTree = {
+export type CommentWithAuthor = Comment & {
+  author: User;
+  likes: CommentLike[];
+};
+export type Comment = {
   id: number;
   comment: string;
   createdAt: Date;
   author: User;
   parentId?: number | null;
-  likes: number;
-  children: CommentTree[];
+  likeCount: number;
+  likes: CommentLike[];
+  children: Comment[];
 };
 
 export default function Comments({
@@ -36,8 +40,8 @@ export default function Comments({
 
   // Function to build a tree structure from flat comments and sort by date
   const buildCommentTree = (comments: CommentWithAuthor[]) => {
-    const commentMap: { [key: number]: CommentTree } = {};
-    const roots: CommentTree[] = [];
+    const commentMap: { [key: number]: Comment } = {};
+    const roots: Comment[] = [];
 
     // Initialize comment map with children array
     comments.forEach((comment) => {
@@ -47,7 +51,8 @@ export default function Comments({
         createdAt: comment.createdAt,
         author: comment.author,
         parentId: comment.parentId,
-        likes: comment.likeCount,
+        likeCount: comment.likeCount,
+        likes: comment.likes,
         children: [],
       };
     });
@@ -62,7 +67,7 @@ export default function Comments({
     });
 
     // Recursive sort function
-    const sortByDate = (nodes: CommentTree[]) => {
+    const sortByDate = (nodes: Comment[]) => {
       nodes.sort(
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -85,7 +90,7 @@ export default function Comments({
   return (
     <div>
       <h2>Comments</h2>
-      {commentTree?.map((comment: CommentTree) => (
+      {commentTree?.map((comment: Comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}

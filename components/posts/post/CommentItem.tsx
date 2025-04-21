@@ -1,22 +1,18 @@
+'use client";';
 import React from "react";
 import { User } from "@/app/generated/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/formatDate";
-import { RiChat1Line, RiHeartLine } from "react-icons/ri";
+import { RiChat1Line, RiHeartLine, RiDeleteBin7Line } from "react-icons/ri";
 import { Button } from "@/components/shared/Button";
 import CommentForm from "./CommentForm";
 import LikeComment from "./LikeComment";
+import { api } from "@/lib/api";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { Dialog } from "@/components/shared/Dialog";
 
-type CommentTree = {
-  id: number;
-  comment: string;
-  createdAt: Date;
-  author: User;
-  parentId?: number | null;
-  likes: number;
-  children: CommentTree[];
-};
+import { Comment } from "./Comments";
 
 export default function CommentItem({
   comment,
@@ -24,12 +20,14 @@ export default function CommentItem({
   postId,
   commentId,
 }: {
-  comment: CommentTree;
+  comment: Comment;
+  children?: Comment[];
   userId: number;
   postId: number;
   commentId?: number;
 }) {
   const [replayVisibility, setReplyVisibility] = React.useState(false);
+  const [deleteDialog, setDeleteDialog] = React.useState(false);
 
   const {
     author: { fullName, username, avatarUrl },
@@ -39,6 +37,39 @@ export default function CommentItem({
     parentId,
     children,
   } = comment;
+
+  // This will be used to invalidate the comments query after deletion
+  const queryClient = useQueryClient();
+  // Mutation to delete a comment
+  const deleteCommentMutation = useMutation({
+    mutationFn: async () => {
+      const res = await api.delete(`/comments/delete`, {
+        commentId: id,
+        userId,
+      });
+      if (!res.ok) {
+        throw new Error("Error deleting comment: " + res.statusText);
+      }
+    },
+    onSuccess: () => {
+      // Invalidate and refetch comments query to update the UI
+      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const handleDeleteApprove = async () => {
+    // Open delete confirmation dialog
+    setDeleteDialog(true);
+  };
+
+  // Function to handle comment deletion
+  const handleDelete = () => {
+    deleteCommentMutation.mutate();
+    setDeleteDialog(false);
+  };
 
   return (
     <div className="flex flex-col py-4 px-2">
@@ -70,17 +101,36 @@ export default function CommentItem({
       </div> */}
       {/*DEV IDS*/}
       <div>
-        <div className="flex pl-7 mt-1 items-center gap-2">
-          <LikeComment commentId={id} userId={userId} likes={comment.likes} />
-          <Button
-            variant="ghost"
-            size="xs"
-            className="gap-1 text-zinc-500"
-            onClick={() => setReplyVisibility((prev) => !prev)}
-          >
-            <RiChat1Line className="-mt-0.5" />
-            Reply
-          </Button>
+        <div className="flex pl-7 mt-1 items-center gap-2 w-full">
+          <LikeComment
+            commentId={id}
+            userId={userId}
+            likes={comment.likes}
+            likesCount={comment.likeCount}
+          />
+          {userId !== 0 && (
+            <Button
+              variant="ghost"
+              size="xs"
+              className="gap-1 text-zinc-500"
+              onClick={() => setReplyVisibility((prev) => !prev)}
+            >
+              <RiChat1Line className="-mt-0.5" />
+              Reply
+            </Button>
+          )}
+          <div className="flex items-center gap-1">
+            {comment.author.id === userId && (
+              <Button
+                variant="ghost"
+                size="xs"
+                className="gap-1 text-zinc-500"
+                onClick={handleDeleteApprove}
+              >
+                <RiDeleteBin7Line />
+              </Button>
+            )}
+          </div>
         </div>
         {replayVisibility && (
           <div className="mt-2 ml-6">
@@ -108,6 +158,27 @@ export default function CommentItem({
           ))}
         </div>
       )}
+      <Dialog
+        isOpen={deleteDialog}
+        onClose={() => setDeleteDialog(false)}
+        contentClassName="bg-white dark:bg-white max-w-98"
+        overlayClassName="bg-white dark:bg-black/10"
+      >
+        <Dialog.Content>
+          <div className="text-black text-md mb-8">
+            Are you sure you want to delete this comment?
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDeleteDialog(false)}>
+              Cancel
+            </Button>
+            <Button className="bg-red-700!" onClick={handleDelete}>
+              Delete
+            </Button>
+          </div>
+        </Dialog.Content>
+      </Dialog>
     </div>
   );
 }

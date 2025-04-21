@@ -6,18 +6,36 @@ export async function GET(
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
-
-  const comments = await prisma.comment.findMany({
-    where: {
-      postId: Number(postId), // Use Number only if postId is an integer in your Prisma schema
-    },
-    include: {
-      author: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return NextResponse.json({ comments });
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        postId: Number(postId), // Use Number only if postId is an integer in your Prisma schema
+      },
+      include: {
+        author: true,
+        likes: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                fullName: true,
+                username: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return NextResponse.json({ comments });
+  } catch (error) {
+    console.error("Error fetching comments:", (error as Error).message);
+    return NextResponse.json(
+      { error: "Failed to fetch comments" },
+      { status: 500 }
+    );
+  }
 }

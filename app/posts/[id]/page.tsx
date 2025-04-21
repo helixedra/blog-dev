@@ -7,9 +7,29 @@ import Like from "@/components/posts/post/Like";
 import { auth } from "@clerk/nextjs/server";
 import { RiArrowLeftLine } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
-import { Textarea } from "@/components/shared/Textarea";
 import CommentForm from "@/components/posts/post/CommentForm";
 import Comments from "@/components/posts/post/Comments";
+import { getUserIdentity } from "@/lib/userIdentity";
+import { PostStatus } from "@/components/posts/PostListItem";
+import { PostStatusType } from "@/components/posts/PostListItem";
+import { AdminApprove } from "@/components/posts/post/AdminApprove";
+
+export const changeStatus = async (formData: FormData): Promise<void> => {
+  "use server";
+  console.log("formData", formData);
+  try {
+    await prisma.post.update({
+      where: {
+        id: Number(formData.get("postId")),
+      },
+      data: {
+        status: formData.get("status") as string,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating post status:", (error as Error).message);
+  }
+};
 
 export default async function PostPage({
   params,
@@ -19,21 +39,15 @@ export default async function PostPage({
   const { id } = await params;
   const pageId = z.number().int().safeParse(Number(id.trim()));
   const { userId } = await auth();
+  const {
+    authStatus,
+    id: userIdentityId,
+    isAdmin,
+  } = await getUserIdentity(userId ?? "");
 
   if (!pageId.success) {
     return <div>Invalid id</div>;
   }
-  // Find user id (userId in Clerk is different from id in Prisma)
-  const registredUserId = await prisma.user.findUnique({
-    where: {
-      userId: userId ?? "",
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  const userIdInt = registredUserId?.id ?? null;
 
   const post = await prisma.post.findUnique({
     where: {
@@ -46,8 +60,9 @@ export default async function PostPage({
   });
 
   const isLiked =
-    post?.likes?.some((like) => String(like.userId) === String(userIdInt)) ??
-    false;
+    post?.likes?.some(
+      (like) => String(like.userId) === String(userIdentityId)
+    ) ?? false;
 
   if (!post) {
     return <div>Post not found</div>;
@@ -62,7 +77,12 @@ export default async function PostPage({
           <RiArrowLeftLine size={16} /> Posts
         </Link>
       </div>
-      <h1>{post.title}</h1>
+      <div className="flex gap-2 items-center">
+        <h1 className="flex items-center">{post.title}</h1>
+        {isAdmin && post.status && (
+          <PostStatus status={post.status as PostStatusType} />
+        )}
+      </div>
 
       <div className="flex items-center text-sm mb-4 mt-1  text-zinc-500">
         <Link
@@ -78,18 +98,28 @@ export default async function PostPage({
       <div className="mb-8">
         <Markdown>{post.content}</Markdown>
       </div>
-      <div>
+      <div className="flex items-center gap-2">
         <Like
           postId={post.id}
           likes={post.likeCount}
           liked={isLiked}
-          userId={{ userId: userId ?? "", id: userIdInt ?? 0 }}
+          userId={{ userId: userId ?? "", id: userIdentityId ?? 0 }}
         />
+        {post.status === "review" && (
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="text-sm text-zinc-500 mr-4">
+              This post is under review
+            </span>
+            <AdminApprove postId={post.id} action={changeStatus} />
+          </div>
+        )}
       </div>
       <div className="mt-4 mb-8">
-        <CommentForm postId={post.id} userId={userIdInt ?? 0} />
+        {userIdentityId && (
+          <CommentForm postId={post.id} userId={userIdentityId ?? 0} />
+        )}
       </div>
-      <Comments postId={post.id} userId={userIdInt ?? 0} />
+      <Comments postId={post.id} userId={userIdentityId ?? 0} />
     </div>
   );
 }
