@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { Follow, User } from "@/app/generated/prisma";
+import PostListItem from "@/components/posts/PostListItem";
 
 export default async function ProfilePage({
   params,
@@ -59,9 +60,18 @@ export default async function ProfilePage({
       <ProfileCard
         isOwner={isOwner}
         profileUser={profileUser as User & { follows: Follow[] }}
-        userPosts={userPosts}
         viewer={viewerData?.id}
       />
+      <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
+        {userPosts.length === 0 && (
+          <div className="p-12 text-zinc-400 text-center w-full">
+            No posts yet
+          </div>
+        )}
+        {userPosts.map((post) => (
+          <PostListItem key={post.id} post={post} user={profileUser as User} />
+        ))}
+      </div>
     </div>
   );
 }

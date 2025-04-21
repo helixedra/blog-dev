@@ -2,7 +2,7 @@ import React from "react";
 import { Post, User } from "@/app/generated/prisma";
 import PostListItem from "./PostListItem";
 import { auth } from "@clerk/nextjs/server";
-import { getUserIdentity } from "@/lib/userIdentity";
+import { getUserIdentity } from "@/lib/getUserIdentity";
 
 export default async function PostList({
   posts,

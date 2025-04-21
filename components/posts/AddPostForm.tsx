@@ -6,7 +6,7 @@ import { RiAddFill, RiQuillPenAiFill, RiCloseFill } from "react-icons/ri";
 export default function AddPostForm({
   children,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   const [visible, setVisible] = React.useState(false);
   return (

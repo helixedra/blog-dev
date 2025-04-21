@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import SignOut from "@/components/profile/SignOut";
 import { UserProfileButton } from "./UserProfileButton";
+import ActionButtons from "./ActionButtons";
 
 export default async function Header() {
   const { userId } = await auth();
@@ -23,6 +24,7 @@ export default async function Header() {
       <div className="font-bold text-2xl hover:opacity-70">
         <Link href="/">{`R＆W`}</Link>
       </div>
+      <ActionButtons />
       <SignedOut>
         <SignInButton>
           <Button variant="ghost">Sign In</Button>

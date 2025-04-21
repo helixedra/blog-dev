@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserIdentity } from "@/lib/userIdentity";
+import { getUserIdentity } from "@/lib/getUserIdentity";
 
 export async function DELETE(request: NextRequest) {
   const { commentId, userId } = await request.json();

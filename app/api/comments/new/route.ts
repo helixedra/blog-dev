@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserIdentity } from "@/lib/userIdentity";
+import { getUserIdentity } from "@/lib/getUserIdentity";
 import { z } from "zod";
 
 const commentSchema = z.object({

@@ -24,6 +24,7 @@ interface AccessibleTextareaProps {
   rows?: number;
   className?: string;
   placeholder?: string;
+  maxLength?: number;
 }
 
 export const Textarea = forwardRef<
@@ -43,6 +44,8 @@ export const Textarea = forwardRef<
       onBlur,
       rows = 1,
       className,
+      placeholder,
+      maxLength,
       ...props
     },
     ref
@@ -86,15 +89,17 @@ export const Textarea = forwardRef<
           onBlur={onBlur}
           disabled={disabled}
           rows={rows}
+          placeholder={placeholder}
+          maxLength={maxLength}
           className={twMerge(
+            className,
             Theme.border,
             Theme.px,
             Theme.py,
             "text-black resize-none overflow-hidden block w-full",
             Theme.borderRadius,
             Theme.textSize,
-            disabled ? "bg-gray-50 cursor-not-allowed" : "",
-            className || ""
+            disabled ? "bg-gray-50 cursor-not-allowed" : ""
           )}
           {...props}
         />
@@ -115,9 +120,9 @@ export function Label({
   name: string;
 }) {
   return (
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+    <label htmlFor={name} className="block text-sm font-medium text-zinc-400">
       {label}
-      {required && <span className="text-red-500">*</span>}
+      {/* {required && <span className="text-red-500">*</span>} */}
     </label>
   );
 }

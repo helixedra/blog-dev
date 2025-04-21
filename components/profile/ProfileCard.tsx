@@ -5,18 +5,16 @@ import Image from "next/image";
 import EditProfile from "./EditProfile";
 import { formatDate } from "@/lib/formatDate";
 import Markdown from "react-markdown";
-import PostListItem from "@/components/posts/PostListItem";
+
 import FollowProfile from "./FollowProfile";
 
 export default function ProfileCard({
   profileUser,
   isOwner,
-  userPosts,
   viewer,
 }: {
   profileUser: User & { follows: Follow[] };
   isOwner: boolean;
-  userPosts: any[];
   viewer: number | undefined;
 }) {
   const isFollowing =
@@ -89,16 +87,6 @@ export default function ProfileCard({
             <Markdown>{profileUser?.bio}</Markdown>
           </div>
         )}
-      </div>
-      <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
-        {userPosts.length === 0 && (
-          <div className="p-12 text-zinc-400 text-center w-full">
-            No posts yet
-          </div>
-        )}
-        {userPosts.map((post) => (
-          <PostListItem key={post.id} post={post} user={profileUser as User} />
-        ))}
       </div>
     </div>
   );

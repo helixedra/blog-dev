@@ -9,7 +9,7 @@ import { RiArrowLeftLine } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
 import CommentForm from "@/components/posts/post/CommentForm";
 import Comments from "@/components/posts/post/Comments";
-import { getUserIdentity } from "@/lib/userIdentity";
+import { getUserIdentity } from "@/lib/getUserIdentity";
 import { PostStatus } from "@/components/posts/PostListItem";
 import { PostStatusType } from "@/components/posts/PostListItem";
 import { AdminApprove } from "@/components/posts/post/AdminApprove";

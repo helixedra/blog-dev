@@ -75,7 +75,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      {user && (
+      {/* {user && (
         <>
           <div>Welcome, {user?.fullName}!</div>
           <AddPostForm>
@@ -91,7 +91,7 @@ export default async function Home() {
             </div>
           </AddPostForm>
         </>
-      )}
+      )} */}
       {posts.length > 0 ? (
         <PostList
           posts={
