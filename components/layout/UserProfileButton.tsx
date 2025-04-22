@@ -23,7 +23,7 @@ export function UserProfileButton({ user }: { user: User | null }) {
               alt={user?.username || ""}
               width={40}
               height={40}
-              className="rounded-full"
+              className="rounded-full bg-zinc-200"
             />
           </div>
           <div className="flex flex-col hover:underline">
