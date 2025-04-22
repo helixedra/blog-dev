@@ -1,45 +1,26 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Button } from "../shared/Button";
 import { RiEdit2Line } from "react-icons/ri";
 import { Dialog } from "../shared/Dialog";
 import { Input } from "../shared/Input";
 import { Textarea } from "../shared/Textarea";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { User } from "@/app/generated/prisma";
 
-export default function EditProfile({ userId }: { userId: string }) {
+export default function EditProfile({
+  userId,
+  user,
+}: {
+  userId: number;
+  user: User;
+}) {
   // Dialog trigger state
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<{
-    username: string;
-    bio: string;
-    avatarUrl: string;
-    fullName: string;
-  } | null>(null);
 
-  // Form refs
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const bioRef = useRef<HTMLTextAreaElement>(null);
-  const avatarRef = useRef<HTMLInputElement>(null);
-  const fullNameRef = useRef<HTMLInputElement>(null);
-
-  // Query client
-  const queryClient = useQueryClient();
-
-  // User query
-  const { data: userData } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: async () => {
-      const userData = await api.get(`user/${userId}`);
-      if (!userData.ok) {
-        throw new Error("Failed to fetch user data");
-      }
-      const userDataJson = await userData.json();
-      setUser(userDataJson);
-      return userDataJson;
-    },
-  });
+  const router = useRouter();
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: {
@@ -56,14 +37,11 @@ export default function EditProfile({ userId }: { userId: string }) {
       return response.json();
     },
     onSuccess: (data) => {
-      // invalidate query to update data
-      queryClient.invalidateQueries({ queryKey: ["user", userId] });
-
-      // update local state
-      setUser(data);
-
       // close dialog
       setIsOpen(false);
+
+      // redirect to profile
+      router.push(`/profile/${data.username}`);
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -83,18 +61,18 @@ export default function EditProfile({ userId }: { userId: string }) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!user) return;
+    const formData = new FormData(e.currentTarget);
 
-    const username = usernameRef.current?.value || user.username;
-    const fullName = fullNameRef.current?.value || user.fullName;
-    const bio = bioRef.current?.value || user.bio;
-    const avatarUrl = avatarRef.current?.value || user.avatarUrl;
+    const username = formData.get("username");
+    const fullName = formData.get("fullName");
+    const bio = formData.get("bio");
+    const avatarUrl = formData.get("avatarUrl");
 
     mutate({
-      username,
-      bio,
-      avatarUrl: avatarUrl,
-      fullName,
+      username: username as string,
+      fullName: fullName as string,
+      bio: bio as string,
+      avatarUrl: avatarUrl as string,
     });
   };
 
@@ -120,28 +98,30 @@ export default function EditProfile({ userId }: { userId: string }) {
               {error instanceof Error ? error.message : "An error occurred"}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
-              type="text"
               name="username"
-              placeholder="Username"
-              defaultValue={user?.username ?? ""}
-              ref={usernameRef}
+              defaultValue={user?.username || ""}
+              // onChange={(e) => setUsername(e.target.value)}
+              label="Username"
             />
             <Input
-              type="text"
               name="fullName"
-              placeholder="Full Name"
-              defaultValue={user?.fullName ?? ""}
-              ref={fullNameRef}
+              defaultValue={user?.fullName || ""}
+              // onChange={(e) => setFullName(e.target.value)}
+              label="Full Name"
             />
-            <Textarea name="bio" defaultValue={user?.bio ?? ""} ref={bioRef} />
+            <Textarea
+              name="bio"
+              defaultValue={user?.bio || ""}
+              // onChange={(e) => setBio(e.target.value)}
+              label="Bio"
+            />
             <Input
-              type="text"
               name="avatarUrl"
-              placeholder="Avatar URL"
-              defaultValue={user?.avatarUrl ?? ""}
-              ref={avatarRef}
+              defaultValue={user?.avatarUrl || ""}
+              // onChange={(e) => setAvatarUrl(e.target.value)}
+              label="Avatar URL"
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? "Saving..." : "Save"}

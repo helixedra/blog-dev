@@ -16,16 +16,16 @@ main {
 }
 
 h1 {
-    @apply text-3xl leading-tight;
-    font-weight: 600;
+    @apply text-2xl leading-tight;
+    font-weight: 500;
 }
 h2 {
-    @apply text-2xl leading-tight;
-    font-weight: 600;
+    @apply text-xl leading-tight tracking-tight;
+    font-weight: 500;
 }
 h3 {
-    @apply text-xl leading-tight;
-    font-weight: 600;
+    @apply text-lg leading-tight tracking-tight;
+    font-weight: 500;
 }
 p {
     @apply text-base py-2;

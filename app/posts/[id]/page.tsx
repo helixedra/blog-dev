@@ -79,7 +79,7 @@ export default async function PostPage({
       </div>
       <div className="flex gap-2 items-center">
         <h1 className="flex items-center">{post.title}</h1>
-        {isAdmin && post.status && (
+        {(isAdmin || post.authorId === userIdentityId) && (
           <PostStatus status={post.status as PostStatusType} />
         )}
       </div>
@@ -105,7 +105,7 @@ export default async function PostPage({
           liked={isLiked}
           userId={{ userId: userId ?? "", id: userIdentityId ?? 0 }}
         />
-        {post.status === "review" && (
+        {isAdmin && post.status === "review" && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-sm text-zinc-500 mr-4">
               This post is under review

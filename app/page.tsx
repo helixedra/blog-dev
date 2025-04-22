@@ -54,24 +54,24 @@ export default async function Home() {
     },
   });
 
-  async function handleSubmit(formData: FormData) {
-    "use server";
+  // async function handleSubmit(formData: FormData) {
+  //   "use server";
 
-    const title = formData.get("title");
-    const content = formData.get("content");
+  //   const title = formData.get("title");
+  //   const content = formData.get("content");
 
-    if (!title || !content) {
-      return;
-    }
+  //   if (!title || !content) {
+  //     return;
+  //   }
 
-    await api.post("/posts/new", {
-      title,
-      content,
-      authorId: user?.id,
-    });
+  //   await api.post("/posts/new", {
+  //     title,
+  //     content,
+  //     authorId: user?.id,
+  //   });
 
-    redirect("/");
-  }
+  //   redirect("/");
+  // }
 
   return (
     <div className="flex flex-col">

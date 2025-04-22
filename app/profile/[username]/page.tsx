@@ -1,9 +1,10 @@
 import React from "react";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import ProfileCard from "@/components/profile/ProfileCard";
-import { Follow, User } from "@/app/generated/prisma";
 import PostListItem from "@/components/posts/PostListItem";
+import { auth } from "@clerk/nextjs/server";
+import { Follow, User } from "@/app/generated/prisma";
+import { getUserIdentity } from "@/lib/getUserIdentity";
 
 export default async function ProfilePage({
   params,
@@ -12,6 +13,7 @@ export default async function ProfilePage({
 }) {
   const { username } = await params;
   const { userId } = await auth();
+  const { id: userIdentityId, isAdmin } = await getUserIdentity(userId ?? "");
 
   const viewerData = userId
     ? await prisma.user.findUnique({
@@ -68,8 +70,14 @@ export default async function ProfilePage({
             No posts yet
           </div>
         )}
-        {userPosts.map((post) => (
-          <PostListItem key={post.id} post={post} user={profileUser as User} />
+        {userPosts.reverse().map((post) => (
+          <PostListItem
+            key={post.id}
+            post={post}
+            user={profileUser as User}
+            isOwner={isOwner}
+            isAdmin={isAdmin}
+          />
         ))}
       </div>
     </div>

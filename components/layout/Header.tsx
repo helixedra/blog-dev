@@ -1,6 +1,11 @@
 import React from "react";
 import { Button } from "../shared/Button";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+} from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
@@ -20,7 +25,7 @@ export default async function Header() {
     : false;
 
   return (
-    <header className="flex justify-between items-center p-4 gap-4 h-16">
+    <header className="flex justify-between items-center p-4 gap-4 h-16 relative">
       <div className="font-bold text-2xl hover:opacity-70">
         <Link href="/">{`R＆W`}</Link>
       </div>
@@ -31,10 +36,9 @@ export default async function Header() {
         </SignInButton>
       </SignedOut>
       {user && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative">
           <SignedIn>
             <UserProfileButton user={user} />
-            <SignOut />
           </SignedIn>
         </div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "../shared/Button";
-import { RiAddFill, RiQuillPenAiFill, RiCloseFill } from "react-icons/ri";
+import { RiQuillPenAiFill, RiCloseFill } from "react-icons/ri";
 
 export default function AddPostForm({
   children,

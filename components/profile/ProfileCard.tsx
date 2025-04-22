@@ -50,7 +50,7 @@ export default function ProfileCard({
               </div>
 
               {isOwner ? (
-                <EditProfile userId={profileUser?.userId} />
+                <EditProfile userId={profileUser?.id} user={profileUser} />
               ) : (
                 <FollowProfile
                   userId={profileUser?.id}
