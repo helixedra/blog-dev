@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/formatDate";
 import Markdown from "react-markdown";
 
 import FollowProfile from "./FollowProfile";
+import Avatar from "./Avatar";
 
 export default function ProfileCard({
   profileUser,
@@ -31,12 +32,9 @@ export default function ProfileCard({
     <div>
       <div className="relative h-38 rounded">
         <div className="flex items-end">
-          <Image
-            width={120}
-            height={120}
-            src={profileUser?.avatarUrl || ""}
-            alt={profileUser?.fullName || ""}
-            className="rounded "
+          <Avatar
+            url={profileUser?.avatarUrl || ""}
+            username={profileUser?.username || ""}
           />
           <div className="px-6 w-full">
             <div className="flex justify-between mb-2 border-b border-zinc-200 pb-4">

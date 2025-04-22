@@ -22,9 +22,9 @@ export function UserProfileButton({ user }: { user: User | null }) {
             <Image
               src={user?.avatarUrl || ""}
               alt={user?.username || ""}
-              width={40}
-              height={40}
-              className="rounded-full bg-zinc-200"
+              width={80}
+              height={80}
+              className="rounded-full bg-zinc-200 object-cover w-6 h-6"
             />
           </div>
           <div className="flex flex-col hover:underline">
