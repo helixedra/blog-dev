@@ -1,29 +1,26 @@
 "use client";
-import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
-import prisma from "@/lib/prisma";
+import { api } from "@/lib/api";
+import { useAuth } from "@clerk/nextjs";
 
-export const useUserData = (userId: string) => {
-  const { userId: authUserId } = useAuth();
-
-  const { data } = useQuery({
-    queryKey: ["user", authUserId],
+export const useUserData = () => {
+  const { userId } = useAuth();
+  // query to get user data by userId
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user", userId],
     queryFn: async () => {
-      const response = await prisma.user.findUnique({
-        where: {
-          userId: authUserId ?? undefined,
-        },
-        select: {
-          id: true,
-        },
-      });
-      return response;
+      const response = await api.get(`/user/${userId}`);
+      return response.json();
     },
-    enabled: !!authUserId,
+    enabled: !!userId,
+    refetchOnWindowFocus: false,
   });
 
-  const registeredUserId = Number(data?.id) === Number(userId);
-  const isRegisteredUser = !!data?.id;
-
-  return { registeredUserId, isRegisteredUser };
+  return {
+    registeredUserId: data?.id,
+    isRegisteredUser: !!data?.id,
+    data,
+    isLoading,
+    error,
+  };
 };

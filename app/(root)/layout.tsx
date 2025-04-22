@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Inconsolata } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import QueryProvider from "@/components/QueryProvider";
-import { ClerkProvider, SignIn, SignUp } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/layout/Header";
 
 const inter = Inter({

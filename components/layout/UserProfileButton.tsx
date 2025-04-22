@@ -10,6 +10,7 @@ import { createPortal } from "react-dom";
 export function UserProfileButton({ user }: { user: User | null }) {
   const [showDropdown, setShowDropdown] = React.useState(false);
   const { signOut } = useClerk();
+
   return (
     <div>
       {user && (

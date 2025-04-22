@@ -11,21 +11,36 @@ const userSchema = z.object({
 });
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
-
     const { userId } = await params;
-    
+
     try {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: Number(userId),
-        },
-    });
-    return NextResponse.json(user);
+        let user = null;
+
+        if (!isNaN(Number(userId))) {
+            user = await prisma.user.findUnique({
+                where: {
+                    id: Number(userId),
+                },
+            });
+        }
+
+        if (!user) {
+            user = await prisma.user.findUnique({
+                where: {
+                    userId: String(userId),
+                },
+            });
+        }
+
+        if (!user) {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+
+        return NextResponse.json(user);
     } catch (error) {
         console.error('Error fetching user:', (error as any).message);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
-    
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { userId: string } }) {

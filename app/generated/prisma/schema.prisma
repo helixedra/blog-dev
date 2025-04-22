@@ -123,7 +123,6 @@ model User {
   userId         String        @unique @db.VarChar(100)
   username       String        @unique @db.VarChar(50)
   email          String        @unique @db.VarChar(100)
-  passwordHash   String        @db.VarChar(255)
   fullName       String?       @db.VarChar(100)
   bio            String?
   avatarUrl      String?       @db.VarChar(255)
