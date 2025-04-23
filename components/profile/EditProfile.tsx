@@ -26,7 +26,6 @@ export default function EditProfile({
     mutationFn: async (data: {
       username: string;
       bio: string;
-      avatarUrl: string;
       fullName: string;
     }) => {
       const response = await api.put(`user/${userId}`, data);
@@ -66,13 +65,11 @@ export default function EditProfile({
     const username = formData.get("username");
     const fullName = formData.get("fullName");
     const bio = formData.get("bio");
-    const avatarUrl = formData.get("avatarUrl");
 
     mutate({
       username: username as string,
       fullName: fullName as string,
       bio: bio as string,
-      avatarUrl: avatarUrl as string,
     });
   };
 
@@ -116,12 +113,6 @@ export default function EditProfile({
               defaultValue={user?.bio || ""}
               // onChange={(e) => setBio(e.target.value)}
               label="Bio"
-            />
-            <Input
-              name="avatarUrl"
-              defaultValue={user?.avatarUrl || ""}
-              // onChange={(e) => setAvatarUrl(e.target.value)}
-              label="Avatar URL"
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? "Saving..." : "Save"}

@@ -7,7 +7,6 @@ const userSchema = z.object({
     username: z.string().min(3).max(50),
     fullName: z.string().min(3).max(100),
     bio: z.string().max(1000),
-    avatarUrl: z.string().url(),
 });
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
@@ -58,7 +57,6 @@ export async function PUT(request: NextRequest, { params }: { params: { userId: 
         username,
         fullName,
         bio,
-        avatarUrl,
     });
 
     if (!validatedData.success) {
@@ -74,7 +72,6 @@ export async function PUT(request: NextRequest, { params }: { params: { userId: 
                 username,
                 fullName,
                 bio,
-                avatarUrl,
             },
         });
 

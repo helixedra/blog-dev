@@ -5,7 +5,7 @@ import Markdown from "react-markdown";
 import Link from "next/link";
 import Like from "@/components/posts/post/Like";
 import { auth } from "@clerk/nextjs/server";
-import { RiArrowLeftLine } from "react-icons/ri";
+// import { RiArrowLeftLine } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
 import CommentForm from "@/components/posts/post/CommentForm";
 import Comments from "@/components/posts/post/Comments";
@@ -13,10 +13,11 @@ import { getUserIdentity } from "@/lib/getUserIdentity";
 import { PostStatus } from "@/components/posts/PostListItem";
 import { PostStatusType } from "@/components/posts/PostListItem";
 import { AdminApprove } from "@/components/posts/post/AdminApprove";
+import EditPostButton from "@/components/posts/post/EditPostButton";
 
 export const changeStatus = async (formData: FormData): Promise<void> => {
   "use server";
-  console.log("formData", formData);
+
   try {
     await prisma.post.update({
       where: {
@@ -39,11 +40,10 @@ export default async function PostPage({
   const { id } = await params;
   const pageId = z.number().int().safeParse(Number(id.trim()));
   const { userId } = await auth();
-  const {
-    authStatus,
-    id: userIdentityId,
-    isAdmin,
-  } = await getUserIdentity(userId ?? "");
+
+  const { id: userIdentityId, isAdmin } = await getUserIdentity(
+    String(userId ?? "")
+  );
 
   if (!pageId.success) {
     return <div>Invalid id</div>;
@@ -69,14 +69,6 @@ export default async function PostPage({
   }
   return (
     <div>
-      <div className="flex items-center text-sm py-4">
-        <Link
-          href="/"
-          className="flex items-center gap-1 hover:text-zinc-700 hover:underline"
-        >
-          <RiArrowLeftLine size={16} /> Posts
-        </Link>
-      </div>
       <div className="flex gap-2 items-center">
         <h1 className="flex items-center">{post.title}</h1>
         {(isAdmin || post.authorId === userIdentityId) && (
@@ -99,12 +91,17 @@ export default async function PostPage({
         <Markdown>{post.content}</Markdown>
       </div>
       <div className="flex items-center gap-2">
-        <Like
-          postId={post.id}
-          likes={post.likeCount}
-          liked={isLiked}
-          userId={{ userId: userId ?? "", id: userIdentityId ?? 0 }}
-        />
+        {post.status === "published" && (
+          <Like
+            postId={post.id}
+            likes={post.likeCount}
+            liked={isLiked}
+            userId={{ userId: userId ?? "", id: userIdentityId ?? 0 }}
+          />
+        )}
+        {userIdentityId && post.status === "draft" && (
+          <EditPostButton postId={post.id} userId={userIdentityId ?? 0} />
+        )}
         {isAdmin && post.status === "review" && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-sm text-zinc-500 mr-4">
@@ -115,11 +112,13 @@ export default async function PostPage({
         )}
       </div>
       <div className="mt-4 mb-8">
-        {userIdentityId && (
+        {userIdentityId && post.status === "published" && (
           <CommentForm postId={post.id} userId={userIdentityId ?? 0} />
         )}
       </div>
-      <Comments postId={post.id} userId={userIdentityId ?? 0} />
+      {post.status === "published" && (
+        <Comments postId={post.id} userId={userIdentityId ?? 0} />
+      )}
     </div>
   );
 }

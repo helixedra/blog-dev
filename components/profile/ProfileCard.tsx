@@ -36,7 +36,7 @@ export default function ProfileCard({
             url={profileUser?.avatarUrl || ""}
             username={profileUser?.username || ""}
           />
-          <div className="px-6 w-full">
+          <div className="ml-6 w-full">
             <div className="flex justify-between mb-2 border-b border-zinc-200 pb-4">
               <div className="">
                 <div className="text-2xl font-semibold">

@@ -10,7 +10,8 @@ interface ButtonProps {
   variant?: "default" | "outline" | "ghost";
   size?: "xs" | "sm" | "md" | "lg";
   name?: string;
-  [key: string]: any; // Allow any other props  
+  value?: string;
+  [key: string]: any; // Allow any other props
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -24,6 +25,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "default",
       size = "md",
       name,
+      value,
       ...props
     },
     ref
@@ -40,6 +42,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onClick={onClick}
         disabled={disabled}
         name={name}
+        value={value}
         className={`${variants[variant as keyof typeof variants]} ${
           Theme.ButtonSize[size as keyof typeof Theme.ButtonSize]
         } inline-flex items-center justify-center cursor-pointer ${
