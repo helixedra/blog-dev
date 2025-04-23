@@ -26,7 +26,7 @@ export default function EditPostButton({
       throw new Error(errorData.error || "Failed to delete post");
     }
 
-    router.back();
+    router.push("/");
   };
   return (
     <>
