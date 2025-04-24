@@ -14,7 +14,7 @@ export default function NotificationsButton() {
   const { data: notifications } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () =>
-      await api.get("/notifications").then((res) => res.json()),
+      await api.get("notifications").then((res) => res.json()),
     enabled: !!userId,
   });
 

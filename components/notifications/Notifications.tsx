@@ -32,7 +32,8 @@ export default function Notifications() {
 
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
-    queryFn: () => api.get("/notifications").then((res) => res.json()),
+    queryFn: () => api.get("notifications").then((res) => res.json()),
+    enabled: !!userId,
   });
 
   return (
