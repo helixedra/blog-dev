@@ -8,6 +8,7 @@ import Markdown from "react-markdown";
 
 import FollowProfile from "./FollowProfile";
 import Avatar from "./Avatar";
+import { useAuth } from "@clerk/nextjs";
 
 export default function ProfileCard({
   profileUser,
@@ -18,6 +19,9 @@ export default function ProfileCard({
   isOwner: boolean;
   viewer: number | undefined;
 }) {
+  const { userId } = useAuth();
+  const isRegistred = !!userId;
+
   const isFollowing =
     !!viewer && profileUser?.follows?.[0]?.userFollowers.includes(viewer);
 
@@ -50,14 +54,16 @@ export default function ProfileCard({
               {isOwner ? (
                 <EditProfile userId={profileUser?.id} user={profileUser} />
               ) : (
-                <FollowProfile
-                  userId={profileUser?.id}
-                  viewer={viewer || 0}
-                  isFollowing={isFollowingState}
-                  setIsFollowing={setIsFollowingState}
-                  followersCount={followersCountState}
-                  setFollowersCount={setFollowersCountState}
-                />
+                isRegistred && (
+                  <FollowProfile
+                    userId={profileUser?.id}
+                    viewer={viewer || 0}
+                    isFollowing={isFollowingState}
+                    setIsFollowing={setIsFollowingState}
+                    followersCount={followersCountState}
+                    setFollowersCount={setFollowersCountState}
+                  />
+                )
               )}
             </div>
             <div className="flex gap-12 w-full">

@@ -13,6 +13,7 @@ export default async function NewPostPage() {
   // If not, redirect to sign in page
   if (!userId) {
     redirect("/sign-in");
+    return null;
   }
 
   return (

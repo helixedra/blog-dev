@@ -7,6 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { RiUserFollowFill } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 interface NotificationData extends Notification {
   relatedUser: User | null;
@@ -15,11 +17,20 @@ interface NotificationData extends Notification {
 }
 
 export default function NotificationsPage() {
-  const {
-    data: notifications,
-    isLoading,
-    error,
-  } = useQuery({
+  const router = useRouter();
+  const { userId } = useAuth();
+
+  React.useEffect(() => {
+    if (!userId) {
+      router.push("/sign-in");
+    }
+  }, [userId, router]);
+
+  if (!userId) {
+    return null;
+  }
+
+  const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: () => api.get("/notifications").then((res) => res.json()),
   });
