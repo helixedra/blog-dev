@@ -9,7 +9,7 @@ export const useUserData = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["user", userId],
     queryFn: async () => {
-      const response = await api.get(`/user/${userId}`);
+      const response = await api.get(`/user`);
       return response.json();
     },
     enabled: !!userId,

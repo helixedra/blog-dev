@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getUserIdentity } from "@/lib/getUserIdentity";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 export async function DELETE(request: NextRequest) {
+  const { userId: authenticatedUserId } = await getAuthenticatedUser();
   const { commentId, userId } = await request.json();
 
-  const { id: userIdFromRequest } = await getUserIdentity(String(userId));
-
-  // If userIdFromRequest is null, it means the user is not authenticated
   // Check if the user is the same as the one in the request
-  if (!userIdFromRequest && userIdFromRequest !== userId) {
-    return NextResponse.json({ error: "Authorization error" }, { status: 401 });
+  if (!authenticatedUserId || authenticatedUserId !== userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Check if the comment exists

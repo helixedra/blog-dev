@@ -40,7 +40,6 @@ export default async function UserRegistration() {
           fullName: `${user.firstName || ""} ${user.lastName || ""}`,
           username,
           email: user.emailAddresses[0]?.emailAddress || "",
-          passwordHash: "",
           isActive: true,
           isAdmin: false,
           avatarUrl: user.imageUrl || "",

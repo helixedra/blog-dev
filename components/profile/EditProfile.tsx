@@ -26,11 +26,12 @@ export default function EditProfile({
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: {
+      userId: number;
       username: string;
       bio: string;
       fullName: string;
     }) => {
-      const response = await api.put(`user/${userId}`, data);
+      const response = await api.put(`/user`, data);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update profile");
@@ -58,6 +59,7 @@ export default function EditProfile({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     mutate({
+      userId,
       username: usernameRef.current?.value || "",
       fullName: fullNameRef.current?.value || "",
       bio: bioRef.current?.value || "",

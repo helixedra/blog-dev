@@ -15,23 +15,6 @@ import { PostStatusType } from "@/components/posts/PostListItem";
 import { AdminApprove } from "@/components/posts/post/AdminApprove";
 import EditPostButton from "@/components/posts/post/EditPostButton";
 
-export const changeStatus = async (formData: FormData): Promise<void> => {
-  "use server";
-
-  try {
-    await prisma.post.update({
-      where: {
-        id: Number(formData.get("postId")),
-      },
-      data: {
-        status: formData.get("status") as string,
-      },
-    });
-  } catch (error) {
-    console.error("Error updating post status:", (error as Error).message);
-  }
-};
-
 export default async function PostPage({
   params,
 }: {
@@ -67,6 +50,24 @@ export default async function PostPage({
   if (!post) {
     return <div>Post not found</div>;
   }
+
+  const changeStatus = async (formData: FormData): Promise<void> => {
+    "use server";
+
+    try {
+      await prisma.post.update({
+        where: {
+          id: Number(formData.get("postId")),
+        },
+        data: {
+          status: formData.get("status") as string,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating post status:", (error as Error).message);
+    }
+  };
+
   return (
     <div>
       <div className="flex gap-2 items-center">

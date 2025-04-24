@@ -9,7 +9,7 @@ export default async function Header() {
   return (
     <header className="flex justify-between items-center p-4 gap-4 h-16 relative">
       <div className="font-bold text-2xl hover:opacity-70">
-        <Link href="/">{`R＆W`}</Link>
+        <Link href="/">{`RW`}</Link>
       </div>
       <ActionButtons />
       <div className="flex items-center gap-2">

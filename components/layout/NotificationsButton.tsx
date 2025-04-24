@@ -4,14 +4,18 @@ import { RiNotification3Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useAuth } from "@clerk/nextjs";
 
 export default function NotificationsButton() {
   const router = useRouter();
+
+  const { userId } = useAuth();
 
   const { data: notifications } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () =>
       await api.get("/notifications").then((res) => res.json()),
+    enabled: !!userId,
   });
 
   return (

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getUserIdentity } from "@/lib/getUserIdentity";
 import { z } from "zod";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 const commentSchema = z.object({
   comment: z.string().min(1).max(2000),
@@ -12,13 +13,12 @@ const commentSchema = z.object({
 
 // new comment
 export async function POST(request: Request) {
+  const { userId: authenticatedUserId } = await getAuthenticatedUser();
+
   const { comment, postId, userId, parentId } = await request.json();
 
-  if (!userId || !(await getUserIdentity(userId)).id) {
-    return NextResponse.json(
-      { error: "Error creating comment" },
-      { status: 401 }
-    );
+  if (!authenticatedUserId || authenticatedUserId !== userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const validatedData = commentSchema.safeParse({
