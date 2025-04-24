@@ -24,7 +24,6 @@ export default function NotificationsPage() {
     queryFn: () => api.get("/notifications").then((res) => res.json()),
   });
 
-  console.log(notifications);
   return (
     <div>
       <div className="text-2xl mb-4">Notifications</div>

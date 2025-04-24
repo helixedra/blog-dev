@@ -17,7 +17,7 @@ export default function NotificationsButton() {
   return (
     <div className="relative">
       {notifications?.length > 0 && (
-        <div className="absolute w-3 h-3 -top-0.5 -right-0.5 border-2 border-white bg-red-500 rounded-full"></div>
+        <div className="absolute w-3 h-3 -top-0.5 z-20 -right-0.5 border-2 border-white bg-red-500 rounded-full"></div>
       )}
       <button
         className="flex items-center justify-center h-8 w-8 cursor-pointer bg-zinc-100 text-sm font-semibold text-black rounded-full hover:opacity-80 hover:scale-110 transition"
