@@ -13,6 +13,7 @@ interface AccessibleInputProps {
   name: string;
   type?: string;
   placeholder?: string;
+  value?: string;
   className?: string;
   defaultValue?: string;
   iconBefore?: React.ReactNode;
