@@ -9,19 +9,26 @@ export const getUserIdentity = async (authUserId: string) => {
     try {
       response = await prisma.user.findUnique({
         where: { userId: String(authUserId) },
-        select: { id: true, isAdmin: true, isActive: true },
+        select: {
+          id: true,
+          isAdmin: true,
+          isActive: true,
+          fullName: true,
+          username: true,
+        },
       });
     } catch (error) {
-      console.error('Error fetching user:', error);
-      throw new Error('Failed to fetch user');
+      console.error("Error fetching user:", error);
+      throw new Error("Failed to fetch user");
     }
   }
-
 
   return {
     id: response?.id,
     isAdmin: response?.isAdmin,
     isActive: response?.isActive,
+    fullName: response?.fullName,
+    username: response?.username,
     userId: authUserId,
   };
 };

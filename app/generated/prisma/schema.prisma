@@ -18,20 +18,21 @@ model Category {
 }
 
 model Comment {
-  id        Int           @id @default(autoincrement())
-  postId    Int
-  userId    Int?
-  comment   String
-  status    String?       @default("pending") @db.VarChar(20)
-  createdAt DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime      @default(now()) @db.Timestamptz(6)
-  parentId  Int?
-  author    User?         @relation(fields: [userId], references: [id])
-  post      Post          @relation(fields: [postId], references: [id])
-  likes     CommentLike[]
-  likeCount Int           @default(0)
-  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
-  replies   Comment[]     @relation("CommentReplies")
+  id            Int            @id @default(autoincrement())
+  postId        Int
+  userId        Int?
+  comment       String
+  status        String?        @default("pending") @db.VarChar(20)
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime       @default(now()) @db.Timestamptz(6)
+  parentId      Int?
+  author        User?          @relation(fields: [userId], references: [id])
+  post          Post           @relation(fields: [postId], references: [id])
+  likes         CommentLike[]
+  likeCount     Int            @default(0)
+  parent        Comment?       @relation("CommentReplies", fields: [parentId], references: [id])
+  replies       Comment[]      @relation("CommentReplies")
+  notifications Notification[]
 
   @@index([postId])
   @@index([status])
@@ -47,25 +48,26 @@ model PostTag {
 }
 
 model Post {
-  id               Int       @id @default(autoincrement())
-  title            String    @db.VarChar(255)
-  likeCount        Int       @default(0)
+  id               Int            @id @default(autoincrement())
+  title            String         @db.VarChar(255)
+  likeCount        Int            @default(0)
   likes            Like[]
   excerpt          String?
   content          String
-  author           User      @relation(fields: [authorId], references: [id])
+  author           User           @relation(fields: [authorId], references: [id])
   authorId         Int
-  category         Category? @relation(fields: [categoryId], references: [id])
+  category         Category?      @relation(fields: [categoryId], references: [id])
   categoryId       Int?
-  status           String?   @default("draft") @db.VarChar(20)
-  publishedAt      DateTime? @db.Timestamptz(6)
-  createdAt        DateTime? @default(now()) @db.Timestamptz(6)
-  updatedAt        DateTime? @default(now()) @db.Timestamptz(6)
-  featuredImageUrl String?   @db.VarChar(255)
-  metaTitle        String?   @db.VarChar(255)
+  status           String?        @default("draft") @db.VarChar(20)
+  publishedAt      DateTime?      @db.Timestamptz(6)
+  createdAt        DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime?      @default(now()) @db.Timestamptz(6)
+  featuredImageUrl String?        @db.VarChar(255)
+  metaTitle        String?        @db.VarChar(255)
   metaDescription  String?
   comments         Comment[]
   tags             PostTag[]
+  notifications    Notification[]
 
   @@index([authorId])
   @@index([categoryId])
@@ -119,19 +121,21 @@ model Tag {
 }
 
 model User {
-  id             Int           @id @default(autoincrement())
-  userId         String        @unique @db.VarChar(100)
-  username       String        @unique @db.VarChar(50)
-  email          String        @unique @db.VarChar(100)
-  fullName       String?       @db.VarChar(100)
+  id             Int            @id @default(autoincrement())
+  userId         String         @unique @db.VarChar(100)
+  username       String         @unique @db.VarChar(50)
+  email          String         @unique @db.VarChar(100)
+  fullName       String?        @db.VarChar(100)
   bio            String?
-  avatarUrl      String?       @db.VarChar(255)
-  createdAt      DateTime?     @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime?     @default(now()) @db.Timestamptz(6)
-  isActive       Boolean?      @default(true)
-  isAdmin        Boolean?      @default(false)
-  followingCount Int           @default(0)
-  followersCount Int           @default(0)
+  avatarUrl      String?        @db.VarChar(255)
+  createdAt      DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime?      @default(now()) @db.Timestamptz(6)
+  isActive       Boolean?       @default(true)
+  isAdmin        Boolean?       @default(false)
+  followingCount Int            @default(0)
+  followersCount Int            @default(0)
+  notifications  Notification[]
+  relatedUser    Notification[] @relation("RelatedUser")
   comments       Comment[]
   posts          Post[]
   likes          Like[]
@@ -146,4 +150,25 @@ model Follow {
   userFollowers Int[] // ID of users who follow this user
   userFollows   Int[] // ID of users this user follows
   createdAt     DateTime @default(now())
+}
+
+model Notification {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  relatedCommentId Int?
+  relatedComment   Comment? @relation(fields: [relatedCommentId], references: [id])
+
+  relatedPostId Int?
+  relatedPost   Post? @relation(fields: [relatedPostId], references: [id])
+
+  relatedUserId Int?
+  relatedUser   User? @relation("RelatedUser", fields: [relatedUserId], references: [id])
+
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

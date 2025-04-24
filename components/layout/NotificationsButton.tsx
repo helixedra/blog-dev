@@ -1,0 +1,30 @@
+"use client";
+import React from "react";
+import { RiNotification3Line } from "react-icons/ri";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+
+export default function NotificationsButton() {
+  const router = useRouter();
+
+  const { data: notifications } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () =>
+      await api.get("/notifications").then((res) => res.json()),
+  });
+
+  return (
+    <div className="relative">
+      {notifications?.length > 0 && (
+        <div className="absolute w-3 h-3 -top-0.5 -right-0.5 border-2 border-white bg-red-500 rounded-full"></div>
+      )}
+      <button
+        className="flex items-center justify-center h-8 w-8 cursor-pointer bg-zinc-100 text-sm font-semibold text-black rounded-full hover:opacity-80 hover:scale-110 transition"
+        onClick={() => router.push("/notifications")}
+      >
+        <RiNotification3Line size={18} />
+      </button>
+    </div>
+  );
+}

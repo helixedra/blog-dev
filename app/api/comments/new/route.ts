@@ -14,7 +14,7 @@ const commentSchema = z.object({
 export async function POST(request: Request) {
   const { comment, postId, userId, parentId } = await request.json();
 
-  if (!userId || !(await getUserIdentity(userId)).authStatus) {
+  if (!userId || !(await getUserIdentity(userId)).id) {
     return NextResponse.json(
       { error: "Error creating comment" },
       { status: 401 }
