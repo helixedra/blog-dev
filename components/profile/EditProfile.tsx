@@ -1,14 +1,11 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Button } from "../shared/Button";
-import { RiEdit2Line } from "react-icons/ri";
-import { Dialog } from "../shared/Dialog";
-import { Input } from "../shared/Input";
-import { Textarea } from "../shared/Textarea";
-import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import { api } from "@/lib/api";
-import { useRouter } from "next/navigation";
 import { User } from "@/app/generated/prisma";
+import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button, Dialog, Input, Textarea } from "@/components/shared";
+import { RiEdit2Line } from "react-icons/ri";
 
 export default function EditProfile({
   userId,
@@ -17,14 +14,19 @@ export default function EditProfile({
   userId: number;
   user: User;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  // State for modal
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const fullNameRef = useRef<HTMLInputElement>(null);
-  const bioRef = useRef<HTMLTextAreaElement>(null);
+  // Refs for form inputs
+  const usernameRef = React.useRef<HTMLInputElement>(null);
+  const fullNameRef = React.useRef<HTMLInputElement>(null);
+  const bioRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const { mutate, isPending, error } = useMutation({
+  // Query client for invalidating queries
+  const queryClient = useQueryClient();
+
+  // Mutation for updating user profile
+  const { mutate, isPending } = useMutation({
     mutationFn: async (data: {
       userId: number;
       username: string;
@@ -39,25 +41,18 @@ export default function EditProfile({
       return response.json();
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["user", userId] });
       setIsOpen(false);
-      // router.push(`/profile/${data.username}`);
       window.location.href = `/profile/${data.username}`;
     },
-    onError: (error) => {
-      if (error instanceof Error) {
-        if (error.message === "Unauthorized") {
-          console.error("User is not authenticated");
-        } else if (error.message === "Forbidden") {
-          console.error("User is not allowed to edit this profile");
-        } else {
-          console.error("Profile update error:", error.message);
-        }
-      }
-    },
+    // TODO: Add error handling
   });
 
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Run mutation
     mutate({
       userId,
       username: usernameRef.current?.value || "",
@@ -83,11 +78,6 @@ export default function EditProfile({
       >
         <Dialog.Header>Edit Profile</Dialog.Header>
         <Dialog.Content>
-          {error && (
-            <div className="text-red-500 mb-4">
-              {error instanceof Error ? error.message : "An error occurred"}
-            </div>
-          )}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
               name="username"

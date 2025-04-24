@@ -11,6 +11,7 @@ body {
 code, pre {
   font-family: "Inconsolata", monospace;
   font-weight: 500;
+  overflow-x: auto;
 }
 main {
   @apply text-xl;
@@ -29,7 +30,7 @@ h3 {
     font-weight: 500;
 }
 p {
-    @apply text-base py-2;
+    @apply text-base pt-4 pb-2;
 }
 pre {
     @apply text-base bg-gray-100 p-4 rounded my-4;

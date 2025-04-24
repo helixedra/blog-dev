@@ -2,6 +2,12 @@ import { getUserIdentity } from "@/lib/getUserIdentity";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import EditPostForm from "@/components/posts/post/EditPostForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Post - Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export default async function NewPostPage() {
   // Get user id from clerk

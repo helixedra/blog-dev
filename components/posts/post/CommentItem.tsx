@@ -79,7 +79,7 @@ export default function CommentItem({
           height={32}
           src={avatarUrl ?? ""}
           alt={username}
-          className="w-6 h-6 rounded-full"
+          className="w-6 h-6 rounded-full object-cover"
         />
         <div className="flex text-sm items-center gap-2">
           <Link

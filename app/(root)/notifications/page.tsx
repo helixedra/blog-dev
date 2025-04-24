@@ -9,12 +9,18 @@ import { RiUserFollowFill } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Metadata } from "next";
 
 interface NotificationData extends Notification {
   relatedUser: User | null;
   relatedPost: Post | null;
   relatedComment: Comment | null;
 }
+
+export const metadata: Metadata = {
+  title: "Notifications - Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export default function NotificationsPage() {
   const router = useRouter();

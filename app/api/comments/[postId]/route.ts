@@ -9,7 +9,7 @@ export async function GET(
   try {
     const comments = await prisma.comment.findMany({
       where: {
-        postId: Number(postId), // Use Number only if postId is an integer in your Prisma schema
+        postId: Number(postId),
       },
       include: {
         author: true,

@@ -5,7 +5,6 @@ import Markdown from "react-markdown";
 import Link from "next/link";
 import Like from "@/components/posts/post/Like";
 import { auth } from "@clerk/nextjs/server";
-// import { RiArrowLeftLine } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
 import CommentForm from "@/components/posts/post/CommentForm";
 import Comments from "@/components/posts/post/Comments";
@@ -14,6 +13,30 @@ import { PostStatus } from "@/components/posts/PostListItem";
 import { PostStatusType } from "@/components/posts/PostListItem";
 import { AdminApprove } from "@/components/posts/post/AdminApprove";
 import EditPostButton from "@/components/posts/post/EditPostButton";
+import Tag from "@/components/posts/post/Tag";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      metaTitle: true,
+      metaDescription: true,
+    },
+  });
+  return {
+    title: post?.metaTitle + " - Dev Blog",
+    description: post?.metaDescription,
+  };
+}
 
 export default async function PostPage({
   params,
@@ -39,6 +62,11 @@ export default async function PostPage({
     include: {
       author: true,
       likes: true,
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
     },
   });
 
@@ -68,13 +96,17 @@ export default async function PostPage({
     }
   };
 
+  console.log(post);
+
   return (
     <div>
-      <div className="flex gap-2 items-center">
-        <h1 className="flex items-center">{post.title}</h1>
+      <div className="flex flex-col gap-1 items-start">
         {(isAdmin || post.authorId === userIdentityId) && (
           <PostStatus status={post.status as PostStatusType} />
         )}
+        <h1 className="flex items-center leading-tight tracking-tight">
+          {post.title}
+        </h1>
       </div>
 
       <div className="flex items-center text-sm mb-4 mt-1  text-zinc-500">
@@ -91,6 +123,13 @@ export default async function PostPage({
       <div className="mb-8">
         <Markdown>{post.content}</Markdown>
       </div>
+
+      <div className="mb-8 flex gap-2">
+        {post.tags.map((tag) => (
+          <Tag key={tag.tag.id} tag={tag.tag.name} />
+        ))}
+      </div>
+
       <div className="flex items-center gap-2">
         {post.status === "published" && (
           <Like

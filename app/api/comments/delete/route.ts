@@ -25,6 +25,7 @@ export async function DELETE(request: NextRequest) {
       where: { commentId: Number(commentId) },
     });
 
+    // Delete the comment
     await prisma.comment.delete({
       where: { id: Number(commentId) },
     });

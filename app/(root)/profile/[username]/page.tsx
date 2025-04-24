@@ -6,6 +6,26 @@ import { auth } from "@clerk/nextjs/server";
 import { Follow, User } from "@/app/generated/prisma";
 import { getUserIdentity } from "@/lib/getUserIdentity";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const { username } = await params;
+  const user = await prisma.user.findUnique({
+    where: { username },
+    select: {
+      username: true,
+      fullName: true,
+    },
+  });
+  return {
+    title: user?.fullName || user?.username + " - Dev Blog",
+    description: `Profile of ${user?.username}`,
+  };
+}
 
 export default async function ProfilePage({
   params,

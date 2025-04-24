@@ -5,7 +5,12 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserIdentity } from "@/lib/getUserIdentity";
 import prisma from "@/lib/prisma";
 import NotFound from "@/app/not-found";
-import { api } from "@/lib/api";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Post - Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export default async function PostEditPage({
   params,

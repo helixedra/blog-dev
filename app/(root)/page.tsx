@@ -1,13 +1,13 @@
 import prisma from "@/lib/prisma";
-import { Input } from "@/components/shared/Input";
-import { Textarea } from "@/components/shared/Textarea";
-import { Button } from "@/components/shared/Button";
-import { redirect } from "next/navigation";
-import AddPostForm from "@/components/posts/AddPostForm";
 import { auth } from "@clerk/nextjs/server";
 import PostList from "@/components/posts/PostList";
 import { User, Post } from "@/app/generated/prisma";
-import { api } from "@/lib/api";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export interface UserData {
   id: number;
@@ -54,44 +54,8 @@ export default async function Home() {
     },
   });
 
-  // async function handleSubmit(formData: FormData) {
-  //   "use server";
-
-  //   const title = formData.get("title");
-  //   const content = formData.get("content");
-
-  //   if (!title || !content) {
-  //     return;
-  //   }
-
-  //   await api.post("/posts/new", {
-  //     title,
-  //     content,
-  //     authorId: user?.id,
-  //   });
-
-  //   redirect("/");
-  // }
-
   return (
     <div className="flex flex-col">
-      {/* {user && (
-        <>
-          <div>Welcome, {user?.fullName}!</div>
-          <AddPostForm>
-            <div className="bg-zinc-100/50 rounded">
-              <form
-                action={handleSubmit}
-                className="flex flex-col space-y-4 p-8"
-              >
-                <Input label="Title" name="title" type="text" required />
-                <Textarea name="content" label="Content" required rows={4} />
-                <Button type="submit">Post</Button>
-              </form>
-            </div>
-          </AddPostForm>
-        </>
-      )} */}
       {posts.length > 0 ? (
         <PostList
           posts={

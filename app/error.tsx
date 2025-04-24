@@ -2,8 +2,13 @@
 
 import { Button } from "@/components/shared/Button";
 import Link from "next/link";
-import router from "next/router";
 import { useEffect } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Error - Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export default function Error({
   error,

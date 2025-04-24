@@ -7,6 +7,12 @@ import { Input } from "@/components/shared/Input";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import SearchResults from "@/components/search/SearchResults";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Search - Dev Blog",
+  description: "A place for developers to share their knowledge",
+};
 
 export default function SearchPage() {
   const params = useParams();

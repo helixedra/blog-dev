@@ -90,6 +90,11 @@ export default function Comments({
   return (
     <div>
       <h2>Comments</h2>
+      {commentTree?.length === 0 && (
+        <div className="text-sm text-zinc-400 w-full text-center flex items-center justify-center py-18">
+          No Comments
+        </div>
+      )}
       {commentTree?.map((comment: Comment) => (
         <CommentItem
           key={comment.id}
