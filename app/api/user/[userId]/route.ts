@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { getUserIdentity } from "@/lib/getUserIdentity";
+import { auth } from "@clerk/nextjs/server";
 
 const userSchema = z.object({
     username: z.string().min(3).max(50),
@@ -43,15 +44,17 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function PUT(request: NextRequest, { params }: { params: { userId: string } }) {
+    
+    const { userId } = await auth();
+    const { id } = await getUserIdentity(String(userId));
+    
     const { userId: targetUserId } = await params;
-
-    const {authStatus, id} = await getUserIdentity(String(targetUserId));
-    const { username, fullName, bio, avatarUrl } = await request.json();
-
-    if (!authStatus) {
+    
+    if (!userId || !id || id !== Number(targetUserId)) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
+    const { username, fullName, bio } = await request.json();
 
     const validatedData = userSchema.safeParse({
         username,

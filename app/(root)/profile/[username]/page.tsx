@@ -5,6 +5,7 @@ import PostListItem from "@/components/posts/PostListItem";
 import { auth } from "@clerk/nextjs/server";
 import { Follow, User } from "@/app/generated/prisma";
 import { getUserIdentity } from "@/lib/getUserIdentity";
+import { notFound } from "next/navigation";
 
 export default async function ProfilePage({
   params,
@@ -29,6 +30,10 @@ export default async function ProfilePage({
       select: { id: true },
     })
   )?.id;
+
+  if (!userProfileId) {
+    return notFound();
+  }
 
   const profileUser = await prisma.user.findUnique({
     where: { id: userProfileId },

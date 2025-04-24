@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "../shared/Button";
 import { RiEdit2Line } from "react-icons/ri";
 import { Dialog } from "../shared/Dialog";
@@ -17,10 +17,12 @@ export default function EditProfile({
   userId: number;
   user: User;
 }) {
-  // Dialog trigger state
   const [isOpen, setIsOpen] = useState(false);
-
   const router = useRouter();
+
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const fullNameRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: {
@@ -36,20 +38,15 @@ export default function EditProfile({
       return response.json();
     },
     onSuccess: (data) => {
-      // close dialog
       setIsOpen(false);
-
-      // redirect to profile
-      router.push(`/profile/${data.username}`);
+      // router.push(`/profile/${data.username}`);
+      window.location.href = `/profile/${data.username}`;
     },
     onError: (error) => {
       if (error instanceof Error) {
-        // Handle specific error cases
         if (error.message === "Unauthorized") {
-          // Handle unauthorized access
           console.error("User is not authenticated");
         } else if (error.message === "Forbidden") {
-          // Handle forbidden access
           console.error("User is not allowed to edit this profile");
         } else {
           console.error("Profile update error:", error.message);
@@ -60,16 +57,10 @@ export default function EditProfile({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const username = formData.get("username");
-    const fullName = formData.get("fullName");
-    const bio = formData.get("bio");
-
     mutate({
-      username: username as string,
-      fullName: fullName as string,
-      bio: bio as string,
+      username: usernameRef.current?.value || "",
+      fullName: fullNameRef.current?.value || "",
+      bio: bioRef.current?.value || "",
     });
   };
 
@@ -98,21 +89,21 @@ export default function EditProfile({
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
               name="username"
-              defaultValue={user?.username || ""}
-              // onChange={(e) => setUsername(e.target.value)}
+              defaultValue={user.username || ""}
               label="Username"
+              ref={usernameRef}
             />
             <Input
               name="fullName"
-              defaultValue={user?.fullName || ""}
-              // onChange={(e) => setFullName(e.target.value)}
+              defaultValue={user.fullName || ""}
               label="Full Name"
+              ref={fullNameRef}
             />
             <Textarea
               name="bio"
-              defaultValue={user?.bio || ""}
-              // onChange={(e) => setBio(e.target.value)}
+              defaultValue={user.bio || ""}
               label="Bio"
+              ref={bioRef}
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? "Saving..." : "Save"}

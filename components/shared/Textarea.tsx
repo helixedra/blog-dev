@@ -39,7 +39,6 @@ export const Textarea = forwardRef<
       disabled = false,
       name,
       value,
-      defaultValue,
       onChange,
       onBlur,
       rows = 1,
@@ -83,7 +82,6 @@ export const Textarea = forwardRef<
           id={name}
           name={name}
           value={value}
-          defaultValue={defaultValue}
           onChange={handleChange}
           onInput={handleInput}
           onBlur={onBlur}

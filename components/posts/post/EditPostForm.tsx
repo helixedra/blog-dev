@@ -25,7 +25,6 @@ export default function EditPostForm({
     if (!formRef.current) return;
 
     const formData = new FormData(formRef.current);
-    formData.set("draft", draft ? "true" : "false");
 
     // Convert FormData to object
     const data = Object.fromEntries(formData.entries());
@@ -36,7 +35,7 @@ export default function EditPostForm({
       content: String(data.content),
       authorId: Number(data.authorId),
       tags: String(data.tags),
-      draft: Boolean(data.draft),
+      draft: Boolean(draft),
     };
     // Send to API
     // If id is present, update post, else create new post

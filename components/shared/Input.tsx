@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { Theme } from "./Theme";
+import { twMerge } from "tailwind-merge";
 
 interface AccessibleInputProps {
   label?: string;
@@ -7,13 +8,17 @@ interface AccessibleInputProps {
   helperText?: string;
   required?: boolean;
   disabled?: boolean;
+  autoComplete?: string;
+  size?: "xs" | "sm" | "md" | "lg";
   name: string;
   type?: string;
   placeholder?: string;
-  value?: string;
+  className?: string;
   defaultValue?: string;
+  iconBefore?: React.ReactNode;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const Input = forwardRef<HTMLInputElement, AccessibleInputProps>(
@@ -22,15 +27,15 @@ export const Input = forwardRef<HTMLInputElement, AccessibleInputProps>(
       label,
       error,
       helperText,
+      size = "md",
       required = false,
       disabled = false,
       name,
       type = "text",
       placeholder,
-      value,
       onChange,
       onBlur,
-      defaultValue,
+      iconBefore,
       ...props
     },
     ref
@@ -39,15 +44,12 @@ export const Input = forwardRef<HTMLInputElement, AccessibleInputProps>(
     const ariaInvalid = hasError ? "true" : "false";
     const ariaDescribedBy = [];
 
-    if (helperText) {
-      ariaDescribedBy.push(`input-helper-${name}`);
-    }
     if (hasError) {
       ariaDescribedBy.push(`input-error-${name}`);
     }
 
     return (
-      <div className="space-y-1">
+      <div className="space-y-1 relative w-full">
         {label && (
           <label
             htmlFor={name}
@@ -57,37 +59,33 @@ export const Input = forwardRef<HTMLInputElement, AccessibleInputProps>(
             {required && <span className="text-red-500">*</span>}
           </label>
         )}
+        {iconBefore && (
+          <div className="absolute inset-y-0 top-1 left-0 pl-3 flex items-center pointer-events-none">
+            {iconBefore}
+          </div>
+        )}
         <input
           ref={ref}
           id={name}
           name={name}
           type={type}
           placeholder={placeholder}
-          value={value}
           onChange={onChange}
           onBlur={onBlur}
           disabled={disabled}
           aria-invalid={ariaInvalid}
-          defaultValue={defaultValue}
+          {...props}
           aria-describedby={
             ariaDescribedBy.length > 0 ? ariaDescribedBy.join(" ") : undefined
           }
-          className={`${Theme.border} ${Theme.px} ${
-            Theme.py
-          } text-black block w-full ${Theme.borderRadius} ${
-            Theme.textSize
-          } focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-            hasError
-              ? "border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500"
-              : ""
-          } ${disabled ? "bg-gray-50 cursor-not-allowed" : ""}`}
-          {...props}
+          className={`${Theme.border} ${
+            Theme.InputSize[size as keyof typeof Theme.InputSize]
+          } text-black w-full ${Theme.borderRadius} ${
+            iconBefore ? "pl-9" : ""
+          } ${disabled ? "bg-gray-50 cursor-not-allowed" : ""} ${
+            props.className
+          }`}
         />
-        {helperText && (
-          <p id={`input-helper-${name}`} className="mt-1 text-sm text-gray-500">
-            {helperText}
-          </p>
-        )}
         {typeof error === "string" && (
           <p id={`input-error-${name}`} className="mt-1 text-sm text-red-600">
             {error}
