@@ -19,17 +19,14 @@ export async function handleAuth() {
   }
 
   try {
-    let baseUsername =
-      user.username || user.firstName
-        ? `${(user.firstName || "").toLowerCase()}${(
-            user.lastName || ""
-          ).toLowerCase()}`
-        : `user-${new Date().getTime()}`;
+    let baseUsername = user.emailAddresses[0]?.emailAddress
+      ?.toLowerCase()
+      .split("@")[0];
     let username = baseUsername;
     let counter = 1;
 
     while (await prisma.user.findUnique({ where: { username } })) {
-      username = `${baseUsername}_${counter++}`;
+      username = `${baseUsername}${counter++}`;
     }
 
     const newUser = await prisma.user.create({

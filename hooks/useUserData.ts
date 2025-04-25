@@ -5,8 +5,6 @@ import { useAuth } from "@clerk/nextjs";
 
 export const useUserData = () => {
   const { userId } = useAuth();
-
-  console.log("useUserData:", userId);
   // query to get user data by userId
   const { data, isLoading, error } = useQuery({
     queryKey: ["user", userId],
@@ -17,7 +15,6 @@ export const useUserData = () => {
     enabled: !!userId,
     staleTime: 0,
   });
-  console.log(error);
 
   return {
     registeredUserId: data?.id,
