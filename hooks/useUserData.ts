@@ -12,8 +12,7 @@ export const useUserData = () => {
       const response = await api.get(`user`);
       return response.json();
     },
-    enabled: !!userId,
-    refetchOnWindowFocus: false,
+    // enabled: !!userId,
   });
 
   return {
