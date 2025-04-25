@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
-import { getUserIdentity } from "@/lib/getUserIdentity";
-import { auth } from "@clerk/nextjs/server";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 const userSchema = z.object({
@@ -48,8 +46,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { userId } = await auth();
-  const { id } = await getUserIdentity(String(userId));
+  const { userId } = await getAuthenticatedUser();
 
   const {
     userId: targetUserId,
@@ -58,7 +55,7 @@ export async function PUT(request: NextRequest) {
     bio,
   } = await request.json();
 
-  if (!userId || !id || id !== Number(targetUserId)) {
+  if (!userId || Number(userId) !== Number(targetUserId)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -75,7 +72,7 @@ export async function PUT(request: NextRequest) {
   try {
     const user = await prisma.user.update({
       where: {
-        id: Number(id),
+        id: Number(userId),
       },
       data: {
         username,
