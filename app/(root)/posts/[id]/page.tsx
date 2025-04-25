@@ -96,8 +96,6 @@ export default async function PostPage({
     }
   };
 
-  console.log(post);
-
   return (
     <div>
       <div className="flex flex-col gap-1 items-start">

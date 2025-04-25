@@ -12,6 +12,8 @@ const userSchema = z.object({
 export async function GET(request: NextRequest) {
   const { userId } = await getAuthenticatedUser();
 
+  console.log(userId);
+
   try {
     let user = null;
 
