@@ -4,14 +4,16 @@ import { SignedOut, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 import ActionButtons from "./ActionButtons";
 import User from "./User";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function Header() {
+  const { userId } = await auth();
   return (
     <header className="flex justify-between items-center p-4 gap-4 h-16 relative">
       <div className="font-bold text-2xl hover:opacity-70">
         <Link href="/">{`RW`}</Link>
       </div>
-      <ActionButtons />
+      <ActionButtons userId={userId} />
       <div className="flex items-center gap-2">
         <SignedOut>
           <SignInButton>

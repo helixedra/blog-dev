@@ -7,7 +7,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { RiUserFollowFill } from "react-icons/ri";
 import { formatDate } from "@/lib/formatDate";
-import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 interface NotificationData extends Notification {
@@ -16,9 +15,8 @@ interface NotificationData extends Notification {
   relatedComment: Comment | null;
 }
 
-export default function Notifications() {
+export default function Notifications({ userId }: { userId: string | null }) {
   const router = useRouter();
-  const { userId } = useAuth();
 
   React.useEffect(() => {
     if (!userId) {

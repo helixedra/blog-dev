@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import SearchBar from "./SearchBar";
 
-export default function ActionButtons() {
+export default function ActionButtons({ userId }: { userId: string | null }) {
   const [searchForm, setSearchForm] = React.useState(false);
 
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function ActionButtons() {
         >
           <RiQuillPenAiFill size={18} />
         </button>
-        <NotificationsButton />
+        <NotificationsButton userId={userId} />
       </div>
 
       {searchForm && (
