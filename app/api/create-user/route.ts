@@ -2,7 +2,7 @@ import { handleAuth } from "@/lib/handleAuth";
 import { NextRequest, NextResponse } from "next/server";
 import { redirect } from "next/navigation";
 
-export default async function GET() {
+export async function GET() {
   try {
     const result = await handleAuth();
     if (result.status === "created" || result.status === "already_registered") {
