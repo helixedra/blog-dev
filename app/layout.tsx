@@ -19,7 +19,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider dynamic={true}>
       <html lang="en">
         <QueryProvider>
           <body className={`${inter.variable} ${inconsolata.variable}`}>
