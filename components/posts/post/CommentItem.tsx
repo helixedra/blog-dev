@@ -43,7 +43,7 @@ export default function CommentItem({
   // Mutation to delete a comment
   const deleteCommentMutation = useMutation({
     mutationFn: async () => {
-      const res = await api.delete(`/comments/delete`, {
+      const res = await api.delete(`comments/delete`, {
         commentId: id,
         userId,
       });

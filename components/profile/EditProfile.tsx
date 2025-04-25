@@ -33,7 +33,7 @@ export default function EditProfile({
       bio: string;
       fullName: string;
     }) => {
-      const response = await api.put(`/user`, data);
+      const response = await api.put(`user`, data);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update profile");

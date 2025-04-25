@@ -40,8 +40,8 @@ export default function EditPostForm({
     // Send to API
     // If id is present, update post, else create new post
     const response = preparedData.id
-      ? await api.put("/posts", preparedData)
-      : await api.post("/posts", preparedData);
+      ? await api.put("posts", preparedData)
+      : await api.post("posts", preparedData);
 
     // Check response
     if (!response.ok) {

@@ -22,7 +22,7 @@ export default function FollowProfile({
 
   const followMutation = useMutation({
     mutationFn: () =>
-      api.post(`/follow/${userId}`, {
+      api.post(`follow/${userId}`, {
         followId: userId,
         byUserId: viewer,
       }),

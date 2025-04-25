@@ -17,7 +17,7 @@ export default function EditPostButton({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
 
   const handleDelete = async () => {
-    const response = await api.delete("/posts", {
+    const response = await api.delete("posts", {
       id: postId,
     });
 

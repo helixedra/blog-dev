@@ -47,7 +47,7 @@ export default function CommentForm({
       userId: number;
       parentId?: number;
     }) => {
-      const response = await api.post("/comments/new", {
+      const response = await api.post("comments/new", {
         comment,
         postId,
         userId,

@@ -30,7 +30,7 @@ export default function Like({
     setLikeCountState((prev) => (isLiked ? prev - 1 : prev + 1));
     // Try to toggle like
     try {
-      const res = await api.post(`/likes/comment/${commentId}`, {
+      const res = await api.post(`likes/comment/${commentId}`, {
         userId: userId,
       });
       // Revert optimistic update if toggle fails

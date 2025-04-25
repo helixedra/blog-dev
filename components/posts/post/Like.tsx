@@ -28,7 +28,7 @@ export default function Like({
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     // Try to toggle like
     try {
-      const res = await api.post(`/likes/${postId}`, {
+      const res = await api.post(`likes/${postId}`, {
         userId: userId?.userId,
         id: userId?.id,
       });
