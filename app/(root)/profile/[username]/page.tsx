@@ -90,11 +90,11 @@ export default async function ProfilePage({
   const isOwner = profile.id === userId;
 
   return (
-    <div>
+    <div className="w-full">
       <ProfileCard
         isOwner={isOwner}
         profileUser={profile as User & { follows: Follow[] }}
-        viewer={viewer?.id || null}
+        viewer={viewer?.id || undefined}
       />
       <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
         {profilePosts.length === 0 && (

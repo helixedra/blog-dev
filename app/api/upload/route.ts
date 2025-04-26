@@ -4,15 +4,17 @@ import { s3 } from "@/lib/s3";
 import { randomUUID } from "crypto";
 import sharp from "sharp";
 import prisma from "@/lib/prisma";
-import {auth} from "@clerk/nextjs/server";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await getAuthenticatedUser();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
     const formData = await req.formData();
+
     const file = formData.get("file") as File;
 
     if (!file) {
@@ -41,8 +43,8 @@ export async function POST(req: NextRequest) {
     const publicUrl = `${process.env.R2_PUBLIC_URL}/${key}`;
 
     await prisma.user.update({
-      where: { userId: userId },
-      data: { avatarUrl: publicUrl },
+      where: { id: userId },
+      data: { image: publicUrl },
     });
 
     return NextResponse.json({ url: publicUrl });

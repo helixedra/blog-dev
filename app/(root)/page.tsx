@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "A place for developers to share their knowledge",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const { user } = await getUser();
 

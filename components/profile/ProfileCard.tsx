@@ -28,59 +28,61 @@ export default function ProfileCard({
   const date = new Date(profileUser.createdAt!);
 
   return (
-    <div>
-      <div className="relative h-38 rounded">
-        <div className="flex items-end">
+    <div className="w-full">
+      {/* User Information */}
+      <div className="w-full flex flex-col lg:flex-row lg:items-end gap-6">
+        {/* Avatar */}
+        <div>
           <Avatar
             url={profileUser?.image || ""}
             username={profileUser?.username || ""}
           />
-          <div className="ml-6 w-full">
-            <div className="flex justify-between mb-2 border-b border-zinc-200 pb-4">
-              <div className="">
-                <div className="text-2xl font-semibold">
-                  {profileUser?.name}
-                </div>
-                <div className="text-sm text-zinc-400">
-                  @{profileUser?.username}
-                </div>
+        </div>
+        {/* User Details */}
+        <div className="w-full">
+          <div className="flex justify-between mb-2 border-b border-zinc-200 pb-4">
+            <div className="">
+              <div className="text-2xl font-semibold">{profileUser?.name}</div>
+              <div className="text-sm text-zinc-400">
+                @{profileUser?.username}
               </div>
-
-              {isOwner ? (
-                <EditProfile userId={profileUser?.id} user={profileUser} />
-              ) : (
-                viewer !== undefined && (
-                  <FollowProfile
-                    userId={profileUser?.id}
-                    viewer={viewer}
-                    isFollowing={isFollowingState}
-                    setIsFollowing={setIsFollowingState}
-                    followersCount={followersCountState}
-                    setFollowersCount={setFollowersCountState}
-                  />
-                )
-              )}
             </div>
-            <div className="flex gap-12 w-full">
-              <div>
-                <div className="text-2xl">{followersCountState}</div>
-                <div className="text-sm text-zinc-400">Followers</div>
-              </div>
-              <div>
-                <div className="text-2xl">
-                  {profileUser?.followingCount || 0}
-                </div>
-                <div className="text-sm text-zinc-400">Following</div>
-              </div>
-              <div className="ml-auto flex flex-col justify-end text-end text-zinc-400">
-                <div className="text-sm">Joined</div>
-                <div className="text-sm">{formatDate(date).shortDate}</div>
-              </div>
+
+            {isOwner ? (
+              <EditProfile userId={profileUser?.id} user={profileUser} />
+            ) : (
+              viewer !== undefined && (
+                <FollowProfile
+                  userId={profileUser?.id}
+                  viewer={viewer}
+                  isFollowing={isFollowingState}
+                  setIsFollowing={setIsFollowingState}
+                  followersCount={followersCountState}
+                  setFollowersCount={setFollowersCountState}
+                />
+              )
+            )}
+          </div>
+          {/* User Stats */}
+          <div className="flex gap-12 w-full">
+            <div>
+              <div className="text-2xl">{followersCountState}</div>
+              <div className="text-sm text-zinc-400">Followers</div>
+            </div>
+            <div>
+              <div className="text-2xl">{profileUser?.followingCount || 0}</div>
+              <div className="text-sm text-zinc-400">Following</div>
+            </div>
+            <div className="ml-auto flex flex-col justify-end text-end text-zinc-400">
+              <div className="text-sm">Joined</div>
+              <div className="text-sm">{formatDate(date).shortDate}</div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+
+      {/* User Bio */}
+      <div className="w-full mt-6">
         {profileUser?.bio && (
           <div className="flex flex-col items-start gap-2">
             <Markdown>{profileUser?.bio}</Markdown>

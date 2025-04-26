@@ -21,7 +21,7 @@ export default async function NewPostPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="w-full items-center text-center text-base">New Post</div>
       <EditPostForm />
     </div>

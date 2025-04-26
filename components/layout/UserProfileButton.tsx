@@ -20,9 +20,9 @@ export function UserProfileButton({ user }: { user: User | null }) {
   };
 
   return (
-    <div>
+    <div className="relative">
       {user && (
-        <>
+        <div className="relative">
           <div
             className="w-6 h-6 hover:scale-110 transition cursor-pointer"
             onClick={() => setShowDropdown(!showDropdown)}
@@ -36,14 +36,14 @@ export function UserProfileButton({ user }: { user: User | null }) {
             />
           </div>
           <div className="flex flex-col hover:underline"></div>
-        </>
-      )}
-      {showDropdown && (
-        <Dropdown
-          user={user}
-          setShowDropdown={setShowDropdown}
-          signOut={signOut}
-        />
+          {showDropdown && (
+            <Dropdown
+              user={user}
+              setShowDropdown={setShowDropdown}
+              signOut={signOut}
+            />
+          )}
+        </div>
       )}
     </div>
   );
@@ -59,7 +59,10 @@ export function Dropdown({
   signOut: () => void;
 }) {
   return createPortal(
-    <div className="fixed inset-0" onClick={() => setShowDropdown(false)}>
+    <div
+      className="fixed inset-0 max-w-4xl mx-auto"
+      onClick={() => setShowDropdown(false)}
+    >
       <div className="absolute top-12 right-4 w-32 border border-zinc-100 bg-white p-1 rounded shadow-lg z-50">
         <Link
           href={`/profile/${user?.username}`}

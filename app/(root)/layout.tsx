@@ -15,7 +15,7 @@ export default async function MainLayout({
   return (
     <>
       <Header />
-      <main className="flex w-full md:w-3xl p-4 flex-1">{children}</main>
+      <main className="flex w-full p-4 flex-1">{children}</main>
       <Footer />
     </>
   );

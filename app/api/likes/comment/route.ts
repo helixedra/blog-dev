@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       where: {
         commentId_userId: {
           commentId: commentId,
-          userId: userId,
+          userId: userId!,
         },
       },
     });
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
         where: {
           commentId_userId: {
             commentId: commentId,
-            userId: userId,
+            userId: userId!,
           },
         },
       });
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       await prisma.commentLike.create({
         data: {
           commentId: commentId,
-          userId: userId,
+          userId: userId!,
         },
       });
 

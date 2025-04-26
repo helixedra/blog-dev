@@ -59,6 +59,9 @@ export default function SignInPage() {
   };
   return (
     <div className="w-full h-screen flex items-center justify-center -mt-8">
+      <div className="font-bold text-2xl hover:opacity-70 absolute top-4">
+        <Link href="/">{`RW`}</Link>
+      </div>
       <div className="flex flex-col gap-2 max-w-md">
         <h1>Sign In</h1>
         <div className="text-sm text-zinc-600">

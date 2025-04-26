@@ -1,5 +1,5 @@
 "use client";
-import { Post } from "@/app/generated/prisma";
+import { Post } from "@/generated/prisma";
 import Link from "next/link";
 import { RiLoader4Line } from "react-icons/ri";
 
@@ -11,7 +11,7 @@ export default function SearchResults({
   loading: boolean;
 }) {
   return (
-    <div>
+    <div className="w-full">
       <div>Search Results</div>
       {loading ? (
         <div className="flex items-center justify-center mt-12">

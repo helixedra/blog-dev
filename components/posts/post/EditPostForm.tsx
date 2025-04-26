@@ -42,8 +42,8 @@ export default function EditPostForm({
     }
   };
 
-  const handleRemoveTag = (idx: number) => {
-    setTags(tags.filter((_, i) => i !== idx));
+  const handleRemoveTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
   };
 
   const handleFormSubmit = async (draft: boolean) => {
@@ -80,10 +80,7 @@ export default function EditPostForm({
   };
 
   return (
-    <form
-      ref={formRef}
-      className="w-full space-y-8 p-6 border border-zinc-200 rounded"
-    >
+    <form ref={formRef} className="w-full space-y-8 p-6">
       <Textarea
         name="title"
         className="w-full border-zinc-200 placeholder:text-zinc-300 placeholder:text-base! focus:outline-none"
@@ -108,17 +105,17 @@ export default function EditPostForm({
           Tags
         </label>
         <div className="flex flex-wrap gap-2 p-2 border border-zinc-200 rounded bg-white min-h-[44px]">
-          {tags.map((t, idx) => (
+          {tags.map((tag, index) => (
             <span
-              key={t + idx}
+              key={tag + index}
               className="bg-zinc-100 text-black rounded px-2 py-1 flex items-center gap-1 text-sm"
             >
-              {t}
+              {tag}
               <button
                 type="button"
                 className="ml-1 text-zinc-600 hover:text-red-500 cursor-pointer focus:outline-none"
-                aria-label={`Remove tag ${t}`}
-                onClick={() => handleRemoveTag(idx)}
+                aria-label={`Remove tag ${tag}`}
+                onClick={() => handleRemoveTag(index)}
               >
                 &times;
               </button>
@@ -126,7 +123,7 @@ export default function EditPostForm({
           ))}
           <input
             type="text"
-            className="flex-1 min-w-[120px] outline-none border-none bg-transparent text-base"
+            className="flex-1 min-w-[120px] outline-none border-none bg-transparent text-base placeholder:text-zinc-300 placeholder:text-base!"
             placeholder={tags.length ? "" : "Add tag and press Enter"}
             value={tagInput}
             onChange={handleTagInputChange}

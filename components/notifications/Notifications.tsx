@@ -35,15 +35,18 @@ export default function Notifications({ userId }: { userId: string | null }) {
   });
 
   return (
-    <div>
+    <div className="w-full">
       <div className="text-2xl mb-4">Notifications</div>
       <div className="space-y-2">
         {isLoading && <div>Loading...</div>}
         {notifications?.length === 0 && <div>No notifications</div>}
         {notifications?.map((notification: NotificationData) => (
-          <div key={notification.id} className="flex flex-col">
+          <div
+            key={notification.id}
+            className="flex flex-col w-full border-b border-zinc-100 pb-4 pt-2"
+          >
             {notification.relatedUser && (
-              <div className="flex items-center text-base ">
+              <div className="flex items-center text-sm w-full">
                 <RiUserFollowFill className="text-zinc-600 mr-2" />
                 <Link
                   href={`/user/${notification.relatedUser.username}`}
@@ -56,16 +59,14 @@ export default function Notifications({ userId }: { userId: string | null }) {
                     height={40}
                     className="rounded-full w-6 h-6 object-cover mr-2"
                   />
-                  <span className="font-semibold">
+                  <div className="font-semibold">
                     {notification.relatedUser.name || ""}
-                  </span>
+                  </div>
                 </Link>
-                <span className="text-zinc-800 ml-2">
-                  {notification.message}
-                </span>
-                <span className="text-zinc-500 ml-2 text-sm">
+                <div className="text-zinc-800 ml-2">{notification.message}</div>
+                <div className="text-zinc-500 text-xs ml-auto">
                   {formatDate(new Date(notification.createdAt)).timeAgo}
-                </span>
+                </div>
               </div>
             )}
           </div>

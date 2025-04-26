@@ -61,7 +61,7 @@ export async function POST(request: Request) {
       data: {
         title,
         content,
-        userId: userId,
+        userId: userId!,
         status: draft ? "draft" : "review",
         metaTitle: title,
         metaDescription: content.slice(0, 150),
