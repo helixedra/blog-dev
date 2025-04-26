@@ -25,7 +25,7 @@ export default function Comments({
   userId,
 }: {
   postId: number;
-  userId: string;
+  userId: string | null;
 }) {
   const {
     data: comments,
@@ -89,20 +89,26 @@ export default function Comments({
 
   return (
     <div>
-      <h2>Comments</h2>
-      {commentTree?.length === 0 && (
-        <div className="text-sm text-zinc-400 w-full text-center flex items-center justify-center py-18">
-          No Comments
-        </div>
-      )}
-      {commentTree?.map((comment: Comment) => (
-        <CommentItem
-          key={comment.id}
-          comment={comment}
-          userId={userId}
-          postId={postId}
-        />
-      ))}
+      <h2 className="mb-4">Comments</h2>
+
+      <ul>
+        {commentTree?.length === 0 && (
+          <div className="text-sm text-zinc-400 w-full text-center flex items-center justify-center py-18">
+            No Comments
+          </div>
+        )}
+      </ul>
+      <ul>
+        {commentTree?.map((comment: Comment, index) => (
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            userId={userId}
+            postId={postId}
+            commentId={comment.id}
+          />
+        ))}
+      </ul>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import PostList from "@/components/posts/PostList";
 import { Metadata } from "next";
 import { api } from "@/lib/api";
 import { Post, User } from "@/generated/prisma";
-import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { getUser } from "@/lib/getUser";
 
 export const metadata: Metadata = {
   title: "Dev Blog",
@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { user } = await getAuthenticatedUser();
+  const { user } = await getUser();
 
-  const posts = await api.get("posts").then((res) => res.json());
+  const { posts } = await api.get("posts").then((res) => res.json());
 
   return (
     <div className="flex flex-col">

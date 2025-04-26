@@ -28,7 +28,6 @@ export default function Avatar({
 
     const data = await res.json();
     setPreview(data.url);
-    console.log(data);
   };
 
   return (

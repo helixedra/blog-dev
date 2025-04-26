@@ -48,10 +48,7 @@ export default async function PostPage({
     return <div>Invalid id</div>;
   }
 
-  const {
-    userId,
-    user: { isAdmin },
-  } = await getAuthenticatedUser();
+  const { userId, user } = await getAuthenticatedUser();
 
   let post;
   try {
@@ -102,7 +99,7 @@ export default async function PostPage({
   return (
     <div>
       <div className="flex flex-col gap-1 items-start">
-        {(isAdmin || post.author.id === userId) && (
+        {(user?.isAdmin || post.author.id === userId) && (
           <PostStatus status={post.status as PostStatusType} />
         )}
         <h1 className="flex items-center leading-tight tracking-tight">
@@ -118,7 +115,7 @@ export default async function PostPage({
           {post.author.name || ""}
         </Link>
         <span className="mx-2">/</span>
-        <span>{formatDate(post.createdAt ?? new Date()).dateTime}</span>
+        <span>{formatDate(post.createdAt).timeAgo}</span>
       </div>
 
       <div className="mb-8">
@@ -143,7 +140,7 @@ export default async function PostPage({
         {userId && post.status === "draft" && (
           <EditPostButton postId={post.id} userId={userId} />
         )}
-        {isAdmin && post.status === "review" && (
+        {user?.isAdmin && post.status === "review" && (
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-sm text-zinc-500 mr-4">
               This post is under review
@@ -158,7 +155,7 @@ export default async function PostPage({
         )}
       </div>
       {post.status === "published" && (
-        <Comments postId={post.id} userId={userId} />
+        <Comments postId={post.id} userId={userId || null} />
       )}
     </div>
   );

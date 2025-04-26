@@ -3,19 +3,14 @@ import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { User } from "@/generated/prisma";
 
-export const getAuthenticatedUser = async () => {
+export async function getUser() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  const userId = session?.user?.id;
+  const userId = session?.user?.id || null;
 
   if (!userId) {
-    return {
-      user: null,
-      userId: null,
-      isAdmin: false,
-      isActive: false,
-    };
+    return { user: null, userId: null, isAdmin: false, isActive: false };
   }
 
   const user = (await prisma.user.findUnique({
@@ -28,6 +23,7 @@ export const getAuthenticatedUser = async () => {
       isActive: true,
       name: true,
       username: true,
+      email: true,
     },
   })) as User | null;
 
@@ -41,4 +37,4 @@ export const getAuthenticatedUser = async () => {
     isAdmin: user.isAdmin,
     isActive: user.isActive,
   };
-};
+}

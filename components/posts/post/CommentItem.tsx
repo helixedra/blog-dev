@@ -1,29 +1,27 @@
 'use client";';
 import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { formatDate } from "@/lib/formatDate";
-import { RiChat1Line, RiHeartLine, RiDeleteBin7Line } from "react-icons/ri";
 import { Button } from "@/components/shared/Button";
 import CommentForm from "./CommentForm";
-import LikeComment from "./LikeComment";
 import { api } from "@/lib/api";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { Dialog } from "@/components/shared/Dialog";
-
 import { Comment } from "./Comments";
+import { CommentHeader } from "./comment-item/CommentHeader";
+import CommentFooter from "./comment-item/CommentFooter";
 
 export default function CommentItem({
   comment,
   userId,
   postId,
   commentId,
+  replay,
 }: {
   comment: Comment;
   children?: Comment[];
-  userId: string;
+  userId: string | null;
   postId: number;
   commentId?: number;
+  replay?: boolean;
 }) {
   const [replayVisibility, setReplyVisibility] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
@@ -32,6 +30,7 @@ export default function CommentItem({
     author: { name, username, image },
     comment: commentText,
     createdAt,
+
     id,
     parentId,
     children,
@@ -71,91 +70,56 @@ export default function CommentItem({
   };
 
   return (
-    <div className="flex flex-col py-4 px-2">
-      <div className="flex items-center p-0 gap-2">
-        <Image
-          width={32}
-          height={32}
-          src={image ?? ""}
-          alt={username ?? ""}
-          className="w-6 h-6 rounded-full object-cover"
-        />
-        <div className="flex text-sm items-center gap-2">
-          <Link
-            href={`/profile/${username}`}
-            className="font-semibold text-zinc-700 hover:text-zinc-700 hover:underline"
-          >
-            {name}
-          </Link>
-          <span className="text-zinc-500 text-xs">
-            {formatDate(new Date(createdAt)).timeAgo}
-          </span>
-        </div>
-      </div>
-      <div className="text-base pl-8 mt-1">{commentText}</div>
-      {/*DEV IDS*/}
-      {/* <div className="text-xs">
-        <span className="pr-2">ID : {id}</span>
-        <span>Parent ID : {parentId}</span>
-      </div> */}
-      {/*DEV IDS*/}
-      <div>
-        <div className="flex pl-7 mt-1 items-center gap-2 w-full">
-          <LikeComment
-            commentId={id}
+    <li
+      className={`flex flex-col relative pb-2 ml-1 ${
+        replay ? "mt-4 ml-4 rounded-md" : ""
+      }`}
+    >
+      <CommentHeader
+        image={image ?? ""}
+        username={username ?? ""}
+        name={name ?? ""}
+        createdAt={createdAt}
+      />
+      <div className="relative">
+        <div className="comment-content">
+          <div className={`text-xs mt-1 pt-2 bg-zinc-100 rounded-t-md px-3 `}>
+            {commentText}
+          </div>
+          <CommentFooter
+            comment={comment}
             userId={userId}
-            likes={comment.likes}
-            likesCount={comment.likeCount}
+            setReplyVisibility={setReplyVisibility}
+            handleDeleteApprove={handleDeleteApprove}
           />
-          {userId && (
-            <Button
-              variant="ghost"
-              size="xs"
-              className="gap-1 text-zinc-500"
-              onClick={() => setReplyVisibility((prev) => !prev)}
-            >
-              <RiChat1Line className="-mt-0.5" />
-              Reply
-            </Button>
+
+          {replayVisibility && (
+            <div className="mt-2 ml-6">
+              <CommentForm
+                postId={postId}
+                userId={userId}
+                commentId={commentId}
+                parentId={id ?? undefined}
+                onClose={() => setReplyVisibility(false)}
+              />
+            </div>
           )}
-          <div className="flex items-center gap-1">
-            {comment.author.id === userId && (
-              <Button
-                variant="ghost"
-                size="xs"
-                className="gap-1 text-zinc-500"
-                onClick={handleDeleteApprove}
-              >
-                <RiDeleteBin7Line />
-              </Button>
-            )}
-          </div>
         </div>
-        {replayVisibility && (
-          <div className="mt-2 ml-6">
-            <CommentForm
-              postId={postId}
-              userId={userId}
-              commentId={commentId}
-              parentId={id ?? undefined}
-              onClose={() => setReplyVisibility(false)}
-            />
-          </div>
-        )}
       </div>
 
       {children && children.length > 0 && (
-        <div className="ml-2 pl-1 border-l border-zinc-200">
-          {children.map((child) => (
+        <ul className="relative">
+          {children.map((child, index) => (
             <CommentItem
               key={child.id}
               comment={child}
               userId={userId}
               postId={postId}
               commentId={child.id}
+              replay={true}
             />
           ))}
-        </div>
+        </ul>
       )}
       <Dialog
         isOpen={deleteDialog}
@@ -178,6 +142,6 @@ export default function CommentItem({
           </div>
         </Dialog.Content>
       </Dialog>
-    </div>
+    </li>
   );
 }

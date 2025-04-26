@@ -7,17 +7,17 @@ export default async function PostList({
   user,
 }: {
   posts: (Post & { author: User; _count: { comments: number } })[];
-  user: User;
+  user: User | null;
 }) {
   return (
     <div>
       {posts.map((post) =>
-        user.isAdmin ? (
+        user?.isAdmin ? (
           <PostListItem
             key={post.id}
             post={post}
             user={post.author}
-            isAdmin={user.isAdmin}
+            isAdmin={user?.isAdmin}
           />
         ) : (
           post.status === "published" && (

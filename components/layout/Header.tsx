@@ -16,20 +16,12 @@ export default function Header() {
   const { data, isPending } = useSession();
   const userId = data?.user?.id;
 
-  console.log(userId);
-
-  // if (!userId) {
-  //   return null;
-  // }
-
   const { data: user, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: async () => api.get(`user/${userId}`).then((res) => res.json()),
     enabled: !!userId,
     staleTime: 0,
   });
-
-  console.log(user);
 
   const router = useRouter();
 

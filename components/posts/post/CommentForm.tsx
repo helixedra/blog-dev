@@ -13,7 +13,7 @@ export default function CommentForm({
   onClose,
 }: {
   postId: number;
-  userId: string;
+  userId: string | null;
   parentId?: number;
   commentId?: number;
   onClose?: () => void;
@@ -62,7 +62,7 @@ export default function CommentForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await mutateAsync({ comment, postId, userId, parentId });
+    await mutateAsync({ comment, postId, userId: userId ?? "", parentId });
     setActionVisibility(false);
     setComment("");
     if (onClose) {
