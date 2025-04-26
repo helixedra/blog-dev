@@ -3,7 +3,7 @@ import { Button } from "@/components/shared/Button";
 import React, { useState } from "react";
 import { RiHeartLine, RiHeartFill } from "react-icons/ri";
 import { api } from "@/lib/api";
-import { CommentLike } from "@/app/generated/prisma";
+import { CommentLike } from "@/generated/prisma";
 
 export default function Like({
   commentId,
@@ -12,7 +12,7 @@ export default function Like({
   likesCount,
 }: {
   commentId: number;
-  userId: number | null;
+  userId: string | null;
   likes?: CommentLike[];
   likesCount?: number;
 }) {
@@ -30,8 +30,9 @@ export default function Like({
     setLikeCountState((prev) => (isLiked ? prev - 1 : prev + 1));
     // Try to toggle like
     try {
-      const res = await api.post(`likes/comment/${commentId}`, {
+      const res = await api.post(`likes/comment`, {
         userId: userId,
+        commentId: commentId,
       });
       // Revert optimistic update if toggle fails
       if (!res.ok) {
@@ -54,7 +55,7 @@ export default function Like({
       variant="ghost"
       size="xs"
       aria-label="Like"
-      disabled={userId === 0 || userId === null || isToggled}
+      disabled={!userId || userId === null || isToggled}
     >
       {isLiked ? <RiHeartFill /> : <RiHeartLine />}
       <span className="text-xs">{likeCountState || 0}</span>

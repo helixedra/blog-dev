@@ -18,9 +18,9 @@ export async function GET(
             user: {
               select: {
                 id: true,
-                fullName: true,
+                name: true,
                 username: true,
-                avatarUrl: true,
+                image: true,
               },
             },
           },

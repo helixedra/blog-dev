@@ -3,7 +3,7 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import React from "react";
 import BackButton from "@/components/shared/BackButton";
-import { Post, PostTag, Tag } from "@/app/generated/prisma";
+import { Post, PostTag, Tag } from "@/generated/prisma";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 
@@ -14,12 +14,37 @@ export default function EditPostForm({
   userId,
   post,
 }: {
-  userId?: number;
+  userId?: string;
   post?: PostWithTags | null | undefined;
 }) {
+  const initialTagsArr = post?.tags?.map((tag) => tag.tag.name) || [];
+  const [tags, setTags] = React.useState<string[]>(initialTagsArr);
+  const [tagInput, setTagInput] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
-
   const router = useRouter();
+
+  const handleTagInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(event.target.value);
+  };
+
+  const handleTagInputKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if ((event.key === "Enter" || event.key === ",") && tagInput.trim()) {
+      event.preventDefault();
+      if (!tags.includes(tagInput.trim())) {
+        setTags([...tags, tagInput.trim()]);
+      }
+      setTagInput("");
+    } else if (event.key === "Backspace" && !tagInput && tags.length > 0) {
+      // Remove last tag on backspace
+      setTags(tags.slice(0, -1));
+    }
+  };
+
+  const handleRemoveTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
 
   const handleFormSubmit = async (draft: boolean) => {
     if (!formRef.current) return;
@@ -55,10 +80,7 @@ export default function EditPostForm({
   };
 
   return (
-    <form
-      ref={formRef}
-      className="w-full space-y-8 p-6 border border-zinc-200 rounded"
-    >
+    <form ref={formRef} className="w-full space-y-8 p-6">
       <Textarea
         name="title"
         className="w-full border-zinc-200 placeholder:text-zinc-300 placeholder:text-base! focus:outline-none"
@@ -78,15 +100,40 @@ export default function EditPostForm({
         label="Content"
         rows={12}
       />
-      <Textarea
-        name="tags"
-        className="w-full placeholder:text-zinc-300 placeholder:text-base! focus:outline-none"
-        placeholder="Tags (comma separated)"
-        label="Tags"
-        rows={1}
-        defaultValue={post?.tags?.map((tag) => tag.tag.name).join(", ")}
-        maxLength={150}
-      />
+      <div>
+        <label className="block text-sm font-medium text-zinc-700 mb-1">
+          Tags
+        </label>
+        <div className="flex flex-wrap gap-2 p-2 border border-zinc-200 rounded bg-white min-h-[44px]">
+          {tags.map((tag, index) => (
+            <span
+              key={tag + index}
+              className="bg-zinc-100 text-black rounded px-2 py-1 flex items-center gap-1 text-sm"
+            >
+              {tag}
+              <button
+                type="button"
+                className="ml-1 text-zinc-600 hover:text-red-500 cursor-pointer focus:outline-none"
+                aria-label={`Remove tag ${tag}`}
+                onClick={() => handleRemoveTag(index)}
+              >
+                &times;
+              </button>
+            </span>
+          ))}
+          <input
+            type="text"
+            className="flex-1 min-w-[120px] outline-none border-none bg-transparent text-base placeholder:text-zinc-300 placeholder:text-base!"
+            placeholder={tags.length ? "" : "Add tag and press Enter"}
+            value={tagInput}
+            onChange={handleTagInputChange}
+            onKeyDown={handleTagInputKeyDown}
+            maxLength={32}
+          />
+        </div>
+        {/* Hidden field for sending tags through form */}
+        <input type="hidden" name="tags" value={tags.join(",")} />
+      </div>
       <input type="hidden" name="authorId" value={userId} />
       <input type="hidden" name="id" value={post?.id} />
 

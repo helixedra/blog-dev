@@ -1,6 +1,6 @@
 import Notifications from "@/components/notifications/Notifications";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { Metadata } from "next";
-import { auth } from "@clerk/nextjs/server";
 
 export const metadata: Metadata = {
   title: "Notifications - Dev Blog",
@@ -8,6 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function NotificationsPage() {
-  const { userId } = await auth();
+  const { userId } = await getAuthenticatedUser();
   return <Notifications userId={userId} />;
 }

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
@@ -11,11 +11,16 @@ export async function GET(
     include: {
       likes: true,
       author: true,
+      tags: {
+        include: {
+          tag: true,
+        },
+      },
     },
   });
 
   if (!post) {
-    return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 
   return NextResponse.json(post);

@@ -12,7 +12,7 @@ export default async function AuthLayout({
 }>) {
   return (
     <>
-      <main className="mx-auto max-w-3xl p-4">{children}</main>
+      <main>{children}</main>
     </>
   );
 }

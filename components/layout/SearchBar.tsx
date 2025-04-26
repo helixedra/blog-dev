@@ -1,5 +1,5 @@
 import React from "react";
-import { Post } from "@/app/generated/prisma";
+import { Post } from "@/generated/prisma";
 import { useDebounce } from "react-use";
 import { Button } from "../shared/Button";
 import { api } from "@/lib/api";

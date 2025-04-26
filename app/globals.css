@@ -40,3 +40,10 @@ pre {
     @apply shadow-none! border border-zinc-200;
     transform: translateY(10%);
 }
+
+a {
+  @apply hover:underline;
+}
+/* .comment-connection-line {
+  @apply  border-l border-red-600;
+} */

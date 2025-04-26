@@ -1,7 +1,6 @@
 import { Inter, Inconsolata } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/QueryProvider";
-import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,14 +18,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider dynamic={true}>
-      <html lang="en">
-        <QueryProvider>
-          <body className={`${inter.variable} ${inconsolata.variable}`}>
-            {children}
-          </body>
-        </QueryProvider>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <QueryProvider>
+        <body
+          className={`${inter.variable} ${inconsolata.variable} flex flex-col w-full h-screen max-w-4xl justify-start mx-auto`}
+        >
+          {children}
+        </body>
+      </QueryProvider>
+    </html>
   );
 }

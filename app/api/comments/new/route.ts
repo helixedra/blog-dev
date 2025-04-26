@@ -7,7 +7,7 @@ import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 const commentSchema = z.object({
   comment: z.string().min(1).max(2000),
   postId: z.number(),
-  userId: z.number(),
+  userId: z.string(),
   parentId: z.number().optional(),
 });
 

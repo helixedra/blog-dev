@@ -4,7 +4,6 @@ import { Textarea } from "@/components/shared/Textarea";
 import { Button } from "@/components/shared/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Comment } from "@/app/generated/prisma";
 
 export default function CommentForm({
   postId,
@@ -14,7 +13,7 @@ export default function CommentForm({
   onClose,
 }: {
   postId: number;
-  userId: number;
+  userId: string | null;
   parentId?: number;
   commentId?: number;
   onClose?: () => void;
@@ -44,7 +43,7 @@ export default function CommentForm({
     }: {
       comment: string;
       postId: number;
-      userId: number;
+      userId: string;
       parentId?: number;
     }) => {
       const response = await api.post("comments/new", {
@@ -63,7 +62,7 @@ export default function CommentForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await mutateAsync({ comment, postId, userId, parentId });
+    await mutateAsync({ comment, postId, userId: userId ?? "", parentId });
     setActionVisibility(false);
     setComment("");
     if (onClose) {

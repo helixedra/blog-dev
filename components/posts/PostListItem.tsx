@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { User, Post } from "@/app/generated/prisma";
+import { User, Post } from "@/generated/prisma";
 import PostMeta from "./post/PostMeta";
 
 type PropTypes = {

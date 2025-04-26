@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { User, CommentLike } from "@/app/generated/prisma";
+import { User, CommentLike } from "@/generated/prisma";
 import CommentItem from "./CommentItem";
 
 export type CommentWithAuthor = Comment & {
@@ -25,7 +25,7 @@ export default function Comments({
   userId,
 }: {
   postId: number;
-  userId: number;
+  userId: string | null;
 }) {
   const {
     data: comments,
@@ -89,20 +89,26 @@ export default function Comments({
 
   return (
     <div>
-      <h2>Comments</h2>
-      {commentTree?.length === 0 && (
-        <div className="text-sm text-zinc-400 w-full text-center flex items-center justify-center py-18">
-          No Comments
-        </div>
-      )}
-      {commentTree?.map((comment: Comment) => (
-        <CommentItem
-          key={comment.id}
-          comment={comment}
-          userId={userId}
-          postId={postId}
-        />
-      ))}
+      <h2 className="mb-4">Comments</h2>
+
+      <ul>
+        {commentTree?.length === 0 && (
+          <div className="text-sm text-zinc-400 w-full text-center flex items-center justify-center py-18">
+            No Comments
+          </div>
+        )}
+      </ul>
+      <ul>
+        {commentTree?.map((comment: Comment, index) => (
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            userId={userId}
+            postId={postId}
+            commentId={comment.id}
+          />
+        ))}
+      </ul>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Notification, User, Post, Comment } from "@/app/generated/prisma";
+import { Notification, User, Post, Comment } from "@/generated/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { RiUserFollowFill } from "react-icons/ri";
@@ -35,37 +35,38 @@ export default function Notifications({ userId }: { userId: string | null }) {
   });
 
   return (
-    <div>
+    <div className="w-full">
       <div className="text-2xl mb-4">Notifications</div>
-      <div>
+      <div className="space-y-2">
         {isLoading && <div>Loading...</div>}
         {notifications?.length === 0 && <div>No notifications</div>}
         {notifications?.map((notification: NotificationData) => (
-          <div key={notification.id} className="flex flex-col">
+          <div
+            key={notification.id}
+            className="flex flex-col w-full border-b border-zinc-100 pb-4 pt-2"
+          >
             {notification.relatedUser && (
-              <div className="flex items-center text-base ">
+              <div className="flex items-center text-sm w-full">
                 <RiUserFollowFill className="text-zinc-600 mr-2" />
                 <Link
                   href={`/user/${notification.relatedUser.username}`}
                   className="flex items-center"
                 >
                   <Image
-                    src={notification.relatedUser.avatarUrl || ""}
-                    alt={notification.relatedUser.username}
+                    src={notification.relatedUser.image || ""}
+                    alt={notification.relatedUser.username || ""}
                     width={40}
                     height={40}
                     className="rounded-full w-6 h-6 object-cover mr-2"
                   />
-                  <span className="font-semibold">
-                    {notification.relatedUser.fullName}
-                  </span>
+                  <div className="font-semibold">
+                    {notification.relatedUser.name || ""}
+                  </div>
                 </Link>
-                <span className="text-zinc-800 ml-2">
-                  {notification.message}
-                </span>
-                <span className="text-zinc-500 ml-2 text-sm">
+                <div className="text-zinc-800 ml-2">{notification.message}</div>
+                <div className="text-zinc-500 text-xs ml-auto">
                   {formatDate(new Date(notification.createdAt)).timeAgo}
-                </span>
+                </div>
               </div>
             )}
           </div>

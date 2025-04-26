@@ -11,15 +11,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     // Get follow data from request
-    const { followId, byUserId } = await request.json();
+    const { followId: targetUserId, byUserId: initiatorUserId } =
+      await request.json();
 
-    if (!followId || !byUserId) {
-      return new NextResponse("Missing followId or byUserId", { status: 400 });
+    if (!targetUserId || !initiatorUserId) {
+      return new NextResponse("Missing targetUserId or initiatorUserId", {
+        status: 400,
+      });
     }
 
     // Get the initiator and target users
     const targetUser = await prisma.user.findUnique({
-      where: { id: Number(followId) },
+      where: { id: String(targetUserId) },
     });
 
     if (!targetUser) {
@@ -27,64 +30,66 @@ export async function POST(request: NextRequest) {
     }
 
     // User follow records for both users
-    const userFollow = await prisma.follow.findUnique({
-      where: { userId: Number(userId) },
+    //Initiator
+    const initiator = await prisma.follow.findUnique({
+      where: { userId: String(initiatorUserId) },
     });
-    const targetFollow = await prisma.follow.findUnique({
-      where: { userId: Number(followId) },
+    //Target
+    const target = await prisma.follow.findUnique({
+      where: { userId: String(targetUserId) },
     });
 
-    const isFollowing = userFollow?.userFollows.includes(Number(followId));
+    const isFollowing = initiator?.userFollows.includes(String(targetUserId));
 
     // Transaction: update userFollows of initiator, userFollowers of target, and counters
     await prisma.$transaction([
       // 1. Update initiator (userFollows)
-      userFollow
+      initiator
         ? prisma.follow.update({
-            where: { id: userFollow.id },
+            where: { id: initiator.id },
             data: {
               userFollows: isFollowing
                 ? {
-                    set: userFollow.userFollows.filter(
-                      (id) => id !== Number(followId)
+                    set: initiator.userFollows.filter(
+                      (id) => id !== String(targetUserId)
                     ),
                   }
-                : { push: Number(followId) },
+                : { push: String(targetUserId) },
             },
           })
         : prisma.follow.create({
             data: {
-              user: { connect: { id: Number(userId) } },
-              userFollows: [Number(followId)],
+              user: { connect: { id: String(initiatorUserId) } },
+              userFollows: [String(targetUserId)],
               userFollowers: [],
             },
           }),
 
       // 2. Update target (userFollowers)
-      targetFollow
+      target
         ? prisma.follow.update({
-            where: { id: targetFollow.id },
+            where: { id: target.id },
             data: {
               userFollowers: isFollowing
                 ? {
-                    set: targetFollow.userFollowers.filter(
-                      (id) => id !== Number(userId)
+                    set: target.userFollowers.filter(
+                      (id) => id !== String(userId)
                     ),
                   }
-                : { push: Number(userId) },
+                : { push: String(userId) },
             },
           })
         : prisma.follow.create({
             data: {
               user: { connect: { id: targetUser.id } },
               userFollows: [],
-              userFollowers: [Number(userId)],
+              userFollowers: [String(userId)],
             },
           }),
 
       // 3. Update counters
       prisma.user.update({
-        where: { id: Number(userId) },
+        where: { id: String(userId) },
         data: {
           followingCount: { increment: isFollowing ? -1 : 1 },
         },
@@ -100,9 +105,9 @@ export async function POST(request: NextRequest) {
     // 4. Add notification for target user
     await prisma.notification.create({
       data: {
-        userId: Number(followId),
+        userId: String(targetUserId),
         title: "New Follower",
-        relatedUserId: Number(userId),
+        relatedUserId: String(initiatorUserId),
         message: `started following you`,
       },
     });
