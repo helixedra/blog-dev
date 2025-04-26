@@ -122,7 +122,7 @@ export default async function PostPage({
         <Markdown>{post.content}</Markdown>
       </div>
 
-      <div className="mb-8 flex gap-2">
+      <div className="mb-8 flex gap-2 flex-wrap">
         {post.tags.map((tag) => (
           <Tag key={tag.tag.id} tag={tag.tag.name} />
         ))}

@@ -15,7 +15,8 @@ export function UserProfileButton({ user }: { user: User | null }) {
   // Sign out
   const signOut = async () => {
     await authClient.signOut();
-    router.push("/");
+    setShowDropdown(false);
+    window.location.href = "/";
   };
 
   return (

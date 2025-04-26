@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Dev Blog",
@@ -14,7 +15,8 @@ export default async function MainLayout({
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl p-4">{children}</main>
+      <main className="flex w-full md:w-3xl p-4 flex-1">{children}</main>
+      <Footer />
     </>
   );
 }

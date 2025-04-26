@@ -17,9 +17,34 @@ export default function EditPostForm({
   userId?: string;
   post?: PostWithTags | null | undefined;
 }) {
+  const initialTagsArr = post?.tags?.map((tag) => tag.tag.name) || [];
+  const [tags, setTags] = React.useState<string[]>(initialTagsArr);
+  const [tagInput, setTagInput] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
-
   const router = useRouter();
+
+  const handleTagInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(event.target.value);
+  };
+
+  const handleTagInputKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if ((event.key === "Enter" || event.key === ",") && tagInput.trim()) {
+      event.preventDefault();
+      if (!tags.includes(tagInput.trim())) {
+        setTags([...tags, tagInput.trim()]);
+      }
+      setTagInput("");
+    } else if (event.key === "Backspace" && !tagInput && tags.length > 0) {
+      // Remove last tag on backspace
+      setTags(tags.slice(0, -1));
+    }
+  };
+
+  const handleRemoveTag = (idx: number) => {
+    setTags(tags.filter((_, i) => i !== idx));
+  };
 
   const handleFormSubmit = async (draft: boolean) => {
     if (!formRef.current) return;
@@ -78,15 +103,40 @@ export default function EditPostForm({
         label="Content"
         rows={12}
       />
-      <Textarea
-        name="tags"
-        className="w-full placeholder:text-zinc-300 placeholder:text-base! focus:outline-none"
-        placeholder="Tags (comma separated)"
-        label="Tags"
-        rows={1}
-        defaultValue={post?.tags?.map((tag) => tag.tag.name).join(", ")}
-        maxLength={150}
-      />
+      <div>
+        <label className="block text-sm font-medium text-zinc-700 mb-1">
+          Tags
+        </label>
+        <div className="flex flex-wrap gap-2 p-2 border border-zinc-200 rounded bg-white min-h-[44px]">
+          {tags.map((t, idx) => (
+            <span
+              key={t + idx}
+              className="bg-zinc-100 text-black rounded px-2 py-1 flex items-center gap-1 text-sm"
+            >
+              {t}
+              <button
+                type="button"
+                className="ml-1 text-zinc-600 hover:text-red-500 cursor-pointer focus:outline-none"
+                aria-label={`Remove tag ${t}`}
+                onClick={() => handleRemoveTag(idx)}
+              >
+                &times;
+              </button>
+            </span>
+          ))}
+          <input
+            type="text"
+            className="flex-1 min-w-[120px] outline-none border-none bg-transparent text-base"
+            placeholder={tags.length ? "" : "Add tag and press Enter"}
+            value={tagInput}
+            onChange={handleTagInputChange}
+            onKeyDown={handleTagInputKeyDown}
+            maxLength={32}
+          />
+        </div>
+        {/* Hidden field for sending tags through form */}
+        <input type="hidden" name="tags" value={tags.join(",")} />
+      </div>
       <input type="hidden" name="authorId" value={userId} />
       <input type="hidden" name="id" value={post?.id} />
 

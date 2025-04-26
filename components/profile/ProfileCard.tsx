@@ -14,7 +14,7 @@ export default function ProfileCard({
 }: {
   profileUser: User & { follows: Follow[] };
   isOwner: boolean;
-  viewer: any;
+  viewer: string | undefined;
 }) {
   const isFollowing =
     !!viewer &&

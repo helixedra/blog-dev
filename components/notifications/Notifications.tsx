@@ -37,7 +37,7 @@ export default function Notifications({ userId }: { userId: string | null }) {
   return (
     <div>
       <div className="text-2xl mb-4">Notifications</div>
-      <div>
+      <div className="space-y-2">
         {isLoading && <div>Loading...</div>}
         {notifications?.length === 0 && <div>No notifications</div>}
         {notifications?.map((notification: NotificationData) => (
