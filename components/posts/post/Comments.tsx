@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { User, CommentLike } from "@/app/generated/prisma";
+import { User, CommentLike } from "@/generated/prisma";
 import CommentItem from "./CommentItem";
 
 export type CommentWithAuthor = Comment & {
@@ -25,7 +25,7 @@ export default function Comments({
   userId,
 }: {
   postId: number;
-  userId: number;
+  userId: string;
 }) {
   const {
     data: comments,

@@ -13,9 +13,9 @@ export default function Like({
   postId: number;
   likes: number;
   liked: boolean;
-  userId: { userId: string; id: number } | null;
+  userId: string | null;
 }) {
-  const initialUserState = userId?.id ? false : true;
+  const initialUserState = userId ? false : true;
   const [isToggled, setIsToggled] = useState(initialUserState);
   const [isLiked, setIsLiked] = useState(liked);
   const [likeCount, setLikeCount] = useState(likes);
@@ -28,9 +28,9 @@ export default function Like({
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     // Try to toggle like
     try {
-      const res = await api.post(`likes/${postId}`, {
-        userId: userId?.userId,
-        id: userId?.id,
+      const res = await api.post(`likes/post`, {
+        userId: userId,
+        postId: postId,
       });
       // Revert optimistic update if toggle fails
       if (!res.ok) {

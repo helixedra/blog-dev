@@ -1,11 +1,16 @@
 "use client";
 import React from "react";
 import { UserProfileButton } from "./UserProfileButton";
-import { useUserData } from "@/hooks/useUserData";
 import { RiLoader4Line } from "react-icons/ri";
+import { User as UserType } from "@/generated/prisma";
 
-export default function User() {
-  const { data: user, isLoading } = useUserData();
+export default function User({
+  user,
+  isLoading,
+}: {
+  user: UserType | null;
+  isLoading: boolean;
+}) {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 relative">

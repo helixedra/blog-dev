@@ -1,15 +1,22 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { RiUserLine, RiLogoutCircleRLine } from "react-icons/ri";
-import { User } from "@/app/generated/prisma";
-import React from "react";
-import { useClerk } from "@clerk/nextjs";
+import { User } from "@/generated/prisma";
+import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
+import { authClient } from "@/lib/auth-client";
 
 export function UserProfileButton({ user }: { user: User | null }) {
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const { signOut } = useClerk();
+
+  const router = useRouter();
+  // Sign out
+  const signOut = async () => {
+    await authClient.signOut();
+    router.push("/");
+  };
 
   return (
     <div>
@@ -20,16 +27,14 @@ export function UserProfileButton({ user }: { user: User | null }) {
             onClick={() => setShowDropdown(!showDropdown)}
           >
             <Image
-              src={user?.avatarUrl || ""}
+              src={user?.image || ""}
               alt={user?.username || ""}
               width={80}
               height={80}
               className="rounded-full bg-zinc-200 object-cover w-6 h-6"
             />
           </div>
-          <div className="flex flex-col hover:underline">
-            {/* <div>{user?.fullName}</div> */}
-          </div>
+          <div className="flex flex-col hover:underline"></div>
         </>
       )}
       {showDropdown && (

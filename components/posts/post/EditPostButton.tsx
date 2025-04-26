@@ -11,7 +11,7 @@ export default function EditPostButton({
   userId,
 }: {
   postId: number;
-  userId: number;
+  userId: string;
 }) {
   const router = useRouter();
   const [deleteDialog, setDeleteDialog] = React.useState(false);

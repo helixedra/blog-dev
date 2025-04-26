@@ -1,8 +1,7 @@
 import EditPostForm from "@/components/posts/post/EditPostForm";
 import { redirect } from "next/navigation";
 import React from "react";
-import { auth } from "@clerk/nextjs/server";
-import { getUserIdentity } from "@/lib/getUserIdentity";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import prisma from "@/lib/prisma";
 import NotFound from "@/app/not-found";
 import { Metadata } from "next";
@@ -18,9 +17,7 @@ export default async function PostEditPage({
   params: Promise<{ id: string }>;
 }) {
   // Get user id from clerk
-  const { userId: AuthUserId } = await auth();
-  // Get user id from prisma
-  const { id: userId } = await getUserIdentity(String(AuthUserId));
+  const { userId } = await getAuthenticatedUser();
   // Get post id from params
   const { id } = await params;
 
@@ -30,21 +27,27 @@ export default async function PostEditPage({
     redirect("/sign-in");
   }
 
-  const post = await prisma.post.findUnique({
-    where: {
-      id: Number(id),
-    },
-    include: {
-      author: true,
-      tags: { include: { tag: true } },
-    },
-  });
+  let post;
+  try {
+    post = await prisma.post.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        author: true,
+        tags: { include: { tag: true } },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching post:", (error as Error).message);
+    return <div>Failed to fetch post</div>;
+  }
 
   if (!post) {
     NotFound();
   }
 
-  if (post?.authorId !== userId) {
+  if (post?.author.id !== userId) {
     throw new Error("Unauthorized");
   }
 

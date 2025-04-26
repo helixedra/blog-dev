@@ -3,7 +3,7 @@ import { Button } from "@/components/shared/Button";
 import { Textarea } from "@/components/shared/Textarea";
 import React from "react";
 import BackButton from "@/components/shared/BackButton";
-import { Post, PostTag, Tag } from "@/app/generated/prisma";
+import { Post, PostTag, Tag } from "@/generated/prisma";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 
@@ -14,7 +14,7 @@ export default function EditPostForm({
   userId,
   post,
 }: {
-  userId?: number;
+  userId?: string;
   post?: PostWithTags | null | undefined;
 }) {
   const formRef = React.useRef<HTMLFormElement>(null);

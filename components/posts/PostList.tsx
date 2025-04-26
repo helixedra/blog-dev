@@ -1,27 +1,23 @@
 import React from "react";
-import { Post, User } from "@/app/generated/prisma";
+import { Post, User } from "@/generated/prisma";
 import PostListItem from "./PostListItem";
-import { auth } from "@clerk/nextjs/server";
-import { getUserIdentity } from "@/lib/getUserIdentity";
 
 export default async function PostList({
   posts,
+  user,
 }: {
   posts: (Post & { author: User; _count: { comments: number } })[];
+  user: User;
 }) {
-  // Get user id from clerk
-  const { userId } = await auth();
-  const { isAdmin } = await getUserIdentity(String(userId));
-
   return (
     <div>
       {posts.map((post) =>
-        isAdmin ? (
+        user.isAdmin ? (
           <PostListItem
             key={post.id}
             post={post}
             user={post.author}
-            isAdmin={isAdmin}
+            isAdmin={user.isAdmin}
           />
         ) : (
           post.status === "published" && (

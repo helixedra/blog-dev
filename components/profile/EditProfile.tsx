@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { api } from "@/lib/api";
-import { User } from "@/app/generated/prisma";
+import { User } from "@/generated/prisma";
 import { useMutation } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button, Dialog, Input, Textarea } from "@/components/shared";
@@ -11,7 +11,7 @@ export default function EditProfile({
   userId,
   user,
 }: {
-  userId: number;
+  userId: string;
   user: User;
 }) {
   // State for modal
@@ -19,7 +19,7 @@ export default function EditProfile({
 
   // Refs for form inputs
   const usernameRef = React.useRef<HTMLInputElement>(null);
-  const fullNameRef = React.useRef<HTMLInputElement>(null);
+  const nameRef = React.useRef<HTMLInputElement>(null);
   const bioRef = React.useRef<HTMLTextAreaElement>(null);
 
   // Query client for invalidating queries
@@ -28,12 +28,17 @@ export default function EditProfile({
   // Mutation for updating user profile
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: {
-      userId: number;
+      userId: string;
       username: string;
       bio: string;
-      fullName: string;
+      name: string;
     }) => {
-      const response = await api.put(`user`, data);
+      const response = await api.put(`user/${data.userId}`, {
+        userId: data.userId,
+        username: data.username,
+        bio: data.bio,
+        name: data.name,
+      });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to update profile");
@@ -56,7 +61,7 @@ export default function EditProfile({
     mutate({
       userId,
       username: usernameRef.current?.value || "",
-      fullName: fullNameRef.current?.value || "",
+      name: nameRef.current?.value || "",
       bio: bioRef.current?.value || "",
     });
   };
@@ -86,10 +91,10 @@ export default function EditProfile({
               ref={usernameRef}
             />
             <Input
-              name="fullName"
-              defaultValue={user.fullName || ""}
+              name="name"
+              defaultValue={user.name || ""}
               label="Full Name"
-              ref={fullNameRef}
+              ref={nameRef}
             />
             <Textarea
               name="bio"

@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Notification, User, Post, Comment } from "@/app/generated/prisma";
+import { Notification, User, Post, Comment } from "@/generated/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { RiUserFollowFill } from "react-icons/ri";
@@ -50,14 +50,14 @@ export default function Notifications({ userId }: { userId: string | null }) {
                   className="flex items-center"
                 >
                   <Image
-                    src={notification.relatedUser.avatarUrl || ""}
-                    alt={notification.relatedUser.username}
+                    src={notification.relatedUser.image || ""}
+                    alt={notification.relatedUser.username || ""}
                     width={40}
                     height={40}
                     className="rounded-full w-6 h-6 object-cover mr-2"
                   />
                   <span className="font-semibold">
-                    {notification.relatedUser.fullName}
+                    {notification.relatedUser.name || ""}
                   </span>
                 </Link>
                 <span className="text-zinc-800 ml-2">

@@ -4,11 +4,10 @@ import prisma from "@/lib/prisma";
 import Markdown from "react-markdown";
 import Link from "next/link";
 import Like from "@/components/posts/post/Like";
-import { auth } from "@clerk/nextjs/server";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { formatDate } from "@/lib/formatDate";
 import CommentForm from "@/components/posts/post/CommentForm";
 import Comments from "@/components/posts/post/Comments";
-import { getUserIdentity } from "@/lib/getUserIdentity";
 import { PostStatus } from "@/components/posts/PostListItem";
 import { PostStatusType } from "@/components/posts/PostListItem";
 import { AdminApprove } from "@/components/posts/post/AdminApprove";
@@ -43,37 +42,41 @@ export default async function PostPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
-  const pageId = z.number().int().safeParse(Number(id.trim()));
-  const { userId } = await auth();
-
-  const { id: userIdentityId, isAdmin } = await getUserIdentity(
-    String(userId ?? "")
-  );
-
-  if (!pageId.success) {
+  const { id: postId } = await params;
+  const validation = z.string().safeParse(postId.trim());
+  if (!validation.success) {
     return <div>Invalid id</div>;
   }
 
-  const post = await prisma.post.findUnique({
-    where: {
-      id: pageId.data,
-    },
-    include: {
-      author: true,
-      likes: true,
-      tags: {
-        include: {
-          tag: true,
+  const {
+    userId,
+    user: { isAdmin },
+  } = await getAuthenticatedUser();
+
+  let post;
+  try {
+    post = await prisma.post.findUnique({
+      where: {
+        id: Number(postId),
+      },
+      include: {
+        author: true,
+        likes: true,
+        tags: {
+          include: {
+            tag: true,
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.error("Error fetching post:", (error as Error).message);
+    return <div>Failed to fetch post</div>;
+  }
 
   const isLiked =
-    post?.likes?.some(
-      (like) => String(like.userId) === String(userIdentityId)
-    ) ?? false;
+    post?.likes?.some((like) => String(like.userId) === String(userId)) ??
+    false;
 
   if (!post) {
     return <div>Post not found</div>;
@@ -99,7 +102,7 @@ export default async function PostPage({
   return (
     <div>
       <div className="flex flex-col gap-1 items-start">
-        {(isAdmin || post.authorId === userIdentityId) && (
+        {(isAdmin || post.author.id === userId) && (
           <PostStatus status={post.status as PostStatusType} />
         )}
         <h1 className="flex items-center leading-tight tracking-tight">
@@ -112,7 +115,7 @@ export default async function PostPage({
           href={`/profile/${post.author.username}`}
           className=" hover:underline"
         >
-          {post.author.fullName}
+          {post.author.name || ""}
         </Link>
         <span className="mx-2">/</span>
         <span>{formatDate(post.createdAt ?? new Date()).dateTime}</span>
@@ -134,11 +137,11 @@ export default async function PostPage({
             postId={post.id}
             likes={post.likeCount}
             liked={isLiked}
-            userId={{ userId: userId ?? "", id: userIdentityId ?? 0 }}
+            userId={userId || null}
           />
         )}
-        {userIdentityId && post.status === "draft" && (
-          <EditPostButton postId={post.id} userId={userIdentityId ?? 0} />
+        {userId && post.status === "draft" && (
+          <EditPostButton postId={post.id} userId={userId} />
         )}
         {isAdmin && post.status === "review" && (
           <div className="flex items-center gap-2 ml-auto">
@@ -150,12 +153,12 @@ export default async function PostPage({
         )}
       </div>
       <div className="mt-4 mb-8">
-        {userIdentityId && post.status === "published" && (
-          <CommentForm postId={post.id} userId={userIdentityId ?? 0} />
+        {userId && post.status === "published" && (
+          <CommentForm postId={post.id} userId={userId} />
         )}
       </div>
       {post.status === "published" && (
-        <Comments postId={post.id} userId={userIdentityId ?? 0} />
+        <Comments postId={post.id} userId={userId} />
       )}
     </div>
   );

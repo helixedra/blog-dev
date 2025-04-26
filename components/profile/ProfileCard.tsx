@@ -1,14 +1,11 @@
 "use client";
 import React from "react";
-import { Follow, User } from "@/app/generated/prisma";
-import Image from "next/image";
+import { Follow, User } from "@/generated/prisma";
 import EditProfile from "./EditProfile";
 import { formatDate } from "@/lib/formatDate";
 import Markdown from "react-markdown";
-
 import FollowProfile from "./FollowProfile";
 import Avatar from "./Avatar";
-import { useAuth } from "@clerk/nextjs";
 
 export default function ProfileCard({
   profileUser,
@@ -17,13 +14,11 @@ export default function ProfileCard({
 }: {
   profileUser: User & { follows: Follow[] };
   isOwner: boolean;
-  viewer: number | undefined;
+  viewer: any;
 }) {
-  const { userId } = useAuth();
-  const isRegistred = !!userId;
-
   const isFollowing =
-    !!viewer && profileUser?.follows?.[0]?.userFollowers.includes(viewer);
+    !!viewer &&
+    profileUser?.follows?.[0]?.userFollowers.includes(Number(viewer?.id!));
 
   const [isFollowingState, setIsFollowingState] = React.useState(isFollowing);
   const [followersCountState, setFollowersCountState] = React.useState(
@@ -37,14 +32,14 @@ export default function ProfileCard({
       <div className="relative h-38 rounded">
         <div className="flex items-end">
           <Avatar
-            url={profileUser?.avatarUrl || ""}
+            url={profileUser?.image || ""}
             username={profileUser?.username || ""}
           />
           <div className="ml-6 w-full">
             <div className="flex justify-between mb-2 border-b border-zinc-200 pb-4">
               <div className="">
                 <div className="text-2xl font-semibold">
-                  {profileUser?.fullName}
+                  {profileUser?.name}
                 </div>
                 <div className="text-sm text-zinc-400">
                   @{profileUser?.username}
@@ -54,10 +49,10 @@ export default function ProfileCard({
               {isOwner ? (
                 <EditProfile userId={profileUser?.id} user={profileUser} />
               ) : (
-                isRegistred && (
+                viewer !== undefined && (
                   <FollowProfile
                     userId={profileUser?.id}
-                    viewer={viewer || 0}
+                    viewer={viewer}
                     isFollowing={isFollowingState}
                     setIsFollowing={setIsFollowingState}
                     followersCount={followersCountState}

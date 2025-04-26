@@ -1,6 +1,5 @@
 'use client";';
 import React from "react";
-import { User } from "@/app/generated/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/formatDate";
@@ -22,7 +21,7 @@ export default function CommentItem({
 }: {
   comment: Comment;
   children?: Comment[];
-  userId: number;
+  userId: string;
   postId: number;
   commentId?: number;
 }) {
@@ -30,7 +29,7 @@ export default function CommentItem({
   const [deleteDialog, setDeleteDialog] = React.useState(false);
 
   const {
-    author: { fullName, username, avatarUrl },
+    author: { name, username, image },
     comment: commentText,
     createdAt,
     id,
@@ -77,8 +76,8 @@ export default function CommentItem({
         <Image
           width={32}
           height={32}
-          src={avatarUrl ?? ""}
-          alt={username}
+          src={image ?? ""}
+          alt={username ?? ""}
           className="w-6 h-6 rounded-full object-cover"
         />
         <div className="flex text-sm items-center gap-2">
@@ -86,7 +85,7 @@ export default function CommentItem({
             href={`/profile/${username}`}
             className="font-semibold text-zinc-700 hover:text-zinc-700 hover:underline"
           >
-            {fullName}
+            {name}
           </Link>
           <span className="text-zinc-500 text-xs">
             {formatDate(new Date(createdAt)).timeAgo}
@@ -108,7 +107,7 @@ export default function CommentItem({
             likes={comment.likes}
             likesCount={comment.likeCount}
           />
-          {userId !== 0 && (
+          {userId && (
             <Button
               variant="ghost"
               size="xs"

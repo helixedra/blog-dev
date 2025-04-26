@@ -2,9 +2,8 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import ProfileCard from "@/components/profile/ProfileCard";
 import PostListItem from "@/components/posts/PostListItem";
-import { auth } from "@clerk/nextjs/server";
-import { Follow, User } from "@/app/generated/prisma";
-import { getUserIdentity } from "@/lib/getUserIdentity";
+import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { Follow, Post, User } from "@/generated/prisma";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
@@ -18,11 +17,11 @@ export async function generateMetadata({
     where: { username },
     select: {
       username: true,
-      fullName: true,
+      name: true,
     },
   });
   return {
-    title: user?.fullName || user?.username + " - Dev Blog",
+    title: user?.name || user?.username + " - Dev Blog",
     description: `Profile of ${user?.username}`,
   };
 }
@@ -33,75 +32,83 @@ export default async function ProfilePage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = await params;
-  const { userId } = await auth();
-  const { id: userIdentityId, isAdmin } = await getUserIdentity(userId ?? "");
+  const { userId } = await getAuthenticatedUser();
 
-  const viewerData = userId
-    ? await prisma.user.findUnique({
+  // Get viewer data
+  let viewer: User | null | undefined;
+  try {
+    if (!userId) {
+      viewer = null;
+    } else {
+      viewer = await prisma.user.findUnique({
         where: {
-          userId: userId,
+          id: userId,
         },
-      })
-    : null;
+      });
+    }
+  } catch (error) {
+    console.error((error as Error).message);
+  }
 
-  const userProfileId = (
-    await prisma.user.findUnique({
+  // Get user profile data
+  let profile;
+  try {
+    profile = await prisma.user.findUnique({
       where: { username: username },
-      select: { id: true },
-    })
-  )?.id;
+      include: { follows: true },
+    });
+  } catch (error) {
+    console.error((error as Error).message);
+  }
 
-  if (!userProfileId) {
+  if (!profile) {
     return notFound();
   }
 
-  const profileUser = await prisma.user.findUnique({
-    where: { id: userProfileId },
-    include: { follows: true },
-  });
-
-  const follows = profileUser?.follows[0];
-  const followers = follows?.userFollowers || [];
-  const following = follows?.userFollows || [];
-
-  const userPosts = await prisma.post.findMany({
-    where: {
-      author: {
-        userId: profileUser?.userId,
-      },
-    },
-    include: {
-      author: true,
-      _count: {
-        select: {
-          comments: true,
+  let profilePosts: (Post & { author: User; _count: { comments: number } })[] =
+    [];
+  try {
+    profilePosts = await prisma.post.findMany({
+      where: {
+        author: {
+          id: profile.id,
         },
       },
-    },
-  });
+      include: {
+        author: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.error((error as Error).message);
+  }
 
-  const isOwner = profileUser?.userId === userId;
+  const isOwner = profile.id === userId;
 
   return (
     <div>
       <ProfileCard
         isOwner={isOwner}
-        profileUser={profileUser as User & { follows: Follow[] }}
-        viewer={viewerData?.id}
+        profileUser={profile as User & { follows: Follow[] }}
+        viewer={viewer?.id || null}
       />
       <div className="flex flex-col items-start gap-2 border-t border-zinc-200 pt-4 mt-8">
-        {userPosts.length === 0 && (
+        {profilePosts.length === 0 && (
           <div className="p-12 text-zinc-400 text-center w-full">
             No posts yet
           </div>
         )}
-        {userPosts.reverse().map((post) => (
+        {profilePosts?.reverse().map((post) => (
           <PostListItem
             key={post.id}
             post={post}
-            user={profileUser as User}
-            isOwner={isOwner}
-            isAdmin={isAdmin}
+            user={profile as User}
+            isOwner={Boolean(isOwner)}
+            isAdmin={Boolean(viewer?.isAdmin)}
           />
         ))}
       </div>
