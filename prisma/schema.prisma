@@ -152,8 +152,8 @@ model Follow {
   id            Int      @id @default(autoincrement())
   user          User     @relation(fields: [userId], references: [id])
   userId        String   @unique
-  userFollowers Int[] // ID of users who follow this user
-  userFollows   Int[] // ID of users this user follows
+  userFollowers String[] // ID of users who follow this user
+  userFollows   String[] // ID of users this user follows
   createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }
 

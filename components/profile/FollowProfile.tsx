@@ -12,7 +12,7 @@ export default function FollowProfile({
   setFollowersCount,
 }: {
   userId: string;
-  viewer: number;
+  viewer: string;
   isFollowing: boolean;
   setIsFollowing: (isFollowing: boolean) => void;
   followersCount: number;

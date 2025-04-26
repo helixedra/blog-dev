@@ -18,7 +18,7 @@ export default function ProfileCard({
 }) {
   const isFollowing =
     !!viewer &&
-    profileUser?.follows?.[0]?.userFollowers.includes(Number(viewer?.id!));
+    profileUser?.follows?.[0]?.userFollowers.includes(String(viewer));
 
   const [isFollowingState, setIsFollowingState] = React.useState(isFollowing);
   const [followersCountState, setFollowersCountState] = React.useState(
@@ -74,7 +74,7 @@ export default function ProfileCard({
               </div>
               <div className="ml-auto flex flex-col justify-end text-end text-zinc-400">
                 <div className="text-sm">Joined</div>
-                <div className="text-sm">{formatDate(date).date}</div>
+                <div className="text-sm">{formatDate(date).shortDate}</div>
               </div>
             </div>
           </div>

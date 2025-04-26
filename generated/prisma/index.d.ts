@@ -12937,14 +12937,10 @@ export namespace Prisma {
 
   export type FollowAvgAggregateOutputType = {
     id: number | null
-    userFollowers: number | null
-    userFollows: number | null
   }
 
   export type FollowSumAggregateOutputType = {
     id: number | null
-    userFollowers: number[]
-    userFollows: number[]
   }
 
   export type FollowMinAggregateOutputType = {
@@ -12971,14 +12967,10 @@ export namespace Prisma {
 
   export type FollowAvgAggregateInputType = {
     id?: true
-    userFollowers?: true
-    userFollows?: true
   }
 
   export type FollowSumAggregateInputType = {
     id?: true
-    userFollowers?: true
-    userFollows?: true
   }
 
   export type FollowMinAggregateInputType = {
@@ -13091,8 +13083,8 @@ export namespace Prisma {
   export type FollowGroupByOutputType = {
     id: number
     userId: string
-    userFollowers: number[]
-    userFollows: number[]
+    userFollowers: string[]
+    userFollows: string[]
     createdAt: Date
     _count: FollowCountAggregateOutputType | null
     _avg: FollowAvgAggregateOutputType | null
@@ -13169,8 +13161,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: string
-      userFollowers: number[]
-      userFollows: number[]
+      userFollowers: string[]
+      userFollows: string[]
       createdAt: Date
     }, ExtArgs["result"]["follow"]>
     composites: {}
@@ -13598,8 +13590,8 @@ export namespace Prisma {
   interface FollowFieldRefs {
     readonly id: FieldRef<"Follow", 'Int'>
     readonly userId: FieldRef<"Follow", 'String'>
-    readonly userFollowers: FieldRef<"Follow", 'Int[]'>
-    readonly userFollows: FieldRef<"Follow", 'Int[]'>
+    readonly userFollowers: FieldRef<"Follow", 'String[]'>
+    readonly userFollows: FieldRef<"Follow", 'String[]'>
     readonly createdAt: FieldRef<"Follow", 'DateTime'>
   }
     
@@ -19498,8 +19490,8 @@ export namespace Prisma {
     NOT?: FollowWhereInput | FollowWhereInput[]
     id?: IntFilter<"Follow"> | number
     userId?: StringFilter<"Follow"> | string
-    userFollowers?: IntNullableListFilter<"Follow">
-    userFollows?: IntNullableListFilter<"Follow">
+    userFollowers?: StringNullableListFilter<"Follow">
+    userFollows?: StringNullableListFilter<"Follow">
     createdAt?: DateTimeFilter<"Follow"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -19519,8 +19511,8 @@ export namespace Prisma {
     AND?: FollowWhereInput | FollowWhereInput[]
     OR?: FollowWhereInput[]
     NOT?: FollowWhereInput | FollowWhereInput[]
-    userFollowers?: IntNullableListFilter<"Follow">
-    userFollows?: IntNullableListFilter<"Follow">
+    userFollowers?: StringNullableListFilter<"Follow">
+    userFollows?: StringNullableListFilter<"Follow">
     createdAt?: DateTimeFilter<"Follow"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "userId">
@@ -19544,8 +19536,8 @@ export namespace Prisma {
     NOT?: FollowScalarWhereWithAggregatesInput | FollowScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Follow"> | number
     userId?: StringWithAggregatesFilter<"Follow"> | string
-    userFollowers?: IntNullableListFilter<"Follow">
-    userFollows?: IntNullableListFilter<"Follow">
+    userFollowers?: StringNullableListFilter<"Follow">
+    userFollows?: StringNullableListFilter<"Follow">
     createdAt?: DateTimeWithAggregatesFilter<"Follow"> | Date | string
   }
 
@@ -20534,8 +20526,8 @@ export namespace Prisma {
   }
 
   export type FollowCreateInput = {
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutFollowsInput
   }
@@ -20543,14 +20535,14 @@ export namespace Prisma {
   export type FollowUncheckedCreateInput = {
     id?: number
     userId: string
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
   }
 
   export type FollowUpdateInput = {
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFollowsNestedInput
   }
@@ -20558,30 +20550,30 @@ export namespace Prisma {
   export type FollowUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FollowCreateManyInput = {
     id?: number
     userId: string
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
   }
 
   export type FollowUpdateManyMutationInput = {
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FollowUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21620,11 +21612,11 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type IntNullableListFilter<$PrismaModel = never> = {
-    equals?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    has?: number | IntFieldRefInput<$PrismaModel> | null
-    hasEvery?: number[] | ListIntFieldRefInput<$PrismaModel>
-    hasSome?: number[] | ListIntFieldRefInput<$PrismaModel>
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
     isEmpty?: boolean
   }
 
@@ -21638,8 +21630,6 @@ export namespace Prisma {
 
   export type FollowAvgOrderByAggregateInput = {
     id?: SortOrder
-    userFollowers?: SortOrder
-    userFollows?: SortOrder
   }
 
   export type FollowMaxOrderByAggregateInput = {
@@ -21656,8 +21646,6 @@ export namespace Prisma {
 
   export type FollowSumOrderByAggregateInput = {
     id?: SortOrder
-    userFollowers?: SortOrder
-    userFollows?: SortOrder
   }
 
   export type PostNullableScalarRelationFilter = {
@@ -22781,11 +22769,11 @@ export namespace Prisma {
   }
 
   export type FollowCreateuserFollowersInput = {
-    set: number[]
+    set: string[]
   }
 
   export type FollowCreateuserFollowsInput = {
-    set: number[]
+    set: string[]
   }
 
   export type UserCreateNestedOneWithoutFollowsInput = {
@@ -22795,13 +22783,13 @@ export namespace Prisma {
   }
 
   export type FollowUpdateuserFollowersInput = {
-    set?: number[]
-    push?: number | number[]
+    set?: string[]
+    push?: string | string[]
   }
 
   export type FollowUpdateuserFollowsInput = {
-    set?: number[]
-    push?: number | number[]
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneRequiredWithoutFollowsNestedInput = {
@@ -24742,15 +24730,15 @@ export namespace Prisma {
   }
 
   export type FollowCreateWithoutUserInput = {
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
   }
 
   export type FollowUncheckedCreateWithoutUserInput = {
     id?: number
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
   }
 
@@ -24957,8 +24945,8 @@ export namespace Prisma {
     NOT?: FollowScalarWhereInput | FollowScalarWhereInput[]
     id?: IntFilter<"Follow"> | number
     userId?: StringFilter<"Follow"> | string
-    userFollowers?: IntNullableListFilter<"Follow">
-    userFollows?: IntNullableListFilter<"Follow">
+    userFollowers?: StringNullableListFilter<"Follow">
+    userFollows?: StringNullableListFilter<"Follow">
     createdAt?: DateTimeFilter<"Follow"> | Date | string
   }
 
@@ -26167,8 +26155,8 @@ export namespace Prisma {
 
   export type FollowCreateManyUserInput = {
     id?: number
-    userFollowers?: FollowCreateuserFollowersInput | number[]
-    userFollows?: FollowCreateuserFollowsInput | number[]
+    userFollowers?: FollowCreateuserFollowersInput | string[]
+    userFollows?: FollowCreateuserFollowsInput | string[]
     createdAt?: Date | string
   }
 
@@ -26384,22 +26372,22 @@ export namespace Prisma {
   }
 
   export type FollowUpdateWithoutUserInput = {
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FollowUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FollowUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userFollowers?: FollowUpdateuserFollowersInput | number[]
-    userFollows?: FollowUpdateuserFollowsInput | number[]
+    userFollowers?: FollowUpdateuserFollowersInput | string[]
+    userFollows?: FollowUpdateuserFollowsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
