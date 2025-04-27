@@ -1,43 +1,55 @@
 "use client";
-
 import { Button } from "@/components/shared/Button";
+import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 export function AdminApprove({
   postId,
-  action,
+  authorId,
 }: {
   postId: number;
-  action: (formData: FormData) => Promise<void>;
+  authorId: string;
 }) {
   const router = useRouter();
 
-  async function handleSubmit(formData: FormData) {
-    await action(formData);
-    router.refresh();
-  }
+  const changeStatus = async (review: string) => {
+    try {
+      const response = await api.put("posts/review", {
+        id: postId,
+        review,
+        authorId,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update post status");
+      }
+      router.refresh();
+    } catch (error) {
+      console.error("Error updating post status:", (error as Error).message);
+    }
+  };
 
   return (
-    <form action={handleSubmit} className="flex gap-2">
+    <div className="flex gap-2">
       <Button
         size="sm"
         className="bg-green-100! text-green-800!"
-        type="submit"
-        name="status"
-        value="published"
+        name="review"
+        onClick={() => {
+          changeStatus("published");
+        }}
       >
         Approve
       </Button>
       <Button
         size="sm"
         className="bg-red-100! text-red-800!"
-        type="submit"
-        name="status"
-        value="rejected"
+        name="review"
+        onClick={() => {
+          changeStatus("rejected");
+        }}
       >
         Reject
       </Button>
-      <input type="hidden" name="postId" value={postId} />
-    </form>
+    </div>
   );
 }

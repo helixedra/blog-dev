@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { TagsUpdater } from "./tagsUpdater";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
+import { Post } from "@/generated/prisma";
 
 const postSchema = z.object({
   id: z.number().int(),
@@ -38,11 +39,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  //Check if user is logged in
+  // Check authentication
   const { userId } = await getAuthenticatedUser();
-
   const { title, content, tags, draft } = await request.json();
 
+  // Validation
   const parsedData = postSchema.safeParse({
     id: 0,
     title,
@@ -57,21 +58,65 @@ export async function POST(request: Request) {
   }
 
   try {
-    const post = await prisma.post.create({
-      data: {
-        title,
-        content,
-        userId: userId!,
-        status: draft ? "draft" : "review",
-        metaTitle: title,
-        metaDescription: content.slice(0, 150),
-        likeCount: 0,
-      },
+    // Transaction
+    const post = await prisma.$transaction(async (tx) => {
+      // 1. Create post
+      const newPost = await tx.post.create({
+        data: {
+          title,
+          content,
+          userId: userId!,
+          status: draft ? "draft" : "review",
+          metaTitle: title,
+          metaDescription: content.slice(0, 150),
+          likeCount: 0,
+        },
+      });
+
+      // 2. If post is not draft, create notifications
+      if (!draft) {
+        // Notification for author
+        await tx.notification.create({
+          data: {
+            userId: userId!,
+            title: "post_sent_for_review",
+            relatedUserId: userId!,
+            relatedPostId: newPost.id,
+            message: "your post is sent for review",
+          },
+        });
+
+        // Notifications for admins
+        const admins = await tx.user.findMany({
+          where: { isAdmin: true },
+          select: { id: true },
+        });
+
+        if (admins.length > 0) {
+          const notifications = admins.map((admin) => ({
+            userId: admin.id,
+            title: "new_post_on_review",
+            relatedUserId: userId,
+            relatedPostId: newPost.id,
+            message: "sent a new post for review",
+          }));
+
+          await tx.notification.createMany({
+            data: notifications,
+          });
+        }
+      }
+
+      // 3. Return the newly created post
+      return newPost;
     });
 
-    // Update tags
-    await TagsUpdater(tags, Number(post.id));
+    // Here post is already available after the transaction!
 
+    // 4. Update tags (outside transaction)
+    await TagsUpdater(tags, post.id);
+
+    // 5. Return result
     return NextResponse.json({ post }, { status: 201 });
   } catch (error) {
     console.error("Error creating post:", (error as Error).message);
@@ -84,7 +129,6 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   //Check if user is logged in
-  // Get user id from clerk
   const { userId } = await getAuthenticatedUser();
 
   const { id, title, content, tags, draft } = await request.json();

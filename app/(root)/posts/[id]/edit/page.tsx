@@ -52,7 +52,7 @@ export default async function PostEditPage({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="w-full items-center text-center text-base">Edit Post</div>
       <EditPostForm userId={userId} post={post} />
     </div>

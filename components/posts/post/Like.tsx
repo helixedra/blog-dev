@@ -9,11 +9,13 @@ export default function Like({
   likes,
   liked,
   userId,
+  postAuthorId,
 }: {
   postId: number;
   likes: number;
   liked: boolean;
   userId: string | null;
+  postAuthorId: string | null;
 }) {
   const initialUserState = userId ? false : true;
   const [isToggled, setIsToggled] = useState(initialUserState);
@@ -31,6 +33,7 @@ export default function Like({
       const res = await api.post(`likes/post`, {
         userId: userId,
         postId: postId,
+        postAuthorId: postAuthorId,
       });
       // Revert optimistic update if toggle fails
       if (!res.ok) {

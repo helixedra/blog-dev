@@ -8,11 +8,15 @@ export default function CommentFooter({
   userId,
   setReplyVisibility,
   handleDeleteApprove,
+  postAuthorId,
+  postId,
 }: {
   comment: Comment | any;
   userId: string | null;
   setReplyVisibility: any; // TYPE
   handleDeleteApprove: () => void;
+  postAuthorId: string | null;
+  postId: number | null;
 }) {
   const { id, likes, likeCount, author } = comment as any;
   return (
@@ -23,6 +27,8 @@ export default function CommentFooter({
           userId={userId}
           likes={likes}
           likesCount={likeCount}
+          postAuthorId={postAuthorId}
+          postId={postId}
         />
         {userId && (
           <Button

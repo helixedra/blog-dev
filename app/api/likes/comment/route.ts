@@ -11,7 +11,12 @@ const commentSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     // get userId from request
-    const { userId: userIdFromRequest, commentId } = await request.json();
+    const {
+      userId: userIdFromRequest,
+      commentId,
+      postAuthorId,
+      postId,
+    } = await request.json();
 
     // get userId from Clerk by  passing userId from request
     // checking if the user is the same as the one in the request
@@ -56,6 +61,12 @@ export async function POST(request: NextRequest) {
           },
         },
       });
+      await prisma.notification.deleteMany({
+        where: {
+          relatedCommentId: commentId!,
+          userId: postAuthorId!,
+        },
+      });
 
       // Decrement the like count
       const comment = await prisma.comment.update({
@@ -74,6 +85,16 @@ export async function POST(request: NextRequest) {
         data: {
           commentId: commentId,
           userId: userId!,
+        },
+      });
+      await prisma.notification.create({
+        data: {
+          relatedCommentId: Number(commentId!),
+          relatedUserId: String(userId!),
+          userId: String(postAuthorId!),
+          relatedPostId: Number(postId!),
+          title: "comment_liked",
+          message: "You have received a new like on your comment.",
         },
       });
 

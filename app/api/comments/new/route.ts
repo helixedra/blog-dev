@@ -15,7 +15,8 @@ const commentSchema = z.object({
 export async function POST(request: Request) {
   const { userId: authenticatedUserId } = await getAuthenticatedUser();
 
-  const { comment, postId, userId, parentId } = await request.json();
+  const { comment, postId, userId, parentId, postAuthorId } =
+    await request.json();
 
   if (!authenticatedUserId || authenticatedUserId !== userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -35,12 +36,39 @@ export async function POST(request: Request) {
   try {
     const newComment = await prisma.comment.create({
       data: {
-        comment: validatedData.data.comment,
-        postId: validatedData.data.postId,
-        userId: validatedData.data.userId,
-        parentId: validatedData.data.parentId,
+        comment,
+        postId,
+        userId,
+        parentId,
       },
     });
+
+    // Add notification for post owner
+    // if its replay comment
+    if (parentId) {
+      await prisma.notification.create({
+        data: {
+          userId: postAuthorId,
+          relatedUserId: userId,
+          relatedPostId: postId,
+          relatedCommentId: newComment.id,
+          title: "comment_replied",
+          message: `Replied to your comment`,
+        },
+      });
+    }
+    //if its new comment
+    if (!parentId) {
+      await prisma.notification.create({
+        data: {
+          userId: postAuthorId,
+          relatedUserId: userId,
+          relatedPostId: postId,
+          title: "comment",
+          message: `A new comment has been added to your post`,
+        },
+      });
+    }
 
     return NextResponse.json({ comment: newComment }, { status: 201 });
   } catch (error) {
