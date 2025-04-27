@@ -51,7 +51,7 @@ export async function PUT(request: Request) {
         await tx.notification.create({
           data: {
             userId: authorId,
-            title: `post ${review}`,
+            title: `post_${review}`,
             relatedUserId: authorId,
             relatedPostId: Number(id),
             message: `your post is ${review}`,

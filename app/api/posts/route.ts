@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         await tx.notification.create({
           data: {
             userId: userId!,
-            title: "Post on review",
+            title: "post_sent_for_review",
             relatedUserId: userId!,
             relatedPostId: newPost.id,
             message: "your post is sent for review",
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
         if (admins.length > 0) {
           const notifications = admins.map((admin) => ({
             userId: admin.id,
-            title: "New post on review",
+            title: "new_post_on_review",
             relatedUserId: userId,
             relatedPostId: newPost.id,
             message: "sent a new post for review",

@@ -34,19 +34,98 @@ export default function Notifications({ userId }: { userId: string | null }) {
     enabled: !!userId,
   });
 
-  const messagesTemplate = {
-    post_published: "has been published 🎉",
-    post_rejected: "has been rejected 🚫",
+  // Notification templates
+  const templates = {
+    post_published: (postTitle: string, postId: number) =>
+      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been published 🎉`,
+    post_rejected: (postTitle: string, postId: number) =>
+      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been rejected 🚫`,
+    post_sent_for_review: (postTitle: string, postId: number) =>
+      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been sent for review`,
+    new_post_on_review: (postTitle: string, postId: number) =>
+      `A new post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been sent for review`,
+    comment_liked: (
+      userName: string,
+      postTitle: string,
+      postId: number,
+      name: string
+    ) =>
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your comment on <a href="/posts/${postId}" class="font-semibold">post</a> ${postTitle}`,
+    comment_replied: (
+      userName: string,
+      postTitle: string,
+      postId: number,
+      name: string
+    ) =>
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> replied to your comment on <a href="/posts/${postId}" class="font-semibold">post</a> ${postTitle}`,
+    follow: (userName: string, name: string) =>
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> now followed you`,
+    like: (userName: string, postId: number, name: string) =>
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your <a href="/posts/${postId}" class="font-semibold">post</a>`,
   };
 
-  const preparedNotification = (notification: NotificationData) => {
-    const title = notification.title.toLowerCase();
-    if (title.includes("post")) {
-      const templateKey = title.includes("published")
-        ? "post_published"
-        : "post_rejected";
-      const message = `Your <a href="/posts/${notification.relatedPostId}" class="font-semibold">post</a> ${messagesTemplate[templateKey]}`;
-      return { message };
+  const messageBuilder = (notification: NotificationData) => {
+    const t = notification.title.toLowerCase();
+    const n = notification;
+
+    if (t === "post_published") {
+      return templates.post_published(
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0
+      );
+    }
+    if (t === "post_rejected") {
+      return templates.post_rejected(
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0
+      );
+    }
+
+    if (t === "post_sent_for_review") {
+      return templates.post_sent_for_review(
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0
+      );
+    }
+
+    if (t === "new_post_on_review") {
+      return templates.new_post_on_review(
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0
+      );
+    }
+
+    if (t === "comment_liked") {
+      return templates.comment_liked(
+        n.relatedUser?.username || "",
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0,
+        n.relatedUser?.name || ""
+      );
+    }
+
+    if (t === "comment_replied") {
+      return templates.comment_replied(
+        n.relatedUser?.username || "",
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0,
+        n.relatedUser?.name || ""
+      );
+    }
+
+    if (t === "new_follower") {
+      return templates.follow(
+        n.relatedUser?.username || "",
+        n.relatedUser?.name || ""
+      );
+    }
+
+    if (t === "post_liked") {
+      return templates.like(
+        n.relatedUser?.username || "",
+        n.relatedPost?.id || 0,
+        n.relatedUser?.name || ""
+      );
     }
   };
 
@@ -64,7 +143,7 @@ export default function Notifications({ userId }: { userId: string | null }) {
             {notification.relatedUser && (
               <div className="flex items-center text-sm w-full">
                 {/* <RiUserFollowFill className="text-zinc-600 mr-2" /> */}
-                <Link
+                {/* <Link
                   href={`/user/${notification.relatedUser.username}`}
                   className="flex items-center"
                 >
@@ -78,13 +157,12 @@ export default function Notifications({ userId }: { userId: string | null }) {
                   <div className="font-semibold">
                     {notification.relatedUser.name || ""}
                   </div>
-                </Link>
+                </Link> */}
                 <div
                   className="text-zinc-800 ml-2"
                   dangerouslySetInnerHTML={{
                     __html:
-                      preparedNotification(notification)?.message ||
-                      notification.message,
+                      messageBuilder(notification) || notification.message,
                   }}
                 ></div>
                 <div className="text-zinc-500 text-xs ml-auto">
