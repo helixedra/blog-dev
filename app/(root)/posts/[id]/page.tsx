@@ -14,6 +14,7 @@ import { AdminApprove } from "@/components/posts/post/AdminApprove";
 import EditPostButton from "@/components/posts/post/EditPostButton";
 import Tag from "@/components/posts/post/Tag";
 import { Metadata } from "next";
+import { api } from "@/lib/api";
 
 export async function generateMetadata({
   params,
@@ -79,25 +80,8 @@ export default async function PostPage({
     return <div>Post not found</div>;
   }
 
-  const changeStatus = async (formData: FormData): Promise<void> => {
-    "use server";
-
-    try {
-      await prisma.post.update({
-        where: {
-          id: Number(formData.get("postId")),
-        },
-        data: {
-          status: formData.get("status") as string,
-        },
-      });
-    } catch (error) {
-      console.error("Error updating post status:", (error as Error).message);
-    }
-  };
-
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-col gap-1 items-start">
         {(user?.isAdmin || post.author.id === userId) && (
           <PostStatus status={post.status as PostStatusType} />
@@ -145,7 +129,7 @@ export default async function PostPage({
             <span className="text-sm text-zinc-500 mr-4">
               This post is under review
             </span>
-            <AdminApprove postId={post.id} action={changeStatus} />
+            <AdminApprove postId={post.id} authorId={post.author.id} />
           </div>
         )}
       </div>

@@ -20,6 +20,7 @@ export default function EditPostForm({
   const initialTagsArr = post?.tags?.map((tag) => tag.tag.name) || [];
   const [tags, setTags] = React.useState<string[]>(initialTagsArr);
   const [tagInput, setTagInput] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const formRef = React.useRef<HTMLFormElement>(null);
   const router = useRouter();
 
@@ -48,7 +49,7 @@ export default function EditPostForm({
 
   const handleFormSubmit = async (draft: boolean) => {
     if (!formRef.current) return;
-
+    setIsLoading(true);
     const formData = new FormData(formRef.current);
 
     // Convert FormData to object
@@ -74,6 +75,7 @@ export default function EditPostForm({
       throw new Error(errorData.error || "Failed to update post");
     }
 
+    setIsLoading(false);
     // Redirect to post page
     const { post } = await response.json();
     router.push(`/posts/${post.id}`);
@@ -144,12 +146,17 @@ export default function EditPostForm({
         <Button
           variant="outline"
           type="button"
+          disabled={isLoading}
           onClick={() => handleFormSubmit(true)}
         >
-          Save Draft
+          {isLoading ? "Saving..." : "Save Draft"}
         </Button>
-        <Button type="button" onClick={() => handleFormSubmit(false)}>
-          Publish
+        <Button
+          type="button"
+          onClick={() => handleFormSubmit(false)}
+          disabled={isLoading}
+        >
+          {isLoading ? "Publishing..." : "Publish"}
         </Button>
       </div>
     </form>

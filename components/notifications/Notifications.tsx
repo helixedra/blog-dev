@@ -34,6 +34,22 @@ export default function Notifications({ userId }: { userId: string | null }) {
     enabled: !!userId,
   });
 
+  const messagesTemplate = {
+    post_published: "has been published 🎉",
+    post_rejected: "has been rejected 🚫",
+  };
+
+  const preparedNotification = (notification: NotificationData) => {
+    const title = notification.title.toLowerCase();
+    if (title.includes("post")) {
+      const templateKey = title.includes("published")
+        ? "post_published"
+        : "post_rejected";
+      const message = `Your <a href="/posts/${notification.relatedPostId}" class="font-semibold">post</a> ${messagesTemplate[templateKey]}`;
+      return { message };
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="text-2xl mb-4">Notifications</div>
@@ -47,7 +63,7 @@ export default function Notifications({ userId }: { userId: string | null }) {
           >
             {notification.relatedUser && (
               <div className="flex items-center text-sm w-full">
-                <RiUserFollowFill className="text-zinc-600 mr-2" />
+                {/* <RiUserFollowFill className="text-zinc-600 mr-2" /> */}
                 <Link
                   href={`/user/${notification.relatedUser.username}`}
                   className="flex items-center"
@@ -63,7 +79,14 @@ export default function Notifications({ userId }: { userId: string | null }) {
                     {notification.relatedUser.name || ""}
                   </div>
                 </Link>
-                <div className="text-zinc-800 ml-2">{notification.message}</div>
+                <div
+                  className="text-zinc-800 ml-2"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      preparedNotification(notification)?.message ||
+                      notification.message,
+                  }}
+                ></div>
                 <div className="text-zinc-500 text-xs ml-auto">
                   {formatDate(new Date(notification.createdAt)).timeAgo}
                 </div>

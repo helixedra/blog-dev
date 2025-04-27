@@ -12,12 +12,13 @@ export default async function PostList({
   return (
     <div>
       {posts.map((post) =>
-        user?.isAdmin ? (
+        user?.isAdmin || user?.id === post.author.id ? (
           <PostListItem
             key={post.id}
             post={post}
             user={post.author}
             isAdmin={user?.isAdmin}
+            isOwner={user?.id === post.author.id}
           />
         ) : (
           post.status === "published" && (
