@@ -6066,9 +6066,9 @@ export namespace Prisma {
     featuredImageUrl?: boolean
     metaTitle?: boolean
     metaDescription?: boolean
-    likes?: boolean | Post$likesArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Post$categoryArgs<ExtArgs>
+    likes?: boolean | Post$likesArgs<ExtArgs>
     comments?: boolean | Post$commentsArgs<ExtArgs>
     tags?: boolean | Post$tagsArgs<ExtArgs>
     notifications?: boolean | Post$notificationsArgs<ExtArgs>
@@ -6132,9 +6132,9 @@ export namespace Prisma {
 
   export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "likeCount" | "excerpt" | "content" | "userId" | "categoryId" | "status" | "publishedAt" | "createdAt" | "updatedAt" | "featuredImageUrl" | "metaTitle" | "metaDescription", ExtArgs["result"]["post"]>
   export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    likes?: boolean | Post$likesArgs<ExtArgs>
     author?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | Post$categoryArgs<ExtArgs>
+    likes?: boolean | Post$likesArgs<ExtArgs>
     comments?: boolean | Post$commentsArgs<ExtArgs>
     tags?: boolean | Post$tagsArgs<ExtArgs>
     notifications?: boolean | Post$notificationsArgs<ExtArgs>
@@ -6152,9 +6152,9 @@ export namespace Prisma {
   export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Post"
     objects: {
-      likes: Prisma.$LikePayload<ExtArgs>[]
       author: Prisma.$UserPayload<ExtArgs>
       category: Prisma.$CategoryPayload<ExtArgs> | null
+      likes: Prisma.$LikePayload<ExtArgs>[]
       comments: Prisma.$CommentPayload<ExtArgs>[]
       tags: Prisma.$PostTagPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
@@ -6568,9 +6568,9 @@ export namespace Prisma {
    */
   export interface Prisma__PostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    likes<T extends Post$likesArgs<ExtArgs> = {}>(args?: Subset<T, Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     category<T extends Post$categoryArgs<ExtArgs> = {}>(args?: Subset<T, Post$categoryArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    likes<T extends Post$likesArgs<ExtArgs> = {}>(args?: Subset<T, Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Post$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Post$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tags<T extends Post$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Post$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends Post$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Post$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7013,6 +7013,25 @@ export namespace Prisma {
   }
 
   /**
+   * Post.category
+   */
+  export type Post$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Category
+     */
+    select?: CategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Category
+     */
+    omit?: CategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CategoryInclude<ExtArgs> | null
+    where?: CategoryWhereInput
+  }
+
+  /**
    * Post.likes
    */
   export type Post$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7034,25 +7053,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LikeScalarFieldEnum | LikeScalarFieldEnum[]
-  }
-
-  /**
-   * Post.category
-   */
-  export type Post$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Category
-     */
-    select?: CategorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Category
-     */
-    omit?: CategoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoryInclude<ExtArgs> | null
-    where?: CategoryWhereInput
   }
 
   /**
@@ -19031,9 +19031,9 @@ export namespace Prisma {
     featuredImageUrl?: StringNullableFilter<"Post"> | string | null
     metaTitle?: StringNullableFilter<"Post"> | string | null
     metaDescription?: StringNullableFilter<"Post"> | string | null
-    likes?: LikeListRelationFilter
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
     tags?: PostTagListRelationFilter
     notifications?: NotificationListRelationFilter
@@ -19054,9 +19054,9 @@ export namespace Prisma {
     featuredImageUrl?: SortOrderInput | SortOrder
     metaTitle?: SortOrderInput | SortOrder
     metaDescription?: SortOrderInput | SortOrder
-    likes?: LikeOrderByRelationAggregateInput
     author?: UserOrderByWithRelationInput
     category?: CategoryOrderByWithRelationInput
+    likes?: LikeOrderByRelationAggregateInput
     comments?: CommentOrderByRelationAggregateInput
     tags?: PostTagOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
@@ -19080,9 +19080,9 @@ export namespace Prisma {
     featuredImageUrl?: StringNullableFilter<"Post"> | string | null
     metaTitle?: StringNullableFilter<"Post"> | string | null
     metaDescription?: StringNullableFilter<"Post"> | string | null
-    likes?: LikeListRelationFilter
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryNullableScalarRelationFilter, CategoryWhereInput> | null
+    likes?: LikeListRelationFilter
     comments?: CommentListRelationFilter
     tags?: PostTagListRelationFilter
     notifications?: NotificationListRelationFilter
@@ -20047,9 +20047,9 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutPostsInput
     category?: CategoryCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
     tags?: PostTagCreateNestedManyWithoutPostInput
     notifications?: NotificationCreateNestedManyWithoutRelatedPostInput
@@ -20088,9 +20088,9 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutPostsNestedInput
     category?: CategoryUpdateOneWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
     tags?: PostTagUpdateManyWithoutPostNestedInput
     notifications?: NotificationUpdateManyWithoutRelatedPostNestedInput
@@ -21244,12 +21244,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type LikeListRelationFilter = {
-    every?: LikeWhereInput
-    some?: LikeWhereInput
-    none?: LikeWhereInput
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -21258,6 +21252,12 @@ export namespace Prisma {
   export type CategoryNullableScalarRelationFilter = {
     is?: CategoryWhereInput | null
     isNot?: CategoryWhereInput | null
+  }
+
+  export type LikeListRelationFilter = {
+    every?: LikeWhereInput
+    some?: LikeWhereInput
+    none?: LikeWhereInput
   }
 
   export type PostTagListRelationFilter = {
@@ -22082,13 +22082,6 @@ export namespace Prisma {
     update?: XOR<XOR<TagUpdateToOneWithWhereWithoutPostsInput, TagUpdateWithoutPostsInput>, TagUncheckedUpdateWithoutPostsInput>
   }
 
-  export type LikeCreateNestedManyWithoutPostInput = {
-    create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
-    createMany?: LikeCreateManyPostInputEnvelope
-    connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
-  }
-
   export type UserCreateNestedOneWithoutPostsInput = {
     create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPostsInput
@@ -22099,6 +22092,13 @@ export namespace Prisma {
     create?: XOR<CategoryCreateWithoutPostsInput, CategoryUncheckedCreateWithoutPostsInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutPostsInput
     connect?: CategoryWhereUniqueInput
+  }
+
+  export type LikeCreateNestedManyWithoutPostInput = {
+    create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
+    createMany?: LikeCreateManyPostInputEnvelope
+    connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
   }
 
   export type CommentCreateNestedManyWithoutPostInput = {
@@ -22154,20 +22154,6 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type LikeUpdateManyWithoutPostNestedInput = {
-    create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
-    upsert?: LikeUpsertWithWhereUniqueWithoutPostInput | LikeUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: LikeCreateManyPostInputEnvelope
-    set?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
-    disconnect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
-    delete?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
-    connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
-    update?: LikeUpdateWithWhereUniqueWithoutPostInput | LikeUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: LikeUpdateManyWithWhereWithoutPostInput | LikeUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: LikeScalarWhereInput | LikeScalarWhereInput[]
-  }
-
   export type UserUpdateOneRequiredWithoutPostsNestedInput = {
     create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPostsInput
@@ -22184,6 +22170,20 @@ export namespace Prisma {
     delete?: CategoryWhereInput | boolean
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutPostsInput, CategoryUpdateWithoutPostsInput>, CategoryUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type LikeUpdateManyWithoutPostNestedInput = {
+    create?: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput> | LikeCreateWithoutPostInput[] | LikeUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: LikeCreateOrConnectWithoutPostInput | LikeCreateOrConnectWithoutPostInput[]
+    upsert?: LikeUpsertWithWhereUniqueWithoutPostInput | LikeUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: LikeCreateManyPostInputEnvelope
+    set?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
+    disconnect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
+    delete?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
+    connect?: LikeWhereUniqueInput | LikeWhereUniqueInput[]
+    update?: LikeUpdateWithWhereUniqueWithoutPostInput | LikeUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: LikeUpdateManyWithWhereWithoutPostInput | LikeUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: LikeScalarWhereInput | LikeScalarWhereInput[]
   }
 
   export type CommentUpdateManyWithoutPostNestedInput = {
@@ -23116,8 +23116,8 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
     tags?: PostTagCreateNestedManyWithoutPostInput
     notifications?: NotificationCreateNestedManyWithoutRelatedPostInput
@@ -23254,9 +23254,9 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutPostsInput
     category?: CategoryCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     tags?: PostTagCreateNestedManyWithoutPostInput
     notifications?: NotificationCreateNestedManyWithoutRelatedPostInput
   }
@@ -23491,9 +23491,9 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutPostsNestedInput
     category?: CategoryUpdateOneWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     tags?: PostTagUpdateManyWithoutPostNestedInput
     notifications?: NotificationUpdateManyWithoutRelatedPostNestedInput
   }
@@ -23657,9 +23657,9 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutPostsInput
     category?: CategoryCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
     notifications?: NotificationCreateNestedManyWithoutRelatedPostInput
   }
@@ -23732,9 +23732,9 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutPostsNestedInput
     category?: CategoryUpdateOneWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
     notifications?: NotificationUpdateManyWithoutRelatedPostNestedInput
   }
@@ -23783,27 +23783,6 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type LikeCreateWithoutPostInput = {
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutLikesInput
-  }
-
-  export type LikeUncheckedCreateWithoutPostInput = {
-    id?: number
-    userId: string
-    createdAt?: Date | string
-  }
-
-  export type LikeCreateOrConnectWithoutPostInput = {
-    where: LikeWhereUniqueInput
-    create: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput>
-  }
-
-  export type LikeCreateManyPostInputEnvelope = {
-    data: LikeCreateManyPostInput | LikeCreateManyPostInput[]
-    skipDuplicates?: boolean
   }
 
   export type UserCreateWithoutPostsInput = {
@@ -23877,6 +23856,27 @@ export namespace Prisma {
   export type CategoryCreateOrConnectWithoutPostsInput = {
     where: CategoryWhereUniqueInput
     create: XOR<CategoryCreateWithoutPostsInput, CategoryUncheckedCreateWithoutPostsInput>
+  }
+
+  export type LikeCreateWithoutPostInput = {
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutLikesInput
+  }
+
+  export type LikeUncheckedCreateWithoutPostInput = {
+    id?: number
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type LikeCreateOrConnectWithoutPostInput = {
+    where: LikeWhereUniqueInput
+    create: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput>
+  }
+
+  export type LikeCreateManyPostInputEnvelope = {
+    data: LikeCreateManyPostInput | LikeCreateManyPostInput[]
+    skipDuplicates?: boolean
   }
 
   export type CommentCreateWithoutPostInput = {
@@ -23967,32 +23967,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type LikeUpsertWithWhereUniqueWithoutPostInput = {
-    where: LikeWhereUniqueInput
-    update: XOR<LikeUpdateWithoutPostInput, LikeUncheckedUpdateWithoutPostInput>
-    create: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput>
-  }
-
-  export type LikeUpdateWithWhereUniqueWithoutPostInput = {
-    where: LikeWhereUniqueInput
-    data: XOR<LikeUpdateWithoutPostInput, LikeUncheckedUpdateWithoutPostInput>
-  }
-
-  export type LikeUpdateManyWithWhereWithoutPostInput = {
-    where: LikeScalarWhereInput
-    data: XOR<LikeUpdateManyMutationInput, LikeUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type LikeScalarWhereInput = {
-    AND?: LikeScalarWhereInput | LikeScalarWhereInput[]
-    OR?: LikeScalarWhereInput[]
-    NOT?: LikeScalarWhereInput | LikeScalarWhereInput[]
-    id?: IntFilter<"Like"> | number
-    postId?: IntFilter<"Like"> | number
-    userId?: StringFilter<"Like"> | string
-    createdAt?: DateTimeFilter<"Like"> | Date | string
-  }
-
   export type UserUpsertWithoutPostsInput = {
     update: XOR<UserUpdateWithoutPostsInput, UserUncheckedUpdateWithoutPostsInput>
     create: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
@@ -24076,6 +24050,32 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LikeUpsertWithWhereUniqueWithoutPostInput = {
+    where: LikeWhereUniqueInput
+    update: XOR<LikeUpdateWithoutPostInput, LikeUncheckedUpdateWithoutPostInput>
+    create: XOR<LikeCreateWithoutPostInput, LikeUncheckedCreateWithoutPostInput>
+  }
+
+  export type LikeUpdateWithWhereUniqueWithoutPostInput = {
+    where: LikeWhereUniqueInput
+    data: XOR<LikeUpdateWithoutPostInput, LikeUncheckedUpdateWithoutPostInput>
+  }
+
+  export type LikeUpdateManyWithWhereWithoutPostInput = {
+    where: LikeScalarWhereInput
+    data: XOR<LikeUpdateManyMutationInput, LikeUncheckedUpdateManyWithoutPostInput>
+  }
+
+  export type LikeScalarWhereInput = {
+    AND?: LikeScalarWhereInput | LikeScalarWhereInput[]
+    OR?: LikeScalarWhereInput[]
+    NOT?: LikeScalarWhereInput | LikeScalarWhereInput[]
+    id?: IntFilter<"Like"> | number
+    postId?: IntFilter<"Like"> | number
+    userId?: StringFilter<"Like"> | string
+    createdAt?: DateTimeFilter<"Like"> | Date | string
   }
 
   export type CommentUpsertWithWhereUniqueWithoutPostInput = {
@@ -24671,8 +24671,8 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     category?: CategoryCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
     tags?: PostTagCreateNestedManyWithoutPostInput
     notifications?: NotificationCreateNestedManyWithoutRelatedPostInput
@@ -25240,9 +25240,9 @@ export namespace Prisma {
     featuredImageUrl?: string | null
     metaTitle?: string | null
     metaDescription?: string | null
-    likes?: LikeCreateNestedManyWithoutPostInput
     author: UserCreateNestedOneWithoutPostsInput
     category?: CategoryCreateNestedOneWithoutPostsInput
+    likes?: LikeCreateNestedManyWithoutPostInput
     comments?: CommentCreateNestedManyWithoutPostInput
     tags?: PostTagCreateNestedManyWithoutPostInput
   }
@@ -25445,9 +25445,9 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutPostsNestedInput
     category?: CategoryUpdateOneWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
     tags?: PostTagUpdateManyWithoutPostNestedInput
   }
@@ -25783,8 +25783,8 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     author?: UserUpdateOneRequiredWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
     tags?: PostTagUpdateManyWithoutPostNestedInput
     notifications?: NotificationUpdateManyWithoutRelatedPostNestedInput
@@ -26311,8 +26311,8 @@ export namespace Prisma {
     featuredImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     metaTitle?: NullableStringFieldUpdateOperationsInput | string | null
     metaDescription?: NullableStringFieldUpdateOperationsInput | string | null
-    likes?: LikeUpdateManyWithoutPostNestedInput
     category?: CategoryUpdateOneWithoutPostsNestedInput
+    likes?: LikeUpdateManyWithoutPostNestedInput
     comments?: CommentUpdateManyWithoutPostNestedInput
     tags?: PostTagUpdateManyWithoutPostNestedInput
     notifications?: NotificationUpdateManyWithoutRelatedPostNestedInput

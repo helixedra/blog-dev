@@ -50,7 +50,7 @@ export default function Notifications({ userId }: { userId: string | null }) {
       postId: number,
       name: string
     ) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your comment on <a href="/posts/${postId}" class="font-semibold">post</a> ${postTitle}`,
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your comment on <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
     comment_replied: (
       userName: string,
       postTitle: string,
