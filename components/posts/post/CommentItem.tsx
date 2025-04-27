@@ -8,6 +8,7 @@ import { Dialog } from "@/components/shared/Dialog";
 import { Comment } from "./Comments";
 import { CommentHeader } from "./comment-item/CommentHeader";
 import CommentFooter from "./comment-item/CommentFooter";
+import { User } from "@/generated/prisma";
 
 export default function CommentItem({
   comment,
@@ -15,6 +16,7 @@ export default function CommentItem({
   postId,
   commentId,
   replay,
+  postAuthor,
 }: {
   comment: Comment;
   children?: Comment[];
@@ -22,6 +24,7 @@ export default function CommentItem({
   postId: number;
   commentId?: number;
   replay?: boolean;
+  postAuthor: any;
 }) {
   const [replayVisibility, setReplyVisibility] = React.useState(false);
   const [deleteDialog, setDeleteDialog] = React.useState(false);
@@ -91,6 +94,7 @@ export default function CommentItem({
             userId={userId}
             setReplyVisibility={setReplyVisibility}
             handleDeleteApprove={handleDeleteApprove}
+            postAuthorId={postAuthor.id}
           />
 
           {replayVisibility && (
@@ -101,6 +105,7 @@ export default function CommentItem({
                 commentId={commentId}
                 parentId={id ?? undefined}
                 onClose={() => setReplyVisibility(false)}
+                postAuthor={postAuthor}
               />
             </div>
           )}
@@ -117,6 +122,7 @@ export default function CommentItem({
               postId={postId}
               commentId={child.id}
               replay={true}
+              postAuthor={postAuthor}
             />
           ))}
         </ul>

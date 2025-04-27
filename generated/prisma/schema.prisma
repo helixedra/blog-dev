@@ -158,24 +158,20 @@ model Follow {
 }
 
 model Notification {
-  id     Int    @id @default(autoincrement())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id               Int      @id @default(autoincrement())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
   relatedCommentId Int?
   relatedComment   Comment? @relation(fields: [relatedCommentId], references: [id])
-
-  relatedPostId Int?
-  relatedPost   Post? @relation(fields: [relatedPostId], references: [id])
-
-  relatedUserId String?
-  relatedUser   User?   @relation("RelatedUser", fields: [relatedUserId], references: [id])
-
-  title     String
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  relatedPostId    Int?
+  relatedPost      Post?    @relation(fields: [relatedPostId], references: [id])
+  relatedUserId    String?
+  relatedUser      User?    @relation("RelatedUser", fields: [relatedUserId], references: [id])
+  title            String
+  message          String
+  read             Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Session {

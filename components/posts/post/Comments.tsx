@@ -23,9 +23,11 @@ export type Comment = {
 export default function Comments({
   postId,
   userId,
+  postAuthor,
 }: {
   postId: number;
   userId: string | null;
+  postAuthor: User;
 }) {
   const {
     data: comments,
@@ -106,6 +108,7 @@ export default function Comments({
             userId={userId}
             postId={postId}
             commentId={comment.id}
+            postAuthor={postAuthor}
           />
         ))}
       </ul>

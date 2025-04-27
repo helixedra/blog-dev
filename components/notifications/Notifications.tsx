@@ -57,7 +57,14 @@ export default function Notifications({ userId }: { userId: string | null }) {
       postId: number,
       name: string
     ) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> replied to your comment on <a href="/posts/${postId}" class="font-semibold">post</a> ${postTitle}`,
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> replied to your comment on post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
+    comment: (
+      userName: string,
+      postTitle: string,
+      postId: number,
+      name: string
+    ) =>
+      `<a href="/user/${userName}" class="font-semibold">${name}</a> left a comment on post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
     follow: (userName: string, name: string) =>
       `<a href="/user/${userName}" class="font-semibold">${name}</a> now followed you`,
     like: (userName: string, postId: number, name: string) =>
@@ -104,6 +111,15 @@ export default function Notifications({ userId }: { userId: string | null }) {
       );
     }
 
+    if (t === "comment") {
+      return templates.comment(
+        n.relatedUser?.username || "",
+        n.relatedPost?.title || "",
+        n.relatedPost?.id || 0,
+        n.relatedUser?.name || ""
+      );
+    }
+
     if (t === "comment_replied") {
       return templates.comment_replied(
         n.relatedUser?.username || "",
@@ -142,22 +158,6 @@ export default function Notifications({ userId }: { userId: string | null }) {
           >
             {notification.relatedUser && (
               <div className="flex items-center text-sm w-full">
-                {/* <RiUserFollowFill className="text-zinc-600 mr-2" /> */}
-                {/* <Link
-                  href={`/user/${notification.relatedUser.username}`}
-                  className="flex items-center"
-                >
-                  <Image
-                    src={notification.relatedUser.image || ""}
-                    alt={notification.relatedUser.username || ""}
-                    width={40}
-                    height={40}
-                    className="rounded-full w-6 h-6 object-cover mr-2"
-                  />
-                  <div className="font-semibold">
-                    {notification.relatedUser.name || ""}
-                  </div>
-                </Link> */}
                 <div
                   className="text-zinc-800 ml-2"
                   dangerouslySetInnerHTML={{

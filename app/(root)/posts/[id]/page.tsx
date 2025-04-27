@@ -14,7 +14,6 @@ import { AdminApprove } from "@/components/posts/post/AdminApprove";
 import EditPostButton from "@/components/posts/post/EditPostButton";
 import Tag from "@/components/posts/post/Tag";
 import { Metadata } from "next";
-import { api } from "@/lib/api";
 
 export async function generateMetadata({
   params,
@@ -135,11 +134,19 @@ export default async function PostPage({
       </div>
       <div className="mt-4 mb-8">
         {userId && post.status === "published" && (
-          <CommentForm postId={post.id} userId={userId} />
+          <CommentForm
+            postId={post.id}
+            userId={userId}
+            postAuthor={post.author}
+          />
         )}
       </div>
       {post.status === "published" && (
-        <Comments postId={post.id} userId={userId || null} />
+        <Comments
+          postId={post.id}
+          userId={userId || null}
+          postAuthor={post.author}
+        />
       )}
     </div>
   );

@@ -4,12 +4,14 @@ import { Textarea } from "@/components/shared/Textarea";
 import { Button } from "@/components/shared/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { User } from "@/generated/prisma";
 
 export default function CommentForm({
   postId,
   userId,
   parentId,
   commentId,
+  postAuthor,
   onClose,
 }: {
   postId: number;
@@ -17,6 +19,7 @@ export default function CommentForm({
   parentId?: number;
   commentId?: number;
   onClose?: () => void;
+  postAuthor: User;
 }) {
   const [actionVisibility, setActionVisibility] = React.useState(false);
   const [comment, setComment] = React.useState("");
@@ -40,17 +43,20 @@ export default function CommentForm({
       postId,
       userId,
       parentId,
+      postAuthorId,
     }: {
       comment: string;
       postId: number;
       userId: string;
       parentId?: number;
+      postAuthorId: string;
     }) => {
       const response = await api.post("comments/new", {
         comment,
         postId,
         userId,
         parentId,
+        postAuthorId: postAuthor.id,
       });
       return response.json();
     },
@@ -62,7 +68,13 @@ export default function CommentForm({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await mutateAsync({ comment, postId, userId: userId ?? "", parentId });
+    await mutateAsync({
+      comment,
+      postId,
+      userId: userId ?? "",
+      parentId,
+      postAuthorId: postAuthor.id,
+    });
     setActionVisibility(false);
     setComment("");
     if (onClose) {
