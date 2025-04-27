@@ -118,6 +118,7 @@ export default async function PostPage({
             likes={post.likeCount}
             liked={isLiked}
             userId={userId || null}
+            postAuthorId={post.author.id}
           />
         )}
         {userId && post.status === "draft" && (

@@ -12,7 +12,11 @@ export async function POST(request: NextRequest) {
   try {
     const { userId } = await getAuthenticatedUser();
 
-    const { postId, userId: userIdFromRequest } = await request.json();
+    const {
+      postId,
+      userId: userIdFromRequest,
+      postAuthorId,
+    } = await request.json();
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -53,6 +57,12 @@ export async function POST(request: NextRequest) {
           },
         },
       });
+      await prisma.notification.deleteMany({
+        where: {
+          relatedPostId: postId,
+          userId: postAuthorId!,
+        },
+      });
 
       // Decrement the like count
       const post = await prisma.post.update({
@@ -71,6 +81,16 @@ export async function POST(request: NextRequest) {
         data: {
           postId: postId,
           userId: userId,
+        },
+      });
+      // Create notification
+      await prisma.notification.create({
+        data: {
+          title: "post_liked",
+          message: `${userId} liked your post`,
+          userId: postAuthorId!,
+          relatedPostId: postId,
+          relatedUserId: userId,
         },
       });
 

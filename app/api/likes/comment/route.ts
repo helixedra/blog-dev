@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
           relatedCommentId: Number(commentId!),
           relatedUserId: String(userId!),
           userId: String(postAuthorId!),
+          relatedPostId: Number(postId!),
           title: "comment_liked",
           message: "You have received a new like on your comment.",
         },

@@ -11,12 +11,14 @@ export default function Like({
   likes,
   likesCount,
   postAuthorId,
+  postId,
 }: {
   commentId: number;
   userId: string | null;
   likes?: CommentLike[];
   likesCount?: number;
   postAuthorId: string | null;
+  postId: number | null;
 }) {
   const [isToggled, setIsToggled] = useState(false);
   const [isLiked, setIsLiked] = useState(
@@ -36,6 +38,7 @@ export default function Like({
         userId: userId,
         commentId: commentId,
         postAuthorId: postAuthorId,
+        postId: postId,
       });
       // Revert optimistic update if toggle fails
       if (!res.ok) {

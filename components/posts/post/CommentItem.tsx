@@ -95,6 +95,7 @@ export default function CommentItem({
             setReplyVisibility={setReplyVisibility}
             handleDeleteApprove={handleDeleteApprove}
             postAuthorId={postAuthor.id}
+            postId={postId}
           />
 
           {replayVisibility && (
