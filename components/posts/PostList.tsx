@@ -1,4 +1,3 @@
-import React from "react";
 import { Post, User } from "@/generated/prisma";
 import PostListItem from "./PostListItem";
 
@@ -11,21 +10,30 @@ export default async function PostList({
 }) {
   return (
     <div>
-      {posts.map((post) =>
-        user?.isAdmin || user?.id === post.author.id ? (
+      {posts.map((post) => {
+        const isOwner = user?.id === post.author.id;
+        const isAdmin = user?.isAdmin;
+        const isPublished = post.status === "published";
+        const isReviewOrRejected =
+          post.status === "review" || post.status === "rejected";
+
+        const canView =
+          isOwner || // Owner can see all their posts
+          isPublished || // All can see published posts
+          (isAdmin && isReviewOrRejected); // Admin can see review/rejected posts
+
+        if (!canView) return null;
+
+        return (
           <PostListItem
             key={post.id}
             post={post}
             user={post.author}
-            isAdmin={user?.isAdmin}
-            isOwner={user?.id === post.author.id}
+            isAdmin={isAdmin}
+            isOwner={isOwner}
           />
-        ) : (
-          post.status === "published" && (
-            <PostListItem key={post.id} post={post} user={post.author} />
-          )
-        )
-      )}
+        );
+      })}
     </div>
   );
 }
