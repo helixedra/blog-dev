@@ -82,7 +82,7 @@ export default function EditPostForm({
   };
 
   return (
-    <form ref={formRef} className="w-full space-y-8 p-6">
+    <form ref={formRef} className="w-full space-y-8">
       <Textarea
         name="title"
         className="w-full border-zinc-200 placeholder:text-zinc-300 placeholder:text-base! focus:outline-none"
