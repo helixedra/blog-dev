@@ -12,16 +12,16 @@ export default function NotificationsButton({
 }) {
   const router = useRouter();
 
-  const { data: notifications } = useQuery({
-    queryKey: ["notifications"],
+  const { data: notificationsCount } = useQuery({
+    queryKey: ["notifications_count"],
     queryFn: async () =>
-      await api.get("notifications").then((res) => res.json()),
+      await api.get("notifications/unreaded/count").then((res) => res.json()),
     enabled: !!userId,
   });
 
   return (
     <div className="relative">
-      {notifications?.length > 0 && (
+      {notificationsCount > 0 && (
         <div className="absolute w-3 h-3 -top-0.5 z-20 -right-0.5 border-2 border-white bg-red-500 rounded-full"></div>
       )}
       <button
