@@ -1,23 +1,19 @@
 "use client";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { Notification, User, Post, Comment } from "@/generated/prisma";
-import Image from "next/image";
-import Link from "next/link";
-import { RiUserFollowFill } from "react-icons/ri";
-import { formatDate } from "@/lib/formatDate";
+import { Notification } from "@/generated/prisma";
 import { useRouter } from "next/navigation";
-
-interface NotificationData extends Notification {
-  relatedUser: User | null;
-  relatedPost: Post | null;
-  relatedComment: Comment | null;
-}
+import NotificationItem from "./NotificationItem";
 
 export default function Notifications({ userId }: { userId: string | null }) {
   const router = useRouter();
+  const [visibleNotifications, setVisibleNotifications] = React.useState<
+    string[]
+  >([]);
+  const queryClient = useQueryClient();
 
+  // If user is not logged in, redirect to sign-in
   React.useEffect(() => {
     if (!userId) {
       router.push("/sign-in");
@@ -28,151 +24,79 @@ export default function Notifications({ userId }: { userId: string | null }) {
     return null;
   }
 
+  // Get notifications
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: () => api.get("notifications").then((res) => res.json()),
     enabled: !!userId,
   });
 
-  // Notification templates
-  const templates = {
-    post_published: (postTitle: string, postId: number) =>
-      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been published 🎉`,
-    post_rejected: (postTitle: string, postId: number) =>
-      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been rejected 🚫`,
-    post_sent_for_review: (postTitle: string, postId: number) =>
-      `Your post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been sent for review`,
-    new_post_on_review: (postTitle: string, postId: number) =>
-      `A new post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a> has been sent for review`,
-    comment_liked: (
-      userName: string,
-      postTitle: string,
-      postId: number,
-      name: string
-    ) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your comment on <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
-    comment_replied: (
-      userName: string,
-      postTitle: string,
-      postId: number,
-      name: string
-    ) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> replied to your comment on post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
-    comment: (
-      userName: string,
-      postTitle: string,
-      postId: number,
-      name: string
-    ) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> left a comment on post <a href="/posts/${postId}" class="font-semibold">${postTitle}</a>`,
-    follow: (userName: string, name: string) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> now followed you`,
-    like: (userName: string, postId: number, name: string) =>
-      `<a href="/user/${userName}" class="font-semibold">${name}</a> liked your <a href="/posts/${postId}" class="font-semibold">post</a>`,
-  };
+  // Get notifications status (ids of unread notifications)
+  const notificationsStatus =
+    notifications
+      ?.map((notification: Notification) =>
+        !notification.read ? { id: notification.id, read: false } : null
+      )
+      .filter(Boolean) || [];
 
-  const messageBuilder = (notification: NotificationData) => {
-    const t = notification.title.toLowerCase();
-    const n = notification;
+  // Handle visible notifications
+  const handleVisible = React.useCallback((id: string) => {
+    setVisibleNotifications((prev) =>
+      prev.includes(id) ? prev : [...prev, id]
+    );
+  }, []);
 
-    if (t === "post_published") {
-      return templates.post_published(
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0
-      );
-    }
-    if (t === "post_rejected") {
-      return templates.post_rejected(
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0
-      );
-    }
+  // Mutation for marking notifications as read
+  const mutation = useMutation({
+    mutationKey: ["notifications"],
+    mutationFn: ({ ids }: { ids: string[] }) =>
+      api.patch("notifications/read", { ids }),
+    onSuccess: () => {
+      setVisibleNotifications([]);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications_count"] });
+    },
+  });
 
-    if (t === "post_sent_for_review") {
-      return templates.post_sent_for_review(
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0
-      );
+  // Update notifications status when visible notifications change
+  React.useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    if (visibleNotifications.length > 0) {
+      timeoutId = setTimeout(() => {
+        updateNotificationsStatus();
+      }, 5000);
     }
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleNotifications]);
 
-    if (t === "new_post_on_review") {
-      return templates.new_post_on_review(
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0
-      );
-    }
+  // Update notifications status
+  const updateNotificationsStatus = async () => {
+    // Select only the ids that are in notificationsStatus and visibleNotifications
+    const unreadVisibleIds = notificationsStatus
+      .map((n: { id: string | number }) => n.id.toString())
+      .filter((id: string) => visibleNotifications.includes(id));
 
-    if (t === "comment_liked") {
-      return templates.comment_liked(
-        n.relatedUser?.username || "",
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0,
-        n.relatedUser?.name || ""
-      );
-    }
+    if (unreadVisibleIds.length === 0) return;
 
-    if (t === "comment") {
-      return templates.comment(
-        n.relatedUser?.username || "",
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0,
-        n.relatedUser?.name || ""
-      );
-    }
-
-    if (t === "comment_replied") {
-      return templates.comment_replied(
-        n.relatedUser?.username || "",
-        n.relatedPost?.title || "",
-        n.relatedPost?.id || 0,
-        n.relatedUser?.name || ""
-      );
-    }
-
-    if (t === "new_follower") {
-      return templates.follow(
-        n.relatedUser?.username || "",
-        n.relatedUser?.name || ""
-      );
-    }
-
-    if (t === "post_liked") {
-      return templates.like(
-        n.relatedUser?.username || "",
-        n.relatedPost?.id || 0,
-        n.relatedUser?.name || ""
-      );
-    }
+    // Update notifications status
+    mutation.mutate({ ids: unreadVisibleIds });
   };
 
   return (
     <div className="w-full">
       <div className="text-2xl mb-4">Notifications</div>
-      <div className="space-y-2">
+      <ul className="w-full">
         {isLoading && <div>Loading...</div>}
         {notifications?.length === 0 && <div>No notifications</div>}
-        {notifications?.map((notification: NotificationData) => (
-          <div
+        {notifications?.map((notification: Notification) => (
+          <NotificationItem
             key={notification.id}
-            className="flex flex-col w-full border-b border-zinc-100 pb-4 pt-2"
-          >
-            {notification.relatedUser && (
-              <div className="flex items-center text-sm w-full">
-                <div
-                  className="text-zinc-800 ml-2"
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      messageBuilder(notification) || notification.message,
-                  }}
-                ></div>
-                <div className="text-zinc-500 text-xs ml-auto">
-                  {formatDate(new Date(notification.createdAt)).timeAgo}
-                </div>
-              </div>
-            )}
-          </div>
+            notification={notification}
+            onVisible={handleVisible}
+          />
         ))}
-      </div>
+      </ul>
     </div>
   );
 }

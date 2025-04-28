@@ -18,6 +18,14 @@ export const api = {
       },
       body: JSON.stringify(body),
     }),
+  patch: (endpoint: string, body: any) =>
+    fetch(`${url}/api/${endpoint}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }),
   delete: (endpoint: string, body?: unknown) =>
     fetch(`${url}/api/${endpoint}`, {
       method: "DELETE",
