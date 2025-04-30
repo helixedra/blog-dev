@@ -4,9 +4,9 @@ import { z } from "zod";
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 
 const userSchema = z.object({
-  username: z.string().min(3).max(100),
-  name: z.string().min(3).max(100),
-  bio: z.string().max(1000),
+  username: z.string().min(2).max(100),
+  name: z.string().min(2).max(100),
+  bio: z.string().max(1000).optional(),
 });
 
 export async function GET(
