@@ -7,15 +7,18 @@ import { User } from "@/generated/prisma";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { authClient } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function UserProfileButton({ user }: { user: User | null }) {
   const [showDropdown, setShowDropdown] = React.useState(false);
 
   const router = useRouter();
+  const queryClient = useQueryClient();
   // Sign out
   const signOut = async () => {
     await authClient.signOut();
     setShowDropdown(false);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
     window.location.href = "/";
   };
 
